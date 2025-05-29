@@ -15,6 +15,12 @@ import WordCounter from "./pages/tools/text/WordCounter";
 import LoremGenerator from "./pages/tools/text/LoremGenerator";
 import TextReverser from "./pages/tools/text/TextReverser";
 import TextCleaner from "./pages/tools/text/TextCleaner";
+import DuplicateLineRemover from "./pages/tools/text/DuplicateLineRemover";
+import TextSorter from "./pages/tools/text/TextSorter";
+import WordFrequencyCounter from "./pages/tools/text/WordFrequencyCounter";
+import FindAndReplace from "./pages/tools/text/FindAndReplace";
+import TextEncryptor from "./pages/tools/text/TextEncryptor";
+import TextToBinary from "./pages/tools/text/TextToBinary";
 
 // Image Tools
 import Base64Converter from "./pages/tools/image/Base64Converter";
@@ -56,6 +62,12 @@ const App = () => (
               <Route path="/tools/text/lorem-generator" element={<LoremGenerator />} />
               <Route path="/tools/text/text-reverser" element={<TextReverser />} />
               <Route path="/tools/text/text-cleaner" element={<TextCleaner />} />
+              <Route path="/tools/text/duplicate-line-remover" element={<DuplicateLineRemover />} />
+              <Route path="/tools/text/text-sorter" element={<TextSorter />} />
+              <Route path="/tools/text/word-frequency-counter" element={<WordFrequencyCounter />} />
+              <Route path="/tools/text/find-and-replace" element={<FindAndReplace />} />
+              <Route path="/tools/text/text-encryptor" element={<TextEncryptor />} />
+              <Route path="/tools/text/text-to-binary" element={<TextToBinary />} />
               
               {/* Image Tools */}
               <Route path="/tools/image/base64-converter" element={<Base64Converter />} />

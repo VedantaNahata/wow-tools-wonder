@@ -20,9 +20,9 @@ const Index = () => {
       description: "Transform and analyze text with powerful utilities",
       icon: Text,
       color: "from-blue-500 to-cyan-500",
-      count: "9+ tools",
+      count: "11+ tools",
       featured: [
-        "Case Converter", "Word Counter", "Text Reverser", "Find & Replace"
+        "Case Converter", "Word Counter", "Text Reverser", "Find & Replace", "Text Encryptor", "Binary Converter"
       ]
     },
     {
