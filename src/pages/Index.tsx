@@ -21,7 +21,7 @@ const Index = () => {
       icon: Text,
       color: "from-blue-500 to-cyan-500",
       count: "11+ tools",
-      route: "/tools/text/case-converter",
+      route: "/tools/text",
       featured: [
         "Case Converter", "Word Counter", "Text Reverser", "Find & Replace", "Text Encryptor", "Binary Converter"
       ]
@@ -53,10 +53,10 @@ const Index = () => {
       description: "Format, minify, and validate your code",
       icon: Code,
       color: "from-orange-500 to-red-500",
-      count: "2+ tools",
+      count: "4+ tools",
       route: "/tools/code/json-formatter",
       featured: [
-        "JSON Formatter", "CSS Beautifier"
+        "JSON Formatter", "CSS Beautifier", "JS Minifier", "HTML Minifier"
       ]
     },
     {

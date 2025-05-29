@@ -19,7 +19,7 @@ const Navigation = () => {
             <Link to="/">
               <Button variant="ghost">Home</Button>
             </Link>
-            <Link to="/tools/text/case-converter">
+            <Link to="/tools/text">
               <Button variant="ghost">Text Tools</Button>
             </Link>
             <Link to="/tools/image/base64-converter">
