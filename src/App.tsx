@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -33,6 +32,8 @@ import RobotsTester from "./pages/tools/seo/RobotsTester";
 // Code Tools
 import JsonFormatter from "./pages/tools/code/JsonFormatter";
 import CssBeautifier from "./pages/tools/code/CssBeautifier";
+import JavaScriptMinifier from "./pages/tools/code/JavaScriptMinifier";
+import HtmlMinifier from "./pages/tools/code/HtmlMinifier";
 
 // Math & Conversion Tools
 import UnitConverter from "./pages/tools/math/UnitConverter";
@@ -80,6 +81,8 @@ const App = () => (
               {/* Code Tools */}
               <Route path="/tools/code/json-formatter" element={<JsonFormatter />} />
               <Route path="/tools/code/css-beautifier" element={<CssBeautifier />} />
+              <Route path="/tools/code/javascript-minifier" element={<JavaScriptMinifier />} />
+              <Route path="/tools/code/html-minifier" element={<HtmlMinifier />} />
               
               {/* Math & Conversion Tools */}
               <Route path="/tools/math/unit-converter" element={<UnitConverter />} />

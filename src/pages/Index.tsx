@@ -21,6 +21,7 @@ const Index = () => {
       icon: Text,
       color: "from-blue-500 to-cyan-500",
       count: "11+ tools",
+      route: "/tools/text/case-converter",
       featured: [
         "Case Converter", "Word Counter", "Text Reverser", "Find & Replace", "Text Encryptor", "Binary Converter"
       ]
@@ -31,6 +32,7 @@ const Index = () => {
       icon: Image,
       color: "from-purple-500 to-pink-500",
       count: "2+ tools",
+      route: "/tools/image/base64-converter",
       featured: [
         "Base64 Converter", "Image Compressor"
       ]
@@ -41,6 +43,7 @@ const Index = () => {
       icon: Search,
       color: "from-green-500 to-emerald-500",
       count: "2+ tools",
+      route: "/tools/seo/meta-tag-generator",
       featured: [
         "Meta Tag Generator", "Robots.txt Tester"
       ]
@@ -51,6 +54,7 @@ const Index = () => {
       icon: Code,
       color: "from-orange-500 to-red-500",
       count: "2+ tools",
+      route: "/tools/code/json-formatter",
       featured: [
         "JSON Formatter", "CSS Beautifier"
       ]
@@ -61,6 +65,7 @@ const Index = () => {
       icon: Book,
       color: "from-indigo-500 to-purple-500",
       count: "2+ tools",
+      route: "/tools/math/unit-converter",
       featured: [
         "Unit Converter", "Age Calculator"
       ]
@@ -71,6 +76,7 @@ const Index = () => {
       icon: Palette,
       color: "from-pink-500 to-rose-500",
       count: "2+ tools",
+      route: "/tools/color/color-picker",
       featured: [
         "Color Picker", "Hex Converter"
       ]
@@ -150,7 +156,7 @@ const Index = () => {
                       className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                       asChild
                     >
-                      <Link to={`/tools/${category.name.toLowerCase().split(' ')[0]}`}>
+                      <Link to={category.route}>
                         Explore {category.name}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
