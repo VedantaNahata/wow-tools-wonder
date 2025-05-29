@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import AdSenseBox from "@/components/AdSenseBox";
 import SEOWrapper from "@/components/SEOWrapper";
+import ToolFAQ from "@/components/ToolFAQ";
 import { Copy, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -76,6 +77,29 @@ const CaseConverter = () => {
     { id: "inversecase", label: "iNVERSE cASE", example: "hELLO wORLD" },
   ];
 
+  const faqs = [
+    {
+      question: "What is a case converter tool?",
+      answer: "A case converter tool allows you to transform text into different letter cases such as uppercase, lowercase, title case, and more. It's useful for formatting text consistently across documents and applications."
+    },
+    {
+      question: "How does the title case converter work?",
+      answer: "Title case capitalizes the first letter of each word while keeping the rest in lowercase. This is commonly used for headings, titles, and proper formatting in documents."
+    },
+    {
+      question: "What is alternating case?",
+      answer: "Alternating case switches between lowercase and uppercase for each character, creating a pattern like 'hElLo WoRlD'. This is often used for creative text styling."
+    },
+    {
+      question: "Is my text stored on your servers?",
+      answer: "No, all text conversion happens entirely in your browser. Your text is never sent to our servers or stored anywhere."
+    },
+    {
+      question: "Can I convert large amounts of text?",
+      answer: "Yes, there's no limit to the amount of text you can convert. The tool processes everything client-side for fast, unlimited conversions."
+    }
+  ];
+
   return (
     <SEOWrapper
       title="Case Converter - Convert Text to Any Case Format"
@@ -93,23 +117,21 @@ const CaseConverter = () => {
           </p>
         </div>
 
-        <AdSenseBox format="horizontal" slot="tool-header" className="mb-8" />
-
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-3">
-            <Card className="mb-6">
+          <div className="lg:col-span-3 space-y-6">
+            <Card>
               <CardHeader>
-                <CardTitle>Input Text</CardTitle>
+                <CardTitle>Convert Your Text</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <Textarea
                   placeholder="Enter your text here..."
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  className="min-h-32 mb-4"
+                  className="min-h-32"
                 />
                 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {caseTypes.map((caseType) => (
                     <Button
                       key={caseType.id}
@@ -124,75 +146,35 @@ const CaseConverter = () => {
                   ))}
                 </div>
 
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={copyToClipboard}
-                    disabled={!outputText}
-                  >
-                    <Copy className="h-4 w-4 mr-1" />
-                    Copy
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={clearText}
-                  >
-                    <RotateCcw className="h-4 w-4 mr-1" />
-                    Clear
-                  </Button>
-                </div>
+                {outputText && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">Output:</span>
+                        <Badge variant="secondary">{activeCase}</Badge>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" onClick={copyToClipboard}>
+                          <Copy className="h-4 w-4 mr-1" />
+                          Copy
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={clearText}>
+                          <RotateCcw className="h-4 w-4 mr-1" />
+                          Clear
+                        </Button>
+                      </div>
+                    </div>
+                    <Textarea
+                      value={outputText}
+                      readOnly
+                      className="min-h-32"
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
 
-            {outputText && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    Output Text
-                    <Badge variant="secondary">{activeCase}</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={outputText}
-                    readOnly
-                    className="min-h-32"
-                  />
-                </CardContent>
-              </Card>
-            )}
-
-            <Card className="mt-8">
-              <CardHeader>
-                <CardTitle>About Case Converter</CardTitle>
-              </CardHeader>
-              <CardContent className="prose prose-sm max-w-none dark:prose-invert">
-                <p>
-                  Our case converter tool helps you quickly transform text into different case formats. 
-                  Whether you're coding, writing, or formatting content, this tool saves you time by 
-                  instantly converting text to the desired case.
-                </p>
-                
-                <h3>Supported Case Types:</h3>
-                <ul>
-                  <li><strong>UPPERCASE:</strong> Converts all letters to capital letters</li>
-                  <li><strong>lowercase:</strong> Converts all letters to small letters</li>
-                  <li><strong>Title Case:</strong> Capitalizes the first letter of each word</li>
-                  <li><strong>Sentence case:</strong> Capitalizes the first letter of each sentence</li>
-                  <li><strong>aLtErNaTiNg CaSe:</strong> Alternates between lowercase and uppercase</li>
-                  <li><strong>iNVERSE cASE:</strong> Inverts the case of each letter</li>
-                </ul>
-
-                <h3>How to Use:</h3>
-                <ol>
-                  <li>Enter or paste your text in the input field</li>
-                  <li>Click on the desired case conversion button</li>
-                  <li>Copy the converted text to your clipboard</li>
-                </ol>
-              </CardContent>
-            </Card>
+            <ToolFAQ toolName="Case Converter" faqs={faqs} />
           </div>
 
           <div className="space-y-6">

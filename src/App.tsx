@@ -13,6 +13,8 @@ import Footer from "./components/Footer";
 import CaseConverter from "./pages/tools/text/CaseConverter";
 import WordCounter from "./pages/tools/text/WordCounter";
 import LoremGenerator from "./pages/tools/text/LoremGenerator";
+import TextReverser from "./pages/tools/text/TextReverser";
+import TextCleaner from "./pages/tools/text/TextCleaner";
 
 // Image Tools
 import Base64Converter from "./pages/tools/image/Base64Converter";
@@ -52,6 +54,8 @@ const App = () => (
               <Route path="/tools/text/case-converter" element={<CaseConverter />} />
               <Route path="/tools/text/word-counter" element={<WordCounter />} />
               <Route path="/tools/text/lorem-generator" element={<LoremGenerator />} />
+              <Route path="/tools/text/text-reverser" element={<TextReverser />} />
+              <Route path="/tools/text/text-cleaner" element={<TextCleaner />} />
               
               {/* Image Tools */}
               <Route path="/tools/image/base64-converter" element={<Base64Converter />} />
