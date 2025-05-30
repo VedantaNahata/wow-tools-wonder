@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,7 +35,15 @@ import {
   Ruler,
   Calendar,
   Pipette,
-  Hash
+  Hash,
+  FileCode,
+  MapPin,
+  Eye,
+  Link as LinkIcon,
+  Monitor,
+  AlertTriangle,
+  ImageOff,
+  Tags
 } from "lucide-react";
 
 const Index = () => {
@@ -163,21 +172,77 @@ const Index = () => {
       description: "Optimize your website for search engines",
       icon: Search,
       color: "from-green-500 to-emerald-500",
-      initialCount: 2,
+      initialCount: 4,
       tools: [
         {
           name: "Meta Tag Generator",
-          description: "Generate SEO-friendly meta tags for your website pages.",
-          icon: Globe,
+          description: "Create SEO-optimized meta tags for titles, descriptions, Open Graph, and Twitter Cards.",
+          icon: Tags,
           route: "/tools/seo/meta-tag-generator",
           color: "from-green-500 to-emerald-500"
         },
         {
-          name: "Robots.txt Tester",
-          description: "Test and validate your robots.txt file for proper search engine crawling.",
-          icon: Bot,
-          route: "/tools/seo/robots-tester",
+          name: "Robots.txt Generator",
+          description: "Generate customizable robots.txt files for controlling search engine crawlers.",
+          icon: FileCode,
+          route: "/tools/seo/robots-generator",
           color: "from-blue-500 to-cyan-500"
+        },
+        {
+          name: "Sitemap Generator",
+          description: "Create simple XML sitemaps from a list of URLs for better search indexing.",
+          icon: MapPin,
+          route: "/tools/seo/sitemap-generator",
+          color: "from-purple-500 to-pink-500"
+        },
+        {
+          name: "Open Graph Preview Tool",
+          description: "Preview how your link will look when shared on social media platforms.",
+          icon: Eye,
+          route: "/tools/seo/og-preview",
+          color: "from-orange-500 to-red-500"
+        },
+        {
+          name: "URL Redirect Checker",
+          description: "Check the redirect path of any URL (301, 302, etc.) and analyze redirect chains.",
+          icon: LinkIcon,
+          route: "/tools/seo/redirect-checker",
+          color: "from-indigo-500 to-purple-500"
+        },
+        {
+          name: "SERP Snippet Preview",
+          description: "Simulate how your page title & meta description will appear in search results.",
+          icon: Monitor,
+          route: "/tools/seo/serp-preview",
+          color: "from-pink-500 to-rose-500"
+        },
+        {
+          name: "Page Size Checker",
+          description: "Calculate the size of a given URL's content and resource weight analysis.",
+          icon: BarChart3,
+          route: "/tools/seo/page-size-checker",
+          color: "from-teal-500 to-cyan-500"
+        },
+        {
+          name: "Broken Link Checker",
+          description: "Scan pasted HTML code for broken anchor tags and invalid links.",
+          icon: AlertTriangle,
+          route: "/tools/seo/broken-link-checker",
+          color: "from-red-500 to-pink-500"
+        },
+        {
+          name: "Alt Tag Checker",
+          description: "Check for missing or empty alt attributes in pasted image HTML code.",
+          icon: ImageOff,
+          route: "/tools/seo/alt-tag-checker",
+          color: "from-amber-500 to-orange-500"
+        },
+        {
+          name: "HTML Meta Tag Analyzer",
+          description: "Analyze pasted HTML code and extract all SEO-relevant meta tags.",
+          icon: Code,
+          route: "/tools/seo/meta-tag-analyzer",
+          color: "from-violet-500 to-purple-500"
         }
       ]
     },
@@ -269,29 +334,46 @@ const Index = () => {
   return (
     <SEOWrapper 
       title="Free Online Tools for Developers & Designers"
-      description="WowsomeTools offers 20+ free online tools for developers, designers, and digital professionals. Text tools, image converters, SEO utilities, code formatters, and more."
+      description="WowsomeTools offers 33+ free online tools for developers, designers, and digital professionals. Text tools, image converters, SEO utilities, code formatters, and more."
       keywords="online tools, developer tools, text converter, image tools, SEO tools, code formatter, color picker, free utilities"
     >
       <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-                WowsomeTools
+        {/* Hero Section - Full viewport height */}
+        <section className="h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+            <div className="animate-fade-in">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight">
+                Wowsome<span className="text-primary">Tools</span>
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-                Your ultimate collection of free online tools for developers, designers, 
+              <p className="text-xl md:text-3xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
+                Your ultimate collection of <span className="text-primary font-semibold">free online tools</span> for developers, designers, 
                 and digital professionals. All tools work directly in your browser.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" asChild>
-                  <Link to="#tools">
-                    Explore Tools <ArrowRight className="ml-2 h-5 w-5" />
+              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+                <Button size="lg" className="text-lg px-8 py-4 h-auto" asChild>
+                  <a href="#tools" className="smooth-scroll">
+                    Explore 33+ Tools <ArrowRight className="ml-2 h-6 w-6" />
+                  </a>
+                </Button>
+                <Button size="lg" variant="outline" className="text-lg px-8 py-4 h-auto" asChild>
+                  <Link to="/tools/text/case-converter" target="_blank" rel="noopener noreferrer">
+                    Try Most Popular Tool
                   </Link>
                 </Button>
               </div>
+              <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+                <span className="bg-primary/10 px-3 py-1 rounded-full">✨ No Registration</span>
+                <span className="bg-primary/10 px-3 py-1 rounded-full">🚀 Works Offline</span>
+                <span className="bg-primary/10 px-3 py-1 rounded-full">🔒 Privacy First</span>
+                <span className="bg-primary/10 px-3 py-1 rounded-full">💯 Free Forever</span>
+              </div>
             </div>
+          </div>
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#tools" className="smooth-scroll text-muted-foreground hover:text-primary transition-colors">
+              <ChevronDown className="h-8 w-8" />
+            </a>
           </div>
         </section>
 

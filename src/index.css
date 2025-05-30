@@ -42,6 +42,10 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -59,5 +63,14 @@
   
   .adsense-placeholder {
     @apply bg-muted border border-dashed border-muted-foreground/30 rounded-lg flex items-center justify-center text-muted-foreground text-sm;
+  }
+
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+
+  .bg-grid-pattern {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
