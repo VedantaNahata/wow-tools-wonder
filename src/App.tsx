@@ -47,6 +47,16 @@ import HtmlMinifier from "./pages/tools/code/HtmlMinifier";
 // Math & Conversion Tools
 import UnitConverter from "./pages/tools/math/UnitConverter";
 import AgeCalculator from "./pages/tools/math/AgeCalculator";
+import PercentageCalculator from "./pages/tools/math/PercentageCalculator";
+import ScientificCalculator from "./pages/tools/math/ScientificCalculator";
+import InterestCalculator from "./pages/tools/math/InterestCalculator";
+import QuadraticSolver from "./pages/tools/math/QuadraticSolver";
+import FactorialCalculator from "./pages/tools/math/FactorialCalculator";
+import PrimeChecker from "./pages/tools/math/PrimeChecker";
+import LcmHcfFinder from "./pages/tools/math/LcmHcfFinder";
+import MatrixCalculator from "./pages/tools/math/MatrixCalculator";
+import BaseConverter from "./pages/tools/math/BaseConverter";
+import ExpressionSimplifier from "./pages/tools/math/ExpressionSimplifier";
 
 // Color Tools
 import ColorPicker from "./pages/tools/color/ColorPicker";
@@ -105,6 +115,16 @@ const App = () => (
               {/* Math & Conversion Tools */}
               <Route path="/tools/math/unit-converter" element={<UnitConverter />} />
               <Route path="/tools/math/age-calculator" element={<AgeCalculator />} />
+              <Route path="/tools/math/percentage-calculator" element={<PercentageCalculator />} />
+              <Route path="/tools/math/scientific-calculator" element={<ScientificCalculator />} />
+              <Route path="/tools/math/interest-calculator" element={<InterestCalculator />} />
+              <Route path="/tools/math/quadratic-solver" element={<QuadraticSolver />} />
+              <Route path="/tools/math/factorial-calculator" element={<FactorialCalculator />} />
+              <Route path="/tools/math/prime-checker" element={<PrimeChecker />} />
+              <Route path="/tools/math/lcm-hcf-finder" element={<LcmHcfFinder />} />
+              <Route path="/tools/math/matrix-calculator" element={<MatrixCalculator />} />
+              <Route path="/tools/math/base-converter" element={<BaseConverter />} />
+              <Route path="/tools/math/expression-simplifier" element={<ExpressionSimplifier />} />
               
               {/* Color Tools */}
               <Route path="/tools/color/color-picker" element={<ColorPicker />} />

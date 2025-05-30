@@ -43,7 +43,17 @@ import {
   Monitor,
   AlertTriangle,
   ImageOff,
-  Tags
+  Tags,
+  Percent,
+  Square,
+  DollarSign,
+  TrendingUp,
+  Sigma,
+  CheckCircle,
+  GitBranch,
+  Grid3X3,
+  RefreshCw,
+  Superscript
 } from "lucide-react";
 
 const Index = () => {
@@ -285,10 +295,10 @@ const Index = () => {
     },
     math: {
       name: "Math & Conversion",
-      description: "Calculate and convert units with precision",
+      description: "Calculate and convert with precision",
       icon: Calculator,
       color: "from-indigo-500 to-purple-500",
-      initialCount: 2,
+      initialCount: 4,
       tools: [
         {
           name: "Unit Converter",
@@ -303,6 +313,76 @@ const Index = () => {
           icon: Calendar,
           route: "/tools/math/age-calculator",
           color: "from-green-500 to-emerald-500"
+        },
+        {
+          name: "Percentage Calculator",
+          description: "Calculate percentage increase, decrease, and proportion values instantly.",
+          icon: Percent,
+          route: "/tools/math/percentage-calculator",
+          color: "from-blue-500 to-cyan-500"
+        },
+        {
+          name: "Scientific Calculator",
+          description: "Full-featured calculator with trigonometric, logarithmic, and power functions.",
+          icon: Square,
+          route: "/tools/math/scientific-calculator",
+          color: "from-purple-500 to-pink-500"
+        },
+        {
+          name: "Interest Calculator",
+          description: "Compute simple and compound interest with principal, rate, and time.",
+          icon: DollarSign,
+          route: "/tools/math/interest-calculator",
+          color: "from-green-500 to-emerald-500"
+        },
+        {
+          name: "Quadratic Equation Solver",
+          description: "Solve quadratic equations and visualize roots with step-by-step solutions.",
+          icon: TrendingUp,
+          route: "/tools/math/quadratic-solver",
+          color: "from-orange-500 to-red-500"
+        },
+        {
+          name: "Factorial Calculator",
+          description: "Calculate factorial of any number with detailed computation steps.",
+          icon: Sigma,
+          route: "/tools/math/factorial-calculator",
+          color: "from-violet-500 to-purple-500"
+        },
+        {
+          name: "Prime Number Checker",
+          description: "Check if a number is prime with detailed analysis and explanations.",
+          icon: CheckCircle,
+          route: "/tools/math/prime-checker",
+          color: "from-pink-500 to-rose-500"
+        },
+        {
+          name: "LCM & HCF Finder",
+          description: "Calculate Least Common Multiple and Highest Common Factor of numbers.",
+          icon: GitBranch,
+          route: "/tools/math/lcm-hcf-finder",
+          color: "from-teal-500 to-cyan-500"
+        },
+        {
+          name: "Matrix Calculator",
+          description: "Perform matrix operations: addition, subtraction, multiplication, and more.",
+          icon: Grid3X3,
+          route: "/tools/math/matrix-calculator",
+          color: "from-amber-500 to-orange-500"
+        },
+        {
+          name: "Number Base Converter",
+          description: "Convert numbers between binary, octal, decimal, and hexadecimal bases.",
+          icon: RefreshCw,
+          route: "/tools/math/base-converter",
+          color: "from-red-500 to-pink-500"
+        },
+        {
+          name: "Algebraic Expression Simplifier",
+          description: "Simplify algebraic expressions and polynomials with step-by-step solutions.",
+          icon: Superscript,
+          route: "/tools/math/expression-simplifier",
+          color: "from-slate-500 to-gray-500"
         }
       ]
     },
@@ -334,53 +414,53 @@ const Index = () => {
   return (
     <SEOWrapper 
       title="Free Online Tools for Developers & Designers"
-      description="WowsomeTools offers 33+ free online tools for developers, designers, and digital professionals. Text tools, image converters, SEO utilities, code formatters, and more."
+      description="WowsomeTools offers 43+ free online tools for developers, designers, and digital professionals. Text tools, image converters, SEO utilities, code formatters, and more."
       keywords="online tools, developer tools, text converter, image tools, SEO tools, code formatter, color picker, free utilities"
     >
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800">
         {/* Hero Section - Full viewport height */}
-        <section className="h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center relative overflow-hidden">
+        <section className="h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 flex items-center justify-center relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
             <div className="animate-fade-in">
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight animate-pulse">
-                Wowsome<span className="text-primary bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">Tools</span>
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight animate-pulse">
+                Wowsome<span className="text-blue-400 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Tools</span>
               </h1>
-              <p className="text-xl md:text-3xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
-                Your ultimate collection of <span className="text-primary font-semibold animate-pulse">free online tools</span> for developers, designers, 
+              <p className="text-xl md:text-3xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
+                Your ultimate collection of <span className="text-blue-400 font-semibold animate-pulse">free online tools</span> for developers, designers, 
                 and digital professionals. All tools work directly in your browser.
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-                <Button size="lg" className="text-lg px-8 py-4 h-auto hover-scale animate-bounce" asChild>
+                <Button size="lg" className="text-lg px-8 py-4 h-auto hover-scale animate-bounce bg-blue-600 hover:bg-blue-700" asChild>
                   <a href="#tools" className="smooth-scroll">
-                    Explore 30+ Tools <ArrowRight className="ml-2 h-6 w-6" />
+                    Explore 43+ Tools <ArrowRight className="ml-2 h-6 w-6" />
                   </a>
                 </Button>
               </div>
-              <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-                <span className="bg-primary/10 px-3 py-1 rounded-full hover-scale">✨ No Registration</span>
-                <span className="bg-primary/10 px-3 py-1 rounded-full hover-scale">🚀 Works Offline</span>
-                <span className="bg-primary/10 px-3 py-1 rounded-full hover-scale">🔒 Privacy First</span>
-                <span className="bg-primary/10 px-3 py-1 rounded-full hover-scale">💯 Free Forever</span>
+              <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
+                <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full hover-scale">✨ No Registration</span>
+                <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full hover-scale">🚀 Works Offline</span>
+                <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full hover-scale">🔒 Privacy First</span>
+                <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full hover-scale">💯 Free Forever</span>
               </div>
             </div>
           </div>
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <a href="#tools" className="smooth-scroll text-muted-foreground hover:text-primary transition-colors">
+            <a href="#tools" className="smooth-scroll text-gray-400 hover:text-blue-400 transition-colors">
               <ChevronDown className="h-8 w-8" />
             </a>
           </div>
         </section>
 
         {/* Tools Categories Sections */}
-        <section id="tools" className="py-20 bg-gradient-to-b from-background to-muted/20">
+        <section id="tools" className="py-20 bg-gradient-to-b from-slate-800 to-slate-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16 animate-fade-in">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Choose Your Tools by Category
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
                 Discover powerful utilities organized by category. Each tool is optimized 
                 for performance and works entirely in your browser.
               </p>
@@ -395,20 +475,20 @@ const Index = () => {
                 return (
                   <div key={key} className="space-y-8 animate-fade-in">
                     {/* Category Header */}
-                    <div className="flex items-center gap-4 mb-8 p-6 bg-gradient-to-r from-muted/50 to-transparent rounded-xl border border-border/50 hover:border-primary/30 transition-all duration-300">
+                    <div className="flex items-center gap-4 mb-8 p-6 bg-gradient-to-r from-slate-800/80 to-transparent rounded-xl border border-slate-700/50 hover:border-blue-500/30 transition-all duration-300">
                       <div className={`inline-flex p-4 rounded-xl bg-gradient-to-r ${category.color} hover-scale`}>
                         <category.icon className="h-8 w-8 text-white" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-2xl md:text-3xl font-bold text-foreground">
+                        <h3 className="text-2xl md:text-3xl font-bold text-white">
                           {category.name}
                         </h3>
-                        <p className="text-muted-foreground">
+                        <p className="text-gray-300">
                           {category.description}
                         </p>
                       </div>
                       <div className="ml-auto">
-                        <span className="bg-primary/10 text-primary px-3 py-1 rounded-full font-medium text-sm animate-pulse">
+                        <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full font-medium text-sm animate-pulse">
                           {category.tools.length} tools
                         </span>
                       </div>
@@ -419,22 +499,22 @@ const Index = () => {
                       {displayedTools.map((tool, index) => (
                         <Card 
                           key={tool.name} 
-                          className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/30 animate-fade-in hover-scale bg-gradient-to-br from-card to-muted/20"
+                          className="group hover:shadow-xl transition-all duration-300 border-2 border-slate-700 hover:border-blue-500/30 animate-fade-in hover-scale bg-gradient-to-br from-slate-800 to-slate-900"
                           style={{ animationDelay: `${index * 0.1}s` }}
                         >
                           <CardContent className="p-6">
                             <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${tool.color} mb-4 hover-scale`}>
                               <tool.icon className="h-6 w-6 text-white" />
                             </div>
-                            <h4 className="text-lg font-bold text-foreground mb-2">
+                            <h4 className="text-lg font-bold text-white mb-2">
                               {tool.name}
                             </h4>
-                            <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+                            <p className="text-gray-400 mb-4 text-sm leading-relaxed">
                               {tool.description}
                             </p>
                             <Button 
                               variant="outline" 
-                              className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors hover-scale"
+                              className="w-full group-hover:bg-blue-600 group-hover:text-white transition-colors hover-scale border-slate-600 text-gray-300 hover:border-blue-500"
                               asChild
                             >
                               <Link to={tool.route} target="_blank" rel="noopener noreferrer">
@@ -453,7 +533,7 @@ const Index = () => {
                         <Button 
                           variant="outline"
                           onClick={() => toggleSection(key)}
-                          className="px-8 py-2 hover-scale"
+                          className="px-8 py-2 hover-scale border-slate-600 text-gray-300 hover:border-blue-500 hover:text-white"
                         >
                           {isExpanded ? (
                             <>
