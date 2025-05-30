@@ -3,66 +3,108 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-border mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <footer className="bg-muted/20 border-t border-border">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-lg font-semibold text-primary mb-4">WowsomeTools</h3>
-            <p className="text-muted-foreground mb-4">
-              Your go-to collection of powerful online tools for developers, designers, 
-              and digital professionals. All tools are free and work directly in your browser.
+            <div className="flex items-center gap-2 mb-4">
+              <h3 className="text-xl font-bold text-foreground">
+                Wowsome<span className="text-primary">Tools</span>
+              </h3>
+            </div>
+            <p className="text-muted-foreground mb-4 max-w-md">
+              Your ultimate collection of free online tools for developers, designers, 
+              and digital professionals. All tools work directly in your browser with 
+              complete privacy.
             </p>
-            <p className="text-sm text-muted-foreground">
-              © 2024 WowsomeTools. All rights reserved.
-            </p>
+            <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+              <span className="bg-primary/10 px-2 py-1 rounded">✨ No Registration</span>
+              <span className="bg-primary/10 px-2 py-1 rounded">🚀 Works Offline</span>
+              <span className="bg-primary/10 px-2 py-1 rounded">🔒 Privacy First</span>
+            </div>
           </div>
           
           <div>
-            <h4 className="text-sm font-semibold mb-4">Popular Tools</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-semibold text-foreground mb-4">Popular Tools</h4>
+            <ul className="space-y-2">
               <li>
-                <Link to="/tools/text/case-converter" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link 
+                  to="/tools/text/case-converter" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   Case Converter
                 </Link>
               </li>
               <li>
-                <Link to="/tools/code/json-formatter" className="text-muted-foreground hover:text-primary transition-colors">
-                  JSON Formatter
+                <Link 
+                  to="/tools/text/word-counter" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Word Counter
                 </Link>
               </li>
               <li>
-                <Link to="/tools/color/color-picker" className="text-muted-foreground hover:text-primary transition-colors">
-                  Color Picker
-                </Link>
-              </li>
-              <li>
-                <Link to="/tools/seo/meta-tag-generator" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link 
+                  to="/tools/seo/meta-tag-generator" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   Meta Tag Generator
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/tools/code/json-formatter" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  JSON Formatter
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h4 className="text-sm font-semibold mb-4">Legal</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-semibold text-foreground mb-4">Categories</h4>
+            <ul className="space-y-2">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Privacy Policy
+                <a 
+                  href="/#tools" 
+                  className="text-muted-foreground hover:text-primary transition-colors smooth-scroll"
+                >
+                  Text Tools
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Terms of Service
+                <a 
+                  href="/#tools" 
+                  className="text-muted-foreground hover:text-primary transition-colors smooth-scroll"
+                >
+                  SEO Tools
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Contact Us
+                <a 
+                  href="/#tools" 
+                  className="text-muted-foreground hover:text-primary transition-colors smooth-scroll"
+                >
+                  Code Tools
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/#tools" 
+                  className="text-muted-foreground hover:text-primary transition-colors smooth-scroll"
+                >
+                  Image Tools
                 </a>
               </li>
             </ul>
           </div>
+        </div>
+        
+        <div className="border-t border-border mt-8 pt-8 text-center">
+          <p className="text-muted-foreground text-sm">
+            © 2025 WowsomeTools. All rights reserved. Made with ❤️ for developers and designers.
+          </p>
         </div>
       </div>
     </footer>
