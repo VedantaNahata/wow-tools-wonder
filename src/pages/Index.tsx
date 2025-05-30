@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,12 +28,12 @@ import {
   Minimize2,
   Braces,
   ImageIcon,
-  Compress,
+  Archive,
   Globe,
   Bot,
   Ruler,
   Calendar,
-  Eyedropper,
+  Pipette,
   Hash
 } from "lucide-react";
 
@@ -153,7 +152,7 @@ const Index = () => {
         {
           name: "Image Compressor",
           description: "Compress images to reduce file size while maintaining quality.",
-          icon: Compress,
+          icon: Archive,
           route: "/tools/image/image-compressor",
           color: "from-green-500 to-emerald-500"
         }
@@ -252,7 +251,7 @@ const Index = () => {
         {
           name: "Color Picker",
           description: "Pick and explore colors with our advanced color picker tool.",
-          icon: Eyedropper,
+          icon: Pipette,
           route: "/tools/color/color-picker",
           color: "from-pink-500 to-rose-500"
         },
