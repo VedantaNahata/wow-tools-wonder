@@ -9,9 +9,6 @@ import NotFound from "./pages/NotFound";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
-// Category Pages
-import TextTools from "./pages/categories/TextTools";
-
 // Text Tools
 import CaseConverter from "./pages/tools/text/CaseConverter";
 import WordCounter from "./pages/tools/text/WordCounter";

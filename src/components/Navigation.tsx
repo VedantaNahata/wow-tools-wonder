@@ -19,23 +19,23 @@ const Navigation = () => {
             <Link to="/">
               <Button variant="ghost">Home</Button>
             </Link>
-            <Link to="/tools/text">
+            <Link to="/#tools">
               <Button variant="ghost">Text Tools</Button>
             </Link>
-            <Link to="/tools/image/base64-converter">
+            <Link to="/#tools">
               <Button variant="ghost">Image Tools</Button>
             </Link>
-            <Link to="/tools/seo/meta-tag-generator">
+            <Link to="/#tools">
               <Button variant="ghost">SEO Tools</Button>
             </Link>
-            <Link to="/tools/code/json-formatter">
+            <Link to="/#tools">
               <Button variant="ghost">Code Tools</Button>
             </Link>
           </div>
 
           <div className="md:hidden">
-            <Link to="/">
-              <Button variant="ghost" size="sm">Menu</Button>
+            <Link to="/#tools">
+              <Button variant="ghost" size="sm">Tools</Button>
             </Link>
           </div>
         </div>
