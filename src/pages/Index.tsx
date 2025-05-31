@@ -92,6 +92,16 @@ const Index = () => {
     { name: "Color Extractor", description: "Extract colors from uploaded images", path: "/color/color-extractor", icon: Palette },
   ];
 
+  const handleExploreClick = () => {
+    const toolsSection = document.getElementById('tools-section');
+    if (toolsSection) {
+      toolsSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   const CategorySection = ({ 
     title, 
     icon: Icon, 
@@ -112,7 +122,7 @@ const Index = () => {
     return (
       <div className="mb-16 animate-fade-in-up">
         <div className="flex items-center gap-4 mb-8">
-          <div className={`p-4 ${iconColor} rounded-2xl shadow-lg`}>
+          <div className={`p-4 ${iconColor} rounded-2xl shadow-lg hover:scale-110 transition-transform duration-300`}>
             <Icon className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-foreground">{title}</h2>
@@ -195,12 +205,18 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="gap-2 hover:scale-105 transition-all duration-200 animate-bounce text-lg px-8 py-3">
+            <Button 
+              onClick={handleExploreClick}
+              size="lg" 
+              className="gap-2 hover:scale-105 transition-all duration-200 animate-bounce text-lg px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
+            >
               Explore Tools <ArrowRight className="h-5 w-5" />
             </Button>
-            <Button variant="outline" size="lg" className="hover:scale-105 transition-all duration-200 text-lg px-8 py-3">
-              Learn More
-            </Button>
+            <Link to="/features">
+              <Button variant="outline" size="lg" className="hover:scale-105 transition-all duration-200 text-lg px-8 py-3">
+                Learn More
+              </Button>
+            </Link>
           </div>
           
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
@@ -223,13 +239,16 @@ const Index = () => {
           </div>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ChevronDown className="h-8 w-8 text-muted-foreground" />
+        <div 
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer hover:text-primary transition-colors"
+          onClick={handleExploreClick}
+        >
+          <ChevronDown className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors" />
         </div>
       </div>
 
       {/* Tools Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div id="tools-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16 animate-fade-in-up">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Powerful Tools for Every Need
@@ -249,12 +268,12 @@ const Index = () => {
         />
 
         <CategorySection
-          title="Image Tools"
-          icon={Image}
-          tools={imageTools}
-          showAll={showAllImage}
-          setShowAll={setShowAllImage}
-          iconColor="bg-gradient-to-r from-green-500 to-emerald-500"
+          title="Color Tools"
+          icon={Palette}
+          tools={colorTools}
+          showAll={showAllColor}
+          setShowAll={setShowAllColor}
+          iconColor="bg-gradient-to-r from-pink-500 to-rose-500"
         />
 
         <CategorySection
@@ -285,12 +304,12 @@ const Index = () => {
         />
 
         <CategorySection
-          title="Color Tools"
-          icon={Palette}
-          tools={colorTools}
-          showAll={showAllColor}
-          setShowAll={setShowAllColor}
-          iconColor="bg-gradient-to-r from-pink-500 to-rose-500"
+          title="Image Tools"
+          icon={Image}
+          tools={imageTools}
+          showAll={showAllImage}
+          setShowAll={setShowAllImage}
+          iconColor="bg-gradient-to-r from-green-500 to-emerald-500"
         />
       </div>
     </SEOWrapper>

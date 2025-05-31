@@ -29,7 +29,9 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link 
-                  to="/tools/text/case-converter" 
+                  to="/text/case-converter" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Case Converter
@@ -37,7 +39,9 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  to="/tools/text/word-counter" 
+                  to="/text/word-counter" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Word Counter
@@ -45,7 +49,9 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  to="/tools/seo/meta-tag-generator" 
+                  to="/seo/meta-tag-generator" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Meta Tag Generator
@@ -53,7 +59,9 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  to="/tools/code/json-formatter" 
+                  to="/code/json-formatter" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   JSON Formatter
@@ -63,39 +71,39 @@ const Footer = () => {
           </div>
           
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Categories</h4>
+            <h4 className="font-semibold text-foreground mb-4">Pages</h4>
             <ul className="space-y-2">
               <li>
-                <a 
-                  href="/#tools" 
-                  className="text-muted-foreground hover:text-primary transition-colors smooth-scroll"
+                <Link 
+                  to="/categories" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Text Tools
-                </a>
+                  All Categories
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/#tools" 
-                  className="text-muted-foreground hover:text-primary transition-colors smooth-scroll"
+                <Link 
+                  to="/features" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  SEO Tools
-                </a>
+                  Features
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/#tools" 
-                  className="text-muted-foreground hover:text-primary transition-colors smooth-scroll"
+                <Link 
+                  to="/about" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Code Tools
-                </a>
+                  About Us
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/#tools" 
-                  className="text-muted-foreground hover:text-primary transition-colors smooth-scroll"
+                <Link 
+                  to="/contact" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Image Tools
-                </a>
+                  Contact
+                </Link>
               </li>
             </ul>
           </div>
