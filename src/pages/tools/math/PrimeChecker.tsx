@@ -192,7 +192,7 @@ const PrimeChecker = () => {
           )}
 
           <ToolFAQ
-            title="Prime Number Checker FAQ"
+            toolName="Prime Number Checker FAQ"
             faqs={faqData}
           />
         </div>

@@ -201,7 +201,7 @@ const MatrixCalculator = () => {
           )}
 
           <ToolFAQ
-            title="Matrix Calculator FAQ"
+            toolName="Matrix Calculator FAQ"
             faqs={faqData}
           />
         </div>

@@ -205,7 +205,7 @@ const QuadraticSolver = () => {
           )}
 
           <ToolFAQ
-            title="Quadratic Equation Solver FAQ"
+            toolName="Quadratic Equation Solver FAQ"
             faqs={faqData}
           />
         </div>

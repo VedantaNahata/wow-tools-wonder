@@ -145,7 +145,7 @@ const ExpressionSimplifier = () => {
           )}
 
           <ToolFAQ
-            title="Expression Simplifier FAQ"
+            toolName="Expression Simplifier FAQ"
             faqs={faqData}
           />
         </div>

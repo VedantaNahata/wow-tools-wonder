@@ -259,7 +259,7 @@ const InterestCalculator = () => {
           </Tabs>
 
           <ToolFAQ
-            title="Interest Calculator FAQ"
+            toolName="Interest Calculator FAQ"
             faqs={faqData}
           />
         </div>

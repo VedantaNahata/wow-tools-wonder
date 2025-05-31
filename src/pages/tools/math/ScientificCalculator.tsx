@@ -302,7 +302,7 @@ const ScientificCalculator = () => {
           </Card>
 
           <ToolFAQ
-            title="Scientific Calculator FAQ"
+            toolName="Scientific Calculator FAQ"
             faqs={faqData}
           />
         </div>

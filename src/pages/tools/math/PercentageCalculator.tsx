@@ -249,7 +249,7 @@ const PercentageCalculator = () => {
           </Tabs>
 
           <ToolFAQ
-            title="Percentage Calculator FAQ"
+            toolName="Percentage Calculator FAQ"
             faqs={faqData}
           />
         </div>

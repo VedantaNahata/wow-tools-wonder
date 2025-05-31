@@ -172,7 +172,7 @@ const BaseConverter = () => {
           )}
 
           <ToolFAQ
-            title="Number Base Converter FAQ"
+            toolName="Number Base Converter FAQ"
             faqs={faqData}
           />
         </div>

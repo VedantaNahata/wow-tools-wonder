@@ -157,7 +157,7 @@ const LcmHcfFinder = () => {
           )}
 
           <ToolFAQ
-            title="LCM & HCF Calculator FAQ"
+            toolName="LCM & HCF Calculator FAQ"
             faqs={faqData}
           />
         </div>

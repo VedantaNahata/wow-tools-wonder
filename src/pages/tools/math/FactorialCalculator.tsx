@@ -130,7 +130,7 @@ const FactorialCalculator = () => {
           )}
 
           <ToolFAQ
-            title="Factorial Calculator FAQ"
+            toolName="Factorial Calculator FAQ"
             faqs={faqData}
           />
         </div>
