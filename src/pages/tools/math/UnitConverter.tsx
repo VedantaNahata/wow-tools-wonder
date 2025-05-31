@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SEOWrapper from "@/components/SEOWrapper";
 import ToolFAQ from "@/components/ToolFAQ";
 import AdSenseBox from "@/components/AdSenseBox";
-import { ArrowLeftRight, Rulers } from "lucide-react";
+import { ArrowLeftRight, Ruler } from "lucide-react";
 
 const UnitConverter = () => {
   const [value, setValue] = useState("");
@@ -157,7 +156,7 @@ const UnitConverter = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl">
-              <Rulers className="h-8 w-8 text-white" />
+              <Ruler className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               Unit Converter
