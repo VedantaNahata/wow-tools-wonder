@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,7 @@ const Index = () => {
   const [showAllCode, setShowAllCode] = useState(false);
   const [showAllMath, setShowAllMath] = useState(false);
   const [showAllColor, setShowAllColor] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState([]);
 
   const textTools = [
     { name: "Case Converter", description: "Convert text between cases", path: "/text/case-converter", icon: FileText },
@@ -62,6 +62,8 @@ const Index = () => {
     { name: "CSS Beautifier", description: "Format and beautify CSS", path: "/code/css-beautifier", icon: Code },
     { name: "JavaScript Minifier", description: "Minify JavaScript code", path: "/code/javascript-minifier", icon: Code },
     { name: "HTML Minifier", description: "Minify HTML code", path: "/code/html-minifier", icon: Code },
+    { name: "HTML Table Generator", description: "Create HTML tables easily", path: "/code/html-table-generator", icon: Code },
+    { name: "Excel to HTML Table", description: "Convert Excel to HTML tables", path: "/code/excel-to-html-table", icon: Code },
   ];
 
   const mathTools = [
@@ -81,15 +83,118 @@ const Index = () => {
 
   const colorTools = [
     { name: "Color Picker", description: "Choose colors and get HEX, RGB, HSL values", path: "/color/color-picker", icon: Palette },
-    { name: "Hex Converter", description: "Convert between color formats", path: "/color/hex-converter", icon: Palette },
+    { name: "HEX Converter", description: "Convert between color formats", path: "/color/hex-converter", icon: Palette },
     { name: "Gradient Generator", description: "Create linear/radial gradients with CSS", path: "/color/gradient-generator", icon: Palette },
-    { name: "Color Palette Generator", description: "Generate harmonious color palettes", path: "/color/palette-generator", icon: Palette },
+    { name: "Palette Generator", description: "Generate harmonious color palettes", path: "/color/palette-generator", icon: Palette },
     { name: "Contrast Checker", description: "Check accessibility compliance", path: "/color/contrast-checker", icon: Palette },
     { name: "Random Color Generator", description: "Generate random colors instantly", path: "/color/random-generator", icon: Palette },
     { name: "Shades & Tints Generator", description: "Create lighter/darker color versions", path: "/color/shades-tints", icon: Palette },
     { name: "CSS Color Names", description: "Explore 140+ named CSS colors", path: "/color/css-names", icon: Palette },
     { name: "Color to Image", description: "Convert colors to downloadable images", path: "/color/color-to-image", icon: Palette },
     { name: "Color Extractor", description: "Extract colors from uploaded images", path: "/color/color-extractor", icon: Palette },
+  ];
+
+  const toolCategories = [
+    {
+      title: "Text Tools",
+      icon: FileText,
+      count: 11,
+      iconBg: "from-blue-500 to-cyan-500",
+      tools: [
+        { name: "Case Converter", path: "/text/case-converter", description: "Convert text between different cases" },
+        { name: "Word Counter", path: "/text/word-counter", description: "Count words and characters" },
+        { name: "Lorem Generator", path: "/text/lorem-generator", description: "Generate placeholder text" },
+        { name: "Text Reverser", path: "/text/text-reverser", description: "Reverse your text" },
+        { name: "Text Cleaner", path: "/text/text-cleaner", description: "Clean and format text" },
+        { name: "Duplicate Line Remover", path: "/text/duplicate-line-remover", description: "Remove duplicate lines" },
+        { name: "Text Sorter", path: "/text/text-sorter", description: "Sort lines alphabetically" },
+        { name: "Word Frequency Counter", path: "/text/word-frequency-counter", description: "Count word frequency" },
+        { name: "Find and Replace", path: "/text/find-and-replace", description: "Find and replace text" },
+        { name: "Text Encryptor", path: "/text/text-encryptor", description: "Encrypt and decrypt text" },
+        { name: "Text to Binary", path: "/text/text-to-binary", description: "Convert text to binary" }
+      ]
+    },
+    {
+      title: "Color Tools",
+      icon: Palette,
+      count: 10,
+      iconBg: "from-pink-500 to-rose-500",
+      tools: [
+        { name: "Color Picker", path: "/color/color-picker", description: "Pick and convert colors instantly" },
+        { name: "HEX Converter", path: "/color/hex-converter", description: "Convert between color formats" },
+        { name: "Gradient Generator", path: "/color/gradient-generator", description: "Create beautiful CSS gradients" },
+        { name: "Palette Generator", path: "/color/palette-generator", description: "Generate harmonious color palettes" },
+        { name: "Contrast Checker", path: "/color/contrast-checker", description: "Check color accessibility compliance" },
+        { name: "Random Generator", path: "/color/random-generator", description: "Generate random colors instantly" },
+        { name: "Shades & Tints", path: "/color/shades-tints", description: "Create color variations" },
+        { name: "CSS Names", path: "/color/css-names", description: "Explore CSS color names" },
+        { name: "Color to Image", path: "/color/color-to-image", description: "Convert colors to images" },
+        { name: "Color Extractor", path: "/color/color-extractor", description: "Extract colors from images" }
+      ]
+    },
+    {
+      title: "SEO Tools",
+      icon: Search,
+      count: 11,
+      iconBg: "from-purple-500 to-pink-500",
+      tools: [
+        { name: "Meta Tag Generator", path: "/seo/meta-tag-generator", description: "Generate SEO meta tags" },
+        { name: "Robots.txt Tester", path: "/seo/robots-tester", description: "Test robots.txt files" },
+        { name: "Robots.txt Generator", path: "/seo/robots-generator", description: "Generate robots.txt" },
+        { name: "Sitemap Generator", path: "/seo/sitemap-generator", description: "Generate XML sitemaps" },
+        { name: "Open Graph Preview", path: "/seo/og-preview", description: "Preview social media cards" },
+        { name: "URL Redirect Checker", path: "/seo/redirect-checker", description: "Check URL redirects" },
+        { name: "SERP Snippet Preview", path: "/seo/serp-preview", description: "Preview search results" },
+        { name: "Page Size Checker", path: "/seo/page-size-checker", description: "Check page size" },
+        { name: "Broken Link Checker", path: "/seo/broken-link-checker", description: "Find broken links" },
+        { name: "Alt Tag Checker", path: "/seo/alt-tag-checker", description: "Check image alt tags" },
+        { name: "Meta Tag Analyzer", path: "/seo/meta-tag-analyzer", description: "Analyze meta tags" }
+      ]
+    },
+    {
+      title: "Code Tools",
+      icon: Code,
+      count: 6,
+      iconBg: "from-orange-500 to-red-500",
+      tools: [
+        { name: "JSON Formatter", path: "/code/json-formatter", description: "Format and validate JSON" },
+        { name: "CSS Beautifier", path: "/code/css-beautifier", description: "Format and beautify CSS code" },
+        { name: "JavaScript Minifier", path: "/code/javascript-minifier", description: "Minify JavaScript code" },
+        { name: "HTML Minifier", path: "/code/html-minifier", description: "Minify HTML code" },
+        { name: "HTML Table Generator", path: "/code/html-table-generator", description: "Create HTML tables easily" },
+        { name: "Excel to HTML Table", path: "/code/excel-to-html-table", description: "Convert Excel to HTML tables" }
+      ]
+    },
+    {
+      title: "Math Tools",
+      icon: Calculator,
+      count: 12,
+      iconBg: "from-indigo-500 to-purple-500",
+      tools: [
+        { name: "Unit Converter", path: "/math/unit-converter", description: "Convert between units" },
+        { name: "Age Calculator", path: "/math/age-calculator", description: "Calculate your age" },
+        { name: "Percentage Calculator", path: "/math/percentage-calculator", description: "Calculate percentages" },
+        { name: "Scientific Calculator", path: "/math/scientific-calculator", description: "Advanced calculator" },
+        { name: "Interest Calculator", path: "/math/interest-calculator", description: "Calculate compound interest" },
+        { name: "Quadratic Solver", path: "/math/quadratic-solver", description: "Solve quadratic equations" },
+        { name: "Factorial Calculator", path: "/math/factorial-calculator", description: "Calculate factorials" },
+        { name: "Prime Checker", path: "/math/prime-checker", description: "Check if number is prime" },
+        { name: "LCM & HCF Finder", path: "/math/lcm-hcf-finder", description: "Find LCM and HCF" },
+        { name: "Matrix Calculator", path: "/math/matrix-calculator", description: "Matrix operations" },
+        { name: "Base Converter", path: "/math/base-converter", description: "Convert number bases" },
+        { name: "Expression Simplifier", path: "/math/expression-simplifier", description: "Simplify expressions" }
+      ]
+    },
+    {
+      title: "Image Tools",
+      icon: Image,
+      count: 2,
+      iconBg: "from-green-500 to-emerald-500",
+      tools: [
+        { name: "Base64 Converter", path: "/image/base64-converter", description: "Convert images to Base64" },
+        { name: "Image Compressor", path: "/image/image-compressor", description: "Compress images for web" }
+      ]
+    }
   ];
 
   const handleExploreClick = () => {
@@ -177,140 +282,373 @@ const Index = () => {
   };
 
   return (
-    <SEOWrapper
+    <SEOWrapper 
       title="WowsomeTools - Free Online Tools for Everyone"
-      description="A collection of free online tools for text, images, SEO, code, math, and more. Boost your productivity with our easy-to-use tools."
-      keywords="online tools, free tools, text tools, image tools, SEO tools, code tools, math tools, conversion tools"
+      description="Discover 50+ free online tools for text processing, color manipulation, SEO optimization, code formatting, mathematical calculations, and image editing. No registration required!"
+      keywords="free online tools, text tools, color tools, SEO tools, code formatter, calculator, image converter"
     >
-      {/* Hero Section */}
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/90 to-primary/5 bg-grid-pattern flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5"></div>
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 animate-fade-in-up">
-          <div className="inline-block mb-6">
-            <div className="p-4 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl backdrop-blur-sm animate-pulse">
-              <div className="p-3 bg-gradient-to-r from-primary to-secondary rounded-xl">
-                <Code className="h-12 w-12 text-white" />
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
+          {/* Background Animation */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl animate-[pulse_4s_ease-in-out_infinite]"></div>
+            <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl animate-[pulse_4s_ease-in-out_infinite] animation-delay-2000"></div>
+            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl animate-[pulse_4s_ease-in-out_infinite] animation-delay-4000"></div>
+          </div>
+
+          <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+            <div className="animate-fade-in-up">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                Wowsome<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Tools</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Your ultimate collection of <span className="text-purple-400 font-semibold">50+ free online tools</span> for 
+                developers, designers, and digital professionals
+              </p>
+              
+              {/* Feature Pills */}
+              <div className="flex flex-wrap justify-center gap-3 mb-10">
+                <span className="bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium border border-white/20">
+                  ✨ No Registration Required
+                </span>
+                <span className="bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium border border-white/20">
+                  🚀 Works Offline
+                </span>
+                <span className="bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium border border-white/20">
+                  🔒 Privacy First
+                </span>
+              </div>
+
+              <button 
+                onClick={scrollToTools}
+                className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-2xl animate-pulse hover:animate-none"
+              >
+                Explore Tools
+                <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
+              </button>
+            </div>
+            
+            {/* Scroll indicator */}
+            <div 
+              onClick={scrollToTools}
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer animate-bounce hover:animate-pulse"
+            >
+              <ChevronDown className="h-8 w-8 text-white/70 hover:text-white transition-colors" />
+            </div>
+          </div>
+        </section>
+
+        {/* Tools Section */}
+        <section ref={toolsRef} className="py-20 bg-gradient-to-br from-gray-50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Powerful Tools for Every Need
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                From text processing to color manipulation, we've got you covered with professional-grade tools
+              </p>
+            </div>
+
+            {/* Tool Categories */}
+            <div className="space-y-12">
+              {toolCategories.map((category, categoryIndex) => {
+                const Icon = category.icon;
+                const isExpanded = expandedCategories.includes(categoryIndex);
+                const displayedTools = isExpanded ? category.tools : category.tools.slice(0, 6);
+
+                return (
+                  <div key={categoryIndex} className="animate-fade-in-up">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className={`p-3 bg-gradient-to-r ${category.iconBg} rounded-xl shadow-lg`}>
+                        <Icon className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">{category.title}</h3>
+                        <p className="text-gray-600">{category.count} professional tools</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                      {displayedTools.map((tool, toolIndex) => (
+                        <Link
+                          key={toolIndex}
+                          to={tool.path}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group"
+                        >
+                          <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                            <CardContent className="p-6">
+                              <div className="flex items-start justify-between mb-3">
+                                <h4 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
+                                  {tool.name}
+                                </h4>
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <ArrowRight className="h-4 w-4 text-purple-600" />
+                                </div>
+                              </div>
+                              <p className="text-gray-600 text-sm leading-relaxed">
+                                {tool.description}
+                              </p>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      ))}
+                    </div>
+
+                    {category.tools.length > 6 && (
+                      <div className="text-center">
+                        <Button
+                          variant="outline"
+                          onClick={() => toggleCategory(categoryIndex)}
+                          className="group border-purple-200 hover:border-purple-400 hover:bg-purple-50 transition-all duration-300"
+                        >
+                          {isExpanded ? (
+                            <>
+                              Show Less <ChevronUp className="ml-2 h-4 w-4 transition-transform" />
+                            </>
+                          ) : (
+                            <>
+                              Show {category.tools.length - 6} More <ChevronDown className="ml-2 h-4 w-4 transition-transform" />
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Features
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Our tools are designed to help you save time and increase productivity
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <FileText className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Text Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Convert, count, and analyze text</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Palette className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Color Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Choose colors and create beautiful designs</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Search className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">SEO Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Optimize your website for search engines</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Code className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Code Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Format, minify, and convert code</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Calculator className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Math Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Calculate, convert, and analyze numbers</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Image className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Image Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Convert, compress, and manipulate images</p>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
-          
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text">
-            WowsomeTools
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            A comprehensive suite of <span className="text-primary font-semibold">free online tools</span> designed to 
-            <br className="hidden md:block" />
-            simplify your daily tasks and boost productivity
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              onClick={handleExploreClick}
-              size="lg" 
-              className="gap-2 hover:scale-105 transition-all duration-200 animate-bounce text-lg px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
-            >
-              Explore Tools <ArrowRight className="h-5 w-5" />
-            </Button>
-            <Link to="/features">
-              <Button variant="outline" size="lg" className="hover:scale-105 transition-all duration-200 text-lg px-8 py-3">
-                Learn More
-              </Button>
-            </Link>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Stats
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Our tools are used by millions of people every day
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <FileText className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Text Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">50+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Palette className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Color Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">100+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Search className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">SEO Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">100+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Code className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Code Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">60+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Calculator className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Math Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">120+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Image className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Image Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">20+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
-          
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
-            <div className="text-center animate-fade-in animate-delay-100">
-              <div className="text-3xl font-bold text-primary">50+</div>
-              <div className="text-sm text-muted-foreground">Tools Available</div>
-            </div>
-            <div className="text-center animate-fade-in animate-delay-200">
-              <div className="text-3xl font-bold text-primary">100%</div>
-              <div className="text-sm text-muted-foreground">Free to Use</div>
-            </div>
-            <div className="text-center animate-fade-in animate-delay-300">
-              <div className="text-3xl font-bold text-primary">0</div>
-              <div className="text-sm text-muted-foreground">Registration Required</div>
-            </div>
-            <div className="text-center animate-fade-in animate-delay-400">
-              <div className="text-3xl font-bold text-primary">∞</div>
-              <div className="text-sm text-muted-foreground">Usage Limit</div>
-            </div>
-          </div>
-        </div>
-        
-        <div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer hover:text-primary transition-colors"
-          onClick={handleExploreClick}
-        >
-          <ChevronDown className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors" />
-        </div>
-      </div>
-
-      {/* Tools Section */}
-      <div id="tools-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-16 animate-fade-in-up">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Powerful Tools for Every Need
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Choose from our extensive collection of tools organized by category
-          </p>
-        </div>
-
-        <CategorySection
-          title="Text Tools"
-          icon={FileText}
-          tools={textTools}
-          showAll={showAllText}
-          setShowAll={setShowAllText}
-          iconColor="bg-gradient-to-r from-blue-500 to-cyan-500"
-        />
-
-        <CategorySection
-          title="Color Tools"
-          icon={Palette}
-          tools={colorTools}
-          showAll={showAllColor}
-          setShowAll={setShowAllColor}
-          iconColor="bg-gradient-to-r from-pink-500 to-rose-500"
-        />
-
-        <CategorySection
-          title="SEO & Web Tools"
-          icon={Search}
-          tools={seoTools}
-          showAll={showAllSeo}
-          setShowAll={setShowAllSeo}
-          iconColor="bg-gradient-to-r from-purple-500 to-pink-500"
-        />
-
-        <CategorySection
-          title="Code Tools"
-          icon={Code}
-          tools={codeTools}
-          showAll={showAllCode}
-          setShowAll={setShowAllCode}
-          iconColor="bg-gradient-to-r from-orange-500 to-red-500"
-        />
-
-        <CategorySection
-          title="Math & Conversion Tools"
-          icon={Calculator}
-          tools={mathTools}
-          showAll={showAllMath}
-          setShowAll={setShowAllMath}
-          iconColor="bg-gradient-to-r from-indigo-500 to-purple-500"
-        />
-
-        <CategorySection
-          title="Image Tools"
-          icon={Image}
-          tools={imageTools}
-          showAll={showAllImage}
-          setShowAll={setShowAllImage}
-          iconColor="bg-gradient-to-r from-green-500 to-emerald-500"
-        />
+        </section>
       </div>
     </SEOWrapper>
   );

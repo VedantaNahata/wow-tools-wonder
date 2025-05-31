@@ -13,24 +13,30 @@ import {
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleSmoothScroll = (targetId: string) => {
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
+  const handleCategoryClick = (categoryId: string) => {
+    // If we're on the categories page, scroll to section
+    if (window.location.pathname === '/categories') {
+      const element = document.getElementById(categoryId);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    } else {
+      // Navigate to categories page with hash
+      window.open(`/categories#${categoryId}`, '_blank', 'noopener,noreferrer');
     }
     setIsMenuOpen(false);
   };
 
   const categories = [
-    { name: "Text Tools", path: "/categories#text" },
-    { name: "Color Tools", path: "/categories#color" },
-    { name: "SEO Tools", path: "/categories#seo" },
-    { name: "Code Tools", path: "/categories#code" },
-    { name: "Math Tools", path: "/categories#math" },
-    { name: "Image Tools", path: "/categories#image" },
+    { name: "Text Tools", id: "text" },
+    { name: "Color Tools", id: "color" },
+    { name: "SEO Tools", id: "seo" },
+    { name: "Code Tools", id: "code" },
+    { name: "Math Tools", id: "math" },
+    { name: "Image Tools", id: "image" },
   ];
 
   return (
@@ -57,29 +63,31 @@ const Navigation = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-background/95 backdrop-blur-sm border-border z-50">
                 {categories.map((category) => (
-                  <DropdownMenuItem key={category.name} asChild>
-                    <Link to={category.path} className="cursor-pointer">
-                      {category.name}
-                    </Link>
+                  <DropdownMenuItem 
+                    key={category.name}
+                    onClick={() => handleCategoryClick(category.id)}
+                    className="cursor-pointer"
+                  >
+                    {category.name}
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuItem asChild>
-                  <Link to="/categories" className="cursor-pointer font-medium">
+                  <Link to="/categories" target="_blank" rel="noopener noreferrer" className="cursor-pointer font-medium">
                     View All Categories
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link to="/features">
+            <Link to="/features" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost">Features</Button>
             </Link>
             
-            <Link to="/about">
+            <Link to="/about" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost">About</Button>
             </Link>
             
-            <Link to="/contact">
+            <Link to="/contact" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost">Contact</Button>
             </Link>
           </div>
@@ -104,22 +112,22 @@ const Navigation = () => {
                   Home
                 </Button>
               </Link>
-              <Link to="/categories">
+              <Link to="/categories" target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
                   Categories
                 </Button>
               </Link>
-              <Link to="/features">
+              <Link to="/features" target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
                   Features
                 </Button>
               </Link>
-              <Link to="/about">
+              <Link to="/about" target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
                   About
                 </Button>
               </Link>
-              <Link to="/contact">
+              <Link to="/contact" target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
                   Contact
                 </Button>

@@ -49,6 +49,8 @@ import JsonFormatter from "./pages/tools/code/JsonFormatter";
 import CssBeautifier from "./pages/tools/code/CssBeautifier";
 import JavaScriptMinifier from "./pages/tools/code/JavaScriptMinifier";
 import HtmlMinifier from "./pages/tools/code/HtmlMinifier";
+import HtmlTableGenerator from "./pages/tools/code/HtmlTableGenerator";
+import ExcelToHtmlTable from "./pages/tools/code/ExcelToHtmlTable";
 
 // Math & Conversion Tools
 import UnitConverter from "./pages/tools/math/UnitConverter";
@@ -131,6 +133,8 @@ const App = () => (
               <Route path="/code/css-beautifier" element={<CssBeautifier />} />
               <Route path="/code/javascript-minifier" element={<JavaScriptMinifier />} />
               <Route path="/code/html-minifier" element={<HtmlMinifier />} />
+              <Route path="/code/html-table-generator" element={<HtmlTableGenerator />} />
+              <Route path="/code/excel-to-html-table" element={<ExcelToHtmlTable />} />
               
               {/* Math & Conversion Tools */}
               <Route path="/math/unit-converter" element={<UnitConverter />} />
