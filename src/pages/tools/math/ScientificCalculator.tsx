@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -180,9 +179,14 @@ const ScientificCalculator = () => {
             <CardContent>
               {/* Display */}
               <div className="mb-4 p-4 bg-slate-900 border border-slate-600 rounded-lg">
-                <div className="text-right text-2xl font-mono text-white overflow-hidden">
+                <div className="text-right text-2xl font-mono text-white overflow-hidden min-h-[2rem]">
                   {display}
                 </div>
+                {operation && previousValue && (
+                  <div className="text-right text-sm text-gray-400 mt-1">
+                    {previousValue} {operation}
+                  </div>
+                )}
               </div>
 
               {/* Button Grid */}
