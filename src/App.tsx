@@ -62,6 +62,14 @@ import ExpressionSimplifier from "./pages/tools/math/ExpressionSimplifier";
 // Color Tools
 import ColorPicker from "./pages/tools/color/ColorPicker";
 import HexConverter from "./pages/tools/color/HexConverter";
+import GradientGenerator from "./pages/tools/color/GradientGenerator";
+import PaletteGenerator from "./pages/tools/color/PaletteGenerator";
+import ContrastChecker from "./pages/tools/color/ContrastChecker";
+import RandomGenerator from "./pages/tools/color/RandomGenerator";
+import ShadesTints from "./pages/tools/color/ShadesTints";
+import CssNames from "./pages/tools/color/CssNames";
+import ColorToImage from "./pages/tools/color/ColorToImage";
+import ColorExtractor from "./pages/tools/color/ColorExtractor";
 
 const queryClient = new QueryClient();
 
@@ -77,7 +85,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               
-              {/* Text Tools - New routing structure */}
+              {/* Text Tools */}
               <Route path="/text/case-converter" element={<CaseConverter />} />
               <Route path="/text/word-counter" element={<WordCounter />} />
               <Route path="/text/lorem-generator" element={<LoremGenerator />} />
@@ -130,6 +138,14 @@ const App = () => (
               {/* Color Tools */}
               <Route path="/color/color-picker" element={<ColorPicker />} />
               <Route path="/color/hex-converter" element={<HexConverter />} />
+              <Route path="/color/gradient-generator" element={<GradientGenerator />} />
+              <Route path="/color/palette-generator" element={<PaletteGenerator />} />
+              <Route path="/color/contrast-checker" element={<ContrastChecker />} />
+              <Route path="/color/random-generator" element={<RandomGenerator />} />
+              <Route path="/color/shades-tints" element={<ShadesTints />} />
+              <Route path="/color/css-names" element={<CssNames />} />
+              <Route path="/color/color-to-image" element={<ColorToImage />} />
+              <Route path="/color/color-extractor" element={<ColorExtractor />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
