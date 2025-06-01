@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,6 +28,15 @@ import ImageCompressor from "./pages/tools/image/ImageCompressor";
 // Web & SEO Tools
 import MetaTagGenerator from "./pages/tools/seo/MetaTagGenerator";
 import RobotsTester from "./pages/tools/seo/RobotsTester";
+import RobotsGenerator from "./pages/tools/seo/RobotsGenerator";
+import SitemapGenerator from "./pages/tools/seo/SitemapGenerator";
+import OgPreview from "./pages/tools/seo/OgPreview";
+import RedirectChecker from "./pages/tools/seo/RedirectChecker";
+import SerpPreview from "./pages/tools/seo/SerpPreview";
+import PageSizeChecker from "./pages/tools/seo/PageSizeChecker";
+import BrokenLinkChecker from "./pages/tools/seo/BrokenLinkChecker";
+import AltTagChecker from "./pages/tools/seo/AltTagChecker";
+import MetaTagAnalyzer from "./pages/tools/seo/MetaTagAnalyzer";
 
 // Code Tools
 import JsonFormatter from "./pages/tools/code/JsonFormatter";
@@ -78,6 +86,15 @@ const App = () => (
               {/* Web & SEO Tools */}
               <Route path="/tools/seo/meta-tag-generator" element={<MetaTagGenerator />} />
               <Route path="/tools/seo/robots-tester" element={<RobotsTester />} />
+              <Route path="/tools/seo/robots-generator" element={<RobotsGenerator />} />
+              <Route path="/tools/seo/sitemap-generator" element={<SitemapGenerator />} />
+              <Route path="/tools/seo/og-preview" element={<OgPreview />} />
+              <Route path="/tools/seo/redirect-checker" element={<RedirectChecker />} />
+              <Route path="/tools/seo/serp-preview" element={<SerpPreview />} />
+              <Route path="/tools/seo/page-size-checker" element={<PageSizeChecker />} />
+              <Route path="/tools/seo/broken-link-checker" element={<BrokenLinkChecker />} />
+              <Route path="/tools/seo/alt-tag-checker" element={<AltTagChecker />} />
+              <Route path="/tools/seo/meta-tag-analyzer" element={<MetaTagAnalyzer />} />
               
               {/* Code Tools */}
               <Route path="/tools/code/json-formatter" element={<JsonFormatter />} />

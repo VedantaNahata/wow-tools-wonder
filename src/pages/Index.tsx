@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,7 +35,15 @@ import {
   Ruler,
   Calendar,
   Pipette,
-  Hash
+  Hash,
+  FileCode,
+  MapPin,
+  Eye,
+  Link as LinkIcon,
+  Monitor,
+  AlertTriangle,
+  ImageOff,
+  Tags
 } from "lucide-react";
 
 const Index = () => {
@@ -163,21 +172,77 @@ const Index = () => {
       description: "Optimize your website for search engines",
       icon: Search,
       color: "from-green-500 to-emerald-500",
-      initialCount: 2,
+      initialCount: 4,
       tools: [
         {
           name: "Meta Tag Generator",
-          description: "Generate SEO-friendly meta tags for your website pages.",
-          icon: Globe,
+          description: "Create SEO-optimized meta tags for titles, descriptions, Open Graph, and Twitter Cards.",
+          icon: Tags,
           route: "/tools/seo/meta-tag-generator",
           color: "from-green-500 to-emerald-500"
         },
         {
-          name: "Robots.txt Tester",
-          description: "Test and validate your robots.txt file for proper search engine crawling.",
-          icon: Bot,
-          route: "/tools/seo/robots-tester",
+          name: "Robots.txt Generator",
+          description: "Generate customizable robots.txt files for controlling search engine crawlers.",
+          icon: FileCode,
+          route: "/tools/seo/robots-generator",
           color: "from-blue-500 to-cyan-500"
+        },
+        {
+          name: "Sitemap Generator",
+          description: "Create simple XML sitemaps from a list of URLs for better search indexing.",
+          icon: MapPin,
+          route: "/tools/seo/sitemap-generator",
+          color: "from-purple-500 to-pink-500"
+        },
+        {
+          name: "Open Graph Preview Tool",
+          description: "Preview how your link will look when shared on social media platforms.",
+          icon: Eye,
+          route: "/tools/seo/og-preview",
+          color: "from-orange-500 to-red-500"
+        },
+        {
+          name: "URL Redirect Checker",
+          description: "Check the redirect path of any URL (301, 302, etc.) and analyze redirect chains.",
+          icon: LinkIcon,
+          route: "/tools/seo/redirect-checker",
+          color: "from-indigo-500 to-purple-500"
+        },
+        {
+          name: "SERP Snippet Preview",
+          description: "Simulate how your page title & meta description will appear in search results.",
+          icon: Monitor,
+          route: "/tools/seo/serp-preview",
+          color: "from-pink-500 to-rose-500"
+        },
+        {
+          name: "Page Size Checker",
+          description: "Calculate the size of a given URL's content and resource weight analysis.",
+          icon: BarChart3,
+          route: "/tools/seo/page-size-checker",
+          color: "from-teal-500 to-cyan-500"
+        },
+        {
+          name: "Broken Link Checker",
+          description: "Scan pasted HTML code for broken anchor tags and invalid links.",
+          icon: AlertTriangle,
+          route: "/tools/seo/broken-link-checker",
+          color: "from-red-500 to-pink-500"
+        },
+        {
+          name: "Alt Tag Checker",
+          description: "Check for missing or empty alt attributes in pasted image HTML code.",
+          icon: ImageOff,
+          route: "/tools/seo/alt-tag-checker",
+          color: "from-amber-500 to-orange-500"
+        },
+        {
+          name: "HTML Meta Tag Analyzer",
+          description: "Analyze pasted HTML code and extract all SEO-relevant meta tags.",
+          icon: Code,
+          route: "/tools/seo/meta-tag-analyzer",
+          color: "from-violet-500 to-purple-500"
         }
       ]
     },
@@ -269,36 +334,49 @@ const Index = () => {
   return (
     <SEOWrapper 
       title="Free Online Tools for Developers & Designers"
-      description="WowsomeTools offers 20+ free online tools for developers, designers, and digital professionals. Text tools, image converters, SEO utilities, code formatters, and more."
+      description="WowsomeTools offers 33+ free online tools for developers, designers, and digital professionals. Text tools, image converters, SEO utilities, code formatters, and more."
       keywords="online tools, developer tools, text converter, image tools, SEO tools, code formatter, color picker, free utilities"
     >
       <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-                WowsomeTools
+        {/* Hero Section - Full viewport height */}
+        <section className="h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+            <div className="animate-fade-in">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight animate-pulse">
+                Wowsome<span className="text-primary bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">Tools</span>
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-                Your ultimate collection of free online tools for developers, designers, 
+              <p className="text-xl md:text-3xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
+                Your ultimate collection of <span className="text-primary font-semibold animate-pulse">free online tools</span> for developers, designers, 
                 and digital professionals. All tools work directly in your browser.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" asChild>
-                  <Link to="#tools">
-                    Explore Tools <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+                <Button size="lg" className="text-lg px-8 py-4 h-auto hover-scale animate-bounce" asChild>
+                  <a href="#tools" className="smooth-scroll">
+                    Explore 30+ Tools <ArrowRight className="ml-2 h-6 w-6" />
+                  </a>
                 </Button>
               </div>
+              <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+                <span className="bg-primary/10 px-3 py-1 rounded-full hover-scale">✨ No Registration</span>
+                <span className="bg-primary/10 px-3 py-1 rounded-full hover-scale">🚀 Works Offline</span>
+                <span className="bg-primary/10 px-3 py-1 rounded-full hover-scale">🔒 Privacy First</span>
+                <span className="bg-primary/10 px-3 py-1 rounded-full hover-scale">💯 Free Forever</span>
+              </div>
             </div>
+          </div>
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#tools" className="smooth-scroll text-muted-foreground hover:text-primary transition-colors">
+              <ChevronDown className="h-8 w-8" />
+            </a>
           </div>
         </section>
 
         {/* Tools Categories Sections */}
-        <section id="tools" className="py-20 bg-background">
+        <section id="tools" className="py-20 bg-gradient-to-b from-background to-muted/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
+            <div className="text-center mb-16 animate-fade-in">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 Choose Your Tools by Category
               </h2>
@@ -315,13 +393,13 @@ const Index = () => {
                 const hasMoreTools = category.tools.length > category.initialCount;
 
                 return (
-                  <div key={key} className="space-y-8">
+                  <div key={key} className="space-y-8 animate-fade-in">
                     {/* Category Header */}
-                    <div className="flex items-center gap-4 mb-8">
-                      <div className={`inline-flex p-4 rounded-xl bg-gradient-to-r ${category.color}`}>
+                    <div className="flex items-center gap-4 mb-8 p-6 bg-gradient-to-r from-muted/50 to-transparent rounded-xl border border-border/50 hover:border-primary/30 transition-all duration-300">
+                      <div className={`inline-flex p-4 rounded-xl bg-gradient-to-r ${category.color} hover-scale`}>
                         <category.icon className="h-8 w-8 text-white" />
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <h3 className="text-2xl md:text-3xl font-bold text-foreground">
                           {category.name}
                         </h3>
@@ -330,7 +408,7 @@ const Index = () => {
                         </p>
                       </div>
                       <div className="ml-auto">
-                        <span className="bg-primary/10 text-primary px-3 py-1 rounded-full font-medium text-sm">
+                        <span className="bg-primary/10 text-primary px-3 py-1 rounded-full font-medium text-sm animate-pulse">
                           {category.tools.length} tools
                         </span>
                       </div>
@@ -341,11 +419,11 @@ const Index = () => {
                       {displayedTools.map((tool, index) => (
                         <Card 
                           key={tool.name} 
-                          className="group hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/20 animate-fade-in"
+                          className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/30 animate-fade-in hover-scale bg-gradient-to-br from-card to-muted/20"
                           style={{ animationDelay: `${index * 0.1}s` }}
                         >
                           <CardContent className="p-6">
-                            <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${tool.color} mb-4`}>
+                            <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${tool.color} mb-4 hover-scale`}>
                               <tool.icon className="h-6 w-6 text-white" />
                             </div>
                             <h4 className="text-lg font-bold text-foreground mb-2">
@@ -356,10 +434,10 @@ const Index = () => {
                             </p>
                             <Button 
                               variant="outline" 
-                              className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                              className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors hover-scale"
                               asChild
                             >
-                              <Link to={tool.route}>
+                              <Link to={tool.route} target="_blank" rel="noopener noreferrer">
                                 Use Tool
                                 <ArrowRight className="ml-2 h-4 w-4" />
                               </Link>
@@ -375,7 +453,7 @@ const Index = () => {
                         <Button 
                           variant="outline"
                           onClick={() => toggleSection(key)}
-                          className="px-8 py-2"
+                          className="px-8 py-2 hover-scale"
                         >
                           {isExpanded ? (
                             <>
@@ -394,25 +472,6 @@ const Index = () => {
                   </div>
                 );
               })}
-            </div>
-
-            <div className="text-center mt-16">
-              <Card className="max-w-2xl mx-auto">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">
-                    All Tools Are Free Forever
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    No registration required. No hidden fees. All tools work directly 
-                    in your browser without uploading data to our servers.
-                  </p>
-                  <Button size="lg" asChild>
-                    <Link to="/tools/text/case-converter">
-                      Try Our Most Popular Tool
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </section>
