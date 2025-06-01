@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SEOWrapper from "@/components/SEOWrapper";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { 
   FileText, 
   Image, 
@@ -16,25 +16,13 @@ import {
 } from "lucide-react";
 
 const Index = () => {
-  const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
-  const toolsRef = useRef<HTMLElement>(null);
-
-  const scrollToTools = () => {
-    if (toolsRef.current) {
-      toolsRef.current.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
-
-  const toggleCategory = (categoryIndex: number) => {
-    setExpandedCategories(prev => 
-      prev.includes(categoryIndex) 
-        ? prev.filter(index => index !== categoryIndex)
-        : [...prev, categoryIndex]
-    );
-  };
+  const [showAllText, setShowAllText] = useState(false);
+  const [showAllImage, setShowAllImage] = useState(false);
+  const [showAllSeo, setShowAllSeo] = useState(false);
+  const [showAllCode, setShowAllCode] = useState(false);
+  const [showAllMath, setShowAllMath] = useState(false);
+  const [showAllColor, setShowAllColor] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState([]);
 
   const textTools = [
     { name: "Case Converter", description: "Convert text between cases", path: "/text/case-converter", icon: FileText },
@@ -166,7 +154,7 @@ const Index = () => {
     {
       title: "Code Tools",
       icon: Code,
-      count: 8,
+      count: 6,
       iconBg: "from-orange-500 to-red-500",
       tools: [
         { name: "JSON Formatter", path: "/code/json-formatter", description: "Format and validate JSON" },
@@ -208,6 +196,90 @@ const Index = () => {
       ]
     }
   ];
+
+  const handleExploreClick = () => {
+    const toolsSection = document.getElementById('tools-section');
+    if (toolsSection) {
+      toolsSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
+  const CategorySection = ({ 
+    title, 
+    icon: Icon, 
+    tools, 
+    showAll, 
+    setShowAll, 
+    iconColor 
+  }: {
+    title: string;
+    icon: any;
+    tools: any[];
+    showAll: boolean;
+    setShowAll: (show: boolean) => void;
+    iconColor: string;
+  }) => {
+    const displayTools = showAll ? tools : tools.slice(0, 6);
+    
+    return (
+      <div className="mb-16 animate-fade-in-up">
+        <div className="flex items-center gap-4 mb-8">
+          <div className={`p-4 ${iconColor} rounded-2xl shadow-lg hover:scale-110 transition-transform duration-300`}>
+            <Icon className="h-8 w-8 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold text-foreground">{title}</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {displayTools.map((tool, index) => {
+            const ToolIcon = tool.icon;
+            return (
+              <Link key={index} to={tool.path} target="_blank" rel="noopener noreferrer">
+                <Card className="hover:shadow-2xl hover:scale-105 transition-all duration-300 h-full bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 group">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <ToolIcon className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">{tool.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{tool.description}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+        
+        {tools.length > 6 && (
+          <div className="text-center">
+            <Button
+              variant="outline"
+              onClick={() => setShowAll(!showAll)}
+              className="gap-2 hover:scale-105 transition-all duration-200"
+              size="lg"
+            >
+              {showAll ? (
+                <>
+                  Show Less <ChevronUp className="h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  Show More {title} <ChevronDown className="h-4 w-4" />
+                </>
+              )}
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <SEOWrapper 
@@ -310,14 +382,9 @@ const Index = () => {
                           <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
                             <CardContent className="p-6">
                               <div className="flex items-start justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                  <div className={`p-2 bg-gradient-to-r ${category.iconBg} rounded-lg shadow-sm`}>
-                                    <Icon className="h-5 w-5 text-white" />
-                                  </div>
-                                  <h4 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
-                                    {tool.name}
-                                  </h4>
-                                </div>
+                                <h4 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
+                                  {tool.name}
+                                </h4>
                                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                   <ArrowRight className="h-4 w-4 text-purple-600" />
                                 </div>
@@ -370,34 +437,215 @@ const Index = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {toolCategories.slice(0, 6).map((category, index) => {
-                const Icon = category.icon;
-                return (
-                  <div key={index} className="animate-fade-in-up">
-                    <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm group">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className={`p-2 bg-gradient-to-r ${category.iconBg} rounded-lg group-hover:scale-110 transition-transform`}>
-                            <Icon className="h-5 w-5 text-white" />
-                          </div>
-                          <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
-                        </div>
-                        <CardTitle className="text-lg group-hover:text-primary transition-colors">{category.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                          {category.title === "Text Tools" && "Convert, count, and analyze text"}
-                          {category.title === "Color Tools" && "Choose colors and create beautiful designs"}
-                          {category.title === "SEO Tools" && "Optimize your website for search engines"}
-                          {category.title === "Code Tools" && "Format, minify, and convert code"}
-                          {category.title === "Math Tools" && "Calculate, convert, and analyze numbers"}
-                          {category.title === "Image Tools" && "Convert, compress, and manipulate images"}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                );
-              })}
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <FileText className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Text Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Convert, count, and analyze text</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Palette className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Color Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Choose colors and create beautiful designs</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Search className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">SEO Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Optimize your website for search engines</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Code className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Code Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Format, minify, and convert code</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Calculator className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Math Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Calculate, convert, and analyze numbers</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Image className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Image Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Convert, compress, and manipulate images</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Stats
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Our tools are used by millions of people every day
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <FileText className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Text Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">50+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Palette className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Color Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">100+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Search className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">SEO Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">100+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Code className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Code Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">60+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Calculator className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Math Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">120+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="animate-fade-in-up">
+                <Card className="h-full hover:shadow-xl hover:scale-105 transition-all duration-300 border-gray-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Image className="h-5 w-5 text-primary" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">Image Tools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">20+ tools available</p>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </section>
