@@ -13,127 +13,73 @@ import {
 } from "lucide-react";
 
 const Categories = () => {
-  const handleSmoothScroll = (targetId: string) => {
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
-
   const categories = [
     {
-      id: "text",
       title: "Text Tools",
       icon: FileText,
       description: "Powerful text manipulation, conversion, and analysis tools",
       color: "from-blue-500 to-cyan-500",
       count: "11 Tools",
       tools: [
-        { name: "Case Converter", path: "/text/case-converter" },
-        { name: "Word Counter", path: "/text/word-counter" },
-        { name: "Lorem Generator", path: "/text/lorem-generator" },
-        { name: "Text Reverser", path: "/text/text-reverser" },
-        { name: "Text Cleaner", path: "/text/text-cleaner" },
-        { name: "Duplicate Line Remover", path: "/text/duplicate-line-remover" },
-        { name: "Text Sorter", path: "/text/text-sorter" },
-        { name: "Word Frequency Counter", path: "/text/word-frequency-counter" },
-        { name: "Find and Replace", path: "/text/find-and-replace" },
-        { name: "Text Encryptor", path: "/text/text-encryptor" },
-        { name: "Text to Binary", path: "/text/text-to-binary" }
+        "Case Converter", "Word Counter", "Lorem Generator", "Text Reverser",
+        "Text Cleaner", "Duplicate Line Remover", "Text Sorter", "Word Frequency Counter",
+        "Find and Replace", "Text Encryptor", "Text to Binary"
       ]
     },
     {
-      id: "color",
       title: "Color Tools", 
       icon: Palette,
       description: "Complete color management, conversion, and design tools",
       color: "from-pink-500 to-rose-500",
       count: "10 Tools",
       tools: [
-        { name: "Color Picker", path: "/color/color-picker" },
-        { name: "HEX Converter", path: "/color/hex-converter" },
-        { name: "Gradient Generator", path: "/color/gradient-generator" },
-        { name: "Palette Generator", path: "/color/palette-generator" },
-        { name: "Contrast Checker", path: "/color/contrast-checker" },
-        { name: "Random Generator", path: "/color/random-generator" },
-        { name: "Shades & Tints", path: "/color/shades-tints" },
-        { name: "CSS Names", path: "/color/css-names" },
-        { name: "Color to Image", path: "/color/color-to-image" },
-        { name: "Color Extractor", path: "/color/color-extractor" }
+        "Color Picker", "HEX Converter", "Gradient Generator", "Palette Generator",
+        "Contrast Checker", "Random Generator", "Shades & Tints", "CSS Names",
+        "Color to Image", "Color Extractor"
       ]
     },
     {
-      id: "seo",
       title: "SEO & Web Tools",
       icon: Search,
       description: "Essential SEO analysis and web optimization tools",
       color: "from-purple-500 to-pink-500", 
       count: "11 Tools",
       tools: [
-        { name: "Meta Tag Generator", path: "/seo/meta-tag-generator" },
-        { name: "Robots.txt Tester", path: "/seo/robots-tester" },
-        { name: "Robots.txt Generator", path: "/seo/robots-generator" },
-        { name: "Sitemap Generator", path: "/seo/sitemap-generator" },
-        { name: "Open Graph Preview", path: "/seo/og-preview" },
-        { name: "URL Redirect Checker", path: "/seo/redirect-checker" },
-        { name: "SERP Preview", path: "/seo/serp-preview" },
-        { name: "Page Size Checker", path: "/seo/page-size-checker" },
-        { name: "Broken Link Checker", path: "/seo/broken-link-checker" },
-        { name: "Alt Tag Checker", path: "/seo/alt-tag-checker" },
-        { name: "Meta Tag Analyzer", path: "/seo/meta-tag-analyzer" }
+        "Meta Tag Generator", "Robots.txt Tester", "Robots.txt Generator", "Sitemap Generator",
+        "Open Graph Preview", "URL Redirect Checker", "SERP Preview", "Page Size Checker",
+        "Broken Link Checker", "Alt Tag Checker", "Meta Tag Analyzer"
       ]
     },
     {
-      id: "code",
       title: "Code Tools",
       icon: Code,
       description: "Code formatting, minification, and development utilities",
       color: "from-orange-500 to-red-500",
-      count: "6 Tools", 
+      count: "4 Tools", 
       tools: [
-        { name: "JSON Formatter", path: "/code/json-formatter" },
-        { name: "CSS Beautifier", path: "/code/css-beautifier" },
-        { name: "JavaScript Minifier", path: "/code/javascript-minifier" },
-        { name: "HTML Minifier", path: "/code/html-minifier" },
-        { name: "HTML Table Generator", path: "/code/html-table-generator" },
-        { name: "Excel to HTML Table", path: "/code/excel-to-html-table" }
+        "JSON Formatter", "CSS Beautifier", "JavaScript Minifier", "HTML Minifier"
       ]
     },
     {
-      id: "math",
       title: "Math & Conversion Tools",
       icon: Calculator,
       description: "Mathematical calculators and unit conversion tools",
       color: "from-indigo-500 to-purple-500",
       count: "12 Tools",
       tools: [
-        { name: "Unit Converter", path: "/math/unit-converter" },
-        { name: "Age Calculator", path: "/math/age-calculator" },
-        { name: "Percentage Calculator", path: "/math/percentage-calculator" },
-        { name: "Scientific Calculator", path: "/math/scientific-calculator" },
-        { name: "Interest Calculator", path: "/math/interest-calculator" },
-        { name: "Quadratic Solver", path: "/math/quadratic-solver" },
-        { name: "Factorial Calculator", path: "/math/factorial-calculator" },
-        { name: "Prime Checker", path: "/math/prime-checker" },
-        { name: "LCM & HCF Finder", path: "/math/lcm-hcf-finder" },
-        { name: "Matrix Calculator", path: "/math/matrix-calculator" },
-        { name: "Base Converter", path: "/math/base-converter" },
-        { name: "Expression Simplifier", path: "/math/expression-simplifier" }
+        "Unit Converter", "Age Calculator", "Percentage Calculator", "Scientific Calculator",
+        "Interest Calculator", "Quadratic Solver", "Factorial Calculator", "Prime Checker",
+        "LCM & HCF Finder", "Matrix Calculator", "Base Converter", "Expression Simplifier"
       ]
     },
     {
-      id: "image",
       title: "Image Tools",
       icon: Image,
       description: "Image processing, conversion, and optimization tools",
       color: "from-green-500 to-emerald-500",
       count: "2 Tools",
       tools: [
-        { name: "Base64 Converter", path: "/image/base64-converter" },
-        { name: "Image Compressor", path: "/image/image-compressor" }
+        "Base64 Converter", "Image Compressor"
       ]
     }
   ];
@@ -158,56 +104,40 @@ const Categories = () => {
           </div>
 
           {/* Categories Grid */}
-          <div className="space-y-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {categories.map((category, index) => {
               const Icon = category.icon;
               return (
-                <section key={index} id={category.id} className="scroll-mt-20">
-                  <Card className="hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 bg-card/50 backdrop-blur-sm border-border/50 group">
-                    <CardHeader className="pb-6">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className={`p-4 bg-gradient-to-r ${category.color} rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
-                          <Icon className="h-8 w-8 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <CardTitle className="text-3xl group-hover:text-primary transition-colors">
-                              {category.title}
-                            </CardTitle>
-                            <div className="text-primary font-medium bg-primary/10 px-3 py-1 rounded-full">
-                              {category.count}
-                            </div>
-                          </div>
-                          <p className="text-muted-foreground group-hover:text-foreground transition-colors mt-2 text-lg">
-                            {category.description}
-                          </p>
-                        </div>
+                <Card key={index} className="hover:shadow-2xl hover:scale-105 transition-all duration-300 bg-card/50 backdrop-blur-sm border-border/50 group">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className={`p-4 bg-gradient-to-r ${category.color} rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
+                        <Icon className="h-8 w-8 text-white" />
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {category.tools.map((tool, toolIndex) => (
-                          <Link 
-                            key={toolIndex} 
-                            to={tool.path}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group/tool"
-                          >
-                            <div className="p-4 rounded-lg border border-border/50 hover:border-primary/50 hover:bg-accent/50 transition-all duration-200 group-hover/tool:scale-105 group-hover/tool:shadow-lg">
-                              <div className="flex items-center justify-between">
-                                <span className="font-medium text-foreground group-hover/tool:text-primary transition-colors">
-                                  {tool.name}
-                                </span>
-                                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover/tool:text-primary transition-colors" />
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-2xl group-hover:text-primary transition-colors">
+                            {category.title}
+                          </CardTitle>
+                          <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                        </div>
+                        <p className="text-sm text-primary font-medium">{category.count}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-                </section>
+                    </div>
+                    <p className="text-muted-foreground group-hover:text-foreground transition-colors">
+                      {category.description}
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-2">
+                      {category.tools.map((tool, toolIndex) => (
+                        <div key={toolIndex} className="text-sm text-muted-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-accent/50">
+                          • {tool}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
