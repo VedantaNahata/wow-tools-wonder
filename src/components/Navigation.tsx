@@ -1,40 +1,11 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Code, Menu, ChevronDown } from "lucide-react";
-import { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Code } from "lucide-react";
 
 const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const handleSmoothScroll = (targetId: string) => {
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-    setIsMenuOpen(false);
-  };
-
-  const categories = [
-    { name: "Text Tools", path: "/categories#text" },
-    { name: "Color Tools", path: "/categories#color" },
-    { name: "SEO Tools", path: "/categories#seo" },
-    { name: "Code Tools", path: "/categories#code" },
-    { name: "Math Tools", path: "/categories#math" },
-    { name: "Image Tools", path: "/categories#image" },
-  ];
-
   return (
-    <nav className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="border-b border-border bg-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center space-x-2">
@@ -44,89 +15,30 @@ const Navigation = () => {
             <span className="text-xl font-bold text-primary">WowsomeTools</span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-8">
             <Link to="/">
               <Button variant="ghost">Home</Button>
             </Link>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="gap-1">
-                  Categories <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-background/95 backdrop-blur-sm border-border z-50">
-                {categories.map((category) => (
-                  <DropdownMenuItem key={category.name} asChild>
-                    <Link to={category.path} className="cursor-pointer">
-                      {category.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuItem asChild>
-                  <Link to="/categories" className="cursor-pointer font-medium">
-                    View All Categories
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Link to="/features">
-              <Button variant="ghost">Features</Button>
+            <Link to="/#tools">
+              <Button variant="ghost">Text Tools</Button>
             </Link>
-            
-            <Link to="/about">
-              <Button variant="ghost">About</Button>
+            <Link to="/#tools">
+              <Button variant="ghost">Image Tools</Button>
             </Link>
-            
-            <Link to="/contact">
-              <Button variant="ghost">Contact</Button>
+            <Link to="/#tools">
+              <Button variant="ghost">SEO Tools</Button>
+            </Link>
+            <Link to="/#tools">
+              <Button variant="ghost">Code Tools</Button>
             </Link>
           </div>
 
           <div className="md:hidden">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
+            <Link to="/#tools">
+              <Button variant="ghost" size="sm">Tools</Button>
+            </Link>
           </div>
         </div>
-
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
-            <div className="flex flex-col space-y-2">
-              <Link to="/">
-                <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
-                  Home
-                </Button>
-              </Link>
-              <Link to="/categories">
-                <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
-                  Categories
-                </Button>
-              </Link>
-              <Link to="/features">
-                <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
-                  Features
-                </Button>
-              </Link>
-              <Link to="/about">
-                <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
-                  About
-                </Button>
-              </Link>
-              <Link to="/contact">
-                <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
-                  Contact
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
       </div>
     </nav>
   );
