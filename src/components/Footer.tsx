@@ -13,7 +13,7 @@ const Footer = () => {
               and digital professionals. All tools are free and work directly in your browser.
             </p>
             <p className="text-sm text-muted-foreground">
-              © 2024 WowsomeTools. All rights reserved.
+              © 2025 WowsomeTools. All rights reserved.
             </p>
           </div>
           
@@ -21,22 +21,22 @@ const Footer = () => {
             <h4 className="text-sm font-semibold mb-4">Popular Tools</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/tools/text/case-converter" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/tools/text/case-converter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   Case Converter
                 </Link>
               </li>
               <li>
-                <Link to="/tools/code/json-formatter" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/tools/code/json-formatter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   JSON Formatter
                 </Link>
               </li>
               <li>
-                <Link to="/tools/color/color-picker" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/tools/color/color-picker" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   Color Picker
                 </Link>
               </li>
               <li>
-                <Link to="/tools/seo/meta-tag-generator" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/tools/seo/meta-tag-generator" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   Meta Tag Generator
                 </Link>
               </li>

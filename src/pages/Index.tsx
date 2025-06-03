@@ -43,7 +43,21 @@ import {
   Monitor,
   AlertTriangle,
   ImageOff,
-  Tags
+  Tags,
+  Percent,
+  SquareRoot,
+  Timer,
+  Plus,
+  Thermometer,
+  Table,
+  Gradient,
+  Contrast,
+  Random,
+  Layers,
+  ColorPicker,
+  Layers3,
+  HexIcon,
+  Undo
 } from "lucide-react";
 
 const Index = () => {
@@ -55,6 +69,16 @@ const Index = () => {
         ? prev.filter(name => name !== sectionName)
         : [...prev, sectionName]
     );
+  };
+
+  const handleExploreClick = () => {
+    const element = document.getElementById('tools');
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
   };
 
   const toolCategories = {
@@ -288,7 +312,7 @@ const Index = () => {
       description: "Calculate and convert units with precision",
       icon: Calculator,
       color: "from-indigo-500 to-purple-500",
-      initialCount: 2,
+      initialCount: 4,
       tools: [
         {
           name: "Unit Converter",
@@ -303,6 +327,76 @@ const Index = () => {
           icon: Calendar,
           route: "/tools/math/age-calculator",
           color: "from-green-500 to-emerald-500"
+        },
+        {
+          name: "Percentage Calculator",
+          description: "Calculate percentage increase, decrease, and proportion values.",
+          icon: Percent,
+          route: "/tools/math/percentage-calculator",
+          color: "from-blue-500 to-cyan-500"
+        },
+        {
+          name: "Scientific Calculator",
+          description: "A full-featured calculator with trigonometric, logarithmic, and power functions.",
+          icon: Calculator,
+          route: "/tools/math/scientific-calculator",
+          color: "from-purple-500 to-pink-500"
+        },
+        {
+          name: "Interest Calculator",
+          description: "Compute simple and compound interest with given principal, rate, and time.",
+          icon: BarChart3,
+          route: "/tools/math/interest-calculator",
+          color: "from-orange-500 to-red-500"
+        },
+        {
+          name: "Quadratic Equation Solver",
+          description: "Solve and visualize roots of quadratic equations.",
+          icon: SquareRoot,
+          route: "/tools/math/quadratic-solver",
+          color: "from-teal-500 to-cyan-500"
+        },
+        {
+          name: "Factorial Calculator",
+          description: "Enter a number and get its factorial instantly.",
+          icon: Plus,
+          route: "/tools/math/factorial-calculator",
+          color: "from-pink-500 to-rose-500"
+        },
+        {
+          name: "Prime Number Checker",
+          description: "Check if a number is prime with detailed explanation.",
+          icon: Hash,
+          route: "/tools/math/prime-checker",
+          color: "from-violet-500 to-purple-500"
+        },
+        {
+          name: "LCM & HCF Finder",
+          description: "Calculate Least Common Multiple and Highest Common Factor.",
+          icon: ArrowUpDown,
+          route: "/tools/math/lcm-hcf-finder",
+          color: "from-amber-500 to-orange-500"
+        },
+        {
+          name: "Matrix Calculator",
+          description: "Add, subtract, or multiply two matrices.",
+          icon: Table,
+          route: "/tools/math/matrix-calculator",
+          color: "from-slate-500 to-gray-500"
+        },
+        {
+          name: "Number Base Converter",
+          description: "Convert between binary, octal, decimal, and hexadecimal.",
+          icon: Binary,
+          route: "/tools/math/base-converter",
+          color: "from-red-500 to-pink-500"
+        },
+        {
+          name: "Algebraic Expression Simplifier",
+          description: "Simplify algebraic expressions like 2x + 3x - 5.",
+          icon: SquareRoot,
+          route: "/tools/math/expression-simplifier",
+          color: "from-green-500 to-emerald-500"
         }
       ]
     },
@@ -311,21 +405,77 @@ const Index = () => {
       description: "Work with colors and create palettes",
       icon: Palette,
       color: "from-pink-500 to-rose-500",
-      initialCount: 2,
+      initialCount: 4,
       tools: [
         {
           name: "Color Picker",
-          description: "Pick and explore colors with our advanced color picker tool.",
-          icon: Pipette,
+          description: "Choose any color and get its HEX, RGB, and HSL values instantly.",
+          icon: ColorPicker,
           route: "/tools/color/color-picker",
           color: "from-pink-500 to-rose-500"
         },
         {
           name: "Hex Converter",
-          description: "Convert colors between HEX, RGB, HSL, and other color formats.",
-          icon: Hash,
+          description: "Convert between HEX, RGB, HSL, and other color formats with live preview.",
+          icon: HexIcon,
           route: "/tools/color/hex-converter",
           color: "from-purple-500 to-pink-500"
+        },
+        {
+          name: "Gradient Generator",
+          description: "Create linear/radial gradients, adjust direction & colors, and copy CSS code.",
+          icon: Gradient,
+          route: "/tools/color/gradient-generator",
+          color: "from-blue-500 to-cyan-500"
+        },
+        {
+          name: "Color Palette Generator",
+          description: "Enter a base color and auto-generate 5-tone harmonious palettes.",
+          icon: Layers,
+          route: "/tools/color/palette-generator",
+          color: "from-green-500 to-emerald-500"
+        },
+        {
+          name: "Contrast Checker Tool",
+          description: "Enter background and text colors to get accessibility rating (WCAG compliance).",
+          icon: Contrast,
+          route: "/tools/color/contrast-checker",
+          color: "from-orange-500 to-red-500"
+        },
+        {
+          name: "Random Color Generator",
+          description: "Click to get a completely random color with its code and preview.",
+          icon: Random,
+          route: "/tools/color/random-generator",
+          color: "from-indigo-500 to-purple-500"
+        },
+        {
+          name: "Shades & Tints Generator",
+          description: "Enter one color and get multiple lighter/darker versions.",
+          icon: Layers3,
+          route: "/tools/color/shades-tints",
+          color: "from-teal-500 to-cyan-500"
+        },
+        {
+          name: "CSS Color Names Explorer",
+          description: "View all 140+ named CSS colors with previews and HEX codes.",
+          icon: Eye,
+          route: "/tools/color/css-names",
+          color: "from-amber-500 to-orange-500"
+        },
+        {
+          name: "Color to Image Generator",
+          description: "Convert a solid color to a downloadable image for backgrounds.",
+          icon: ImageIcon,
+          route: "/tools/color/color-to-image",
+          color: "from-red-500 to-pink-500"
+        },
+        {
+          name: "Color Code Extractor",
+          description: "Upload an image and extract dominant HEX colors using canvas.",
+          icon: Pipette,
+          route: "/tools/color/color-extractor",
+          color: "from-violet-500 to-purple-500"
         }
       ]
     }
@@ -334,7 +484,7 @@ const Index = () => {
   return (
     <SEOWrapper 
       title="Free Online Tools for Developers & Designers"
-      description="WowsomeTools offers 33+ free online tools for developers, designers, and digital professionals. Text tools, image converters, SEO utilities, code formatters, and more."
+      description="WowsomeTools offers 50+ free online tools for developers, designers, and digital professionals. Text tools, image converters, SEO utilities, code formatters, and more."
       keywords="online tools, developer tools, text converter, image tools, SEO tools, code formatter, color picker, free utilities"
     >
       <div className="min-h-screen">
@@ -351,10 +501,8 @@ const Index = () => {
                 and digital professionals. All tools work directly in your browser.
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-                <Button size="lg" className="text-lg px-8 py-4 h-auto" asChild>
-                  <a href="#tools" className="smooth-scroll">
-                    Explore 33+ Tools <ArrowRight className="ml-2 h-6 w-6" />
-                  </a>
+                <Button size="lg" className="text-lg px-8 py-4 h-auto" onClick={handleExploreClick}>
+                  Explore 50+ Tools <ArrowRight className="ml-2 h-6 w-6" />
                 </Button>
                 <Button size="lg" variant="outline" className="text-lg px-8 py-4 h-auto" asChild>
                   <Link to="/tools/text/case-converter" target="_blank" rel="noopener noreferrer">
@@ -441,7 +589,7 @@ const Index = () => {
                               className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                               asChild
                             >
-                              <Link to={tool.route}>
+                              <Link to={tool.route} target="_blank" rel="noopener noreferrer">
                                 Use Tool
                                 <ArrowRight className="ml-2 h-4 w-4" />
                               </Link>
@@ -476,25 +624,6 @@ const Index = () => {
                   </div>
                 );
               })}
-            </div>
-
-            <div className="text-center mt-16">
-              <Card className="max-w-2xl mx-auto">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">
-                    All Tools Are Free Forever
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    No registration required. No hidden fees. All tools work directly 
-                    in your browser without uploading data to our servers.
-                  </p>
-                  <Button size="lg" asChild>
-                    <Link to="/tools/text/case-converter">
-                      Try Our Most Popular Tool
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </section>

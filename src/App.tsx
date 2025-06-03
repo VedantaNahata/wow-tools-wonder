@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -47,10 +48,13 @@ import HtmlMinifier from "./pages/tools/code/HtmlMinifier";
 // Math & Conversion Tools
 import UnitConverter from "./pages/tools/math/UnitConverter";
 import AgeCalculator from "./pages/tools/math/AgeCalculator";
+import PercentageCalculator from "./pages/tools/math/PercentageCalculator";
+import ScientificCalculator from "./pages/tools/math/ScientificCalculator";
 
 // Color Tools
 import ColorPicker from "./pages/tools/color/ColorPicker";
 import HexConverter from "./pages/tools/color/HexConverter";
+import GradientGenerator from "./pages/tools/color/GradientGenerator";
 
 const queryClient = new QueryClient();
 
@@ -105,10 +109,13 @@ const App = () => (
               {/* Math & Conversion Tools */}
               <Route path="/tools/math/unit-converter" element={<UnitConverter />} />
               <Route path="/tools/math/age-calculator" element={<AgeCalculator />} />
+              <Route path="/tools/math/percentage-calculator" element={<PercentageCalculator />} />
+              <Route path="/tools/math/scientific-calculator" element={<ScientificCalculator />} />
               
               {/* Color Tools */}
               <Route path="/tools/color/color-picker" element={<ColorPicker />} />
               <Route path="/tools/color/hex-converter" element={<HexConverter />} />
+              <Route path="/tools/color/gradient-generator" element={<GradientGenerator />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
