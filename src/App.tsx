@@ -70,52 +70,52 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               
-              {/* Text Tools */}
-              <Route path="/tools/text/case-converter" element={<CaseConverter />} />
-              <Route path="/tools/text/word-counter" element={<WordCounter />} />
-              <Route path="/tools/text/lorem-generator" element={<LoremGenerator />} />
-              <Route path="/tools/text/text-reverser" element={<TextReverser />} />
-              <Route path="/tools/text/text-cleaner" element={<TextCleaner />} />
-              <Route path="/tools/text/duplicate-line-remover" element={<DuplicateLineRemover />} />
-              <Route path="/tools/text/text-sorter" element={<TextSorter />} />
-              <Route path="/tools/text/word-frequency-counter" element={<WordFrequencyCounter />} />
-              <Route path="/tools/text/find-and-replace" element={<FindAndReplace />} />
-              <Route path="/tools/text/text-encryptor" element={<TextEncryptor />} />
-              <Route path="/tools/text/text-to-binary" element={<TextToBinary />} />
+              {/* Text Tools - New routing structure */}
+              <Route path="/text/case-converter" element={<CaseConverter />} />
+              <Route path="/text/word-counter" element={<WordCounter />} />
+              <Route path="/text/lorem-generator" element={<LoremGenerator />} />
+              <Route path="/text/text-reverser" element={<TextReverser />} />
+              <Route path="/text/text-cleaner" element={<TextCleaner />} />
+              <Route path="/text/duplicate-line-remover" element={<DuplicateLineRemover />} />
+              <Route path="/text/text-sorter" element={<TextSorter />} />
+              <Route path="/text/word-frequency-counter" element={<WordFrequencyCounter />} />
+              <Route path="/text/find-and-replace" element={<FindAndReplace />} />
+              <Route path="/text/text-encryptor" element={<TextEncryptor />} />
+              <Route path="/text/text-to-binary" element={<TextToBinary />} />
               
               {/* Image Tools */}
-              <Route path="/tools/image/base64-converter" element={<Base64Converter />} />
-              <Route path="/tools/image/image-compressor" element={<ImageCompressor />} />
+              <Route path="/image/base64-converter" element={<Base64Converter />} />
+              <Route path="/image/image-compressor" element={<ImageCompressor />} />
               
               {/* Web & SEO Tools */}
-              <Route path="/tools/seo/meta-tag-generator" element={<MetaTagGenerator />} />
-              <Route path="/tools/seo/robots-tester" element={<RobotsTester />} />
-              <Route path="/tools/seo/robots-generator" element={<RobotsGenerator />} />
-              <Route path="/tools/seo/sitemap-generator" element={<SitemapGenerator />} />
-              <Route path="/tools/seo/og-preview" element={<OgPreview />} />
-              <Route path="/tools/seo/redirect-checker" element={<RedirectChecker />} />
-              <Route path="/tools/seo/serp-preview" element={<SerpPreview />} />
-              <Route path="/tools/seo/page-size-checker" element={<PageSizeChecker />} />
-              <Route path="/tools/seo/broken-link-checker" element={<BrokenLinkChecker />} />
-              <Route path="/tools/seo/alt-tag-checker" element={<AltTagChecker />} />
-              <Route path="/tools/seo/meta-tag-analyzer" element={<MetaTagAnalyzer />} />
+              <Route path="/seo/meta-tag-generator" element={<MetaTagGenerator />} />
+              <Route path="/seo/robots-tester" element={<RobotsTester />} />
+              <Route path="/seo/robots-generator" element={<RobotsGenerator />} />
+              <Route path="/seo/sitemap-generator" element={<SitemapGenerator />} />
+              <Route path="/seo/og-preview" element={<OgPreview />} />
+              <Route path="/seo/redirect-checker" element={<RedirectChecker />} />
+              <Route path="/seo/serp-preview" element={<SerpPreview />} />
+              <Route path="/seo/page-size-checker" element={<PageSizeChecker />} />
+              <Route path="/seo/broken-link-checker" element={<BrokenLinkChecker />} />
+              <Route path="/seo/alt-tag-checker" element={<AltTagChecker />} />
+              <Route path="/seo/meta-tag-analyzer" element={<MetaTagAnalyzer />} />
               
               {/* Code Tools */}
-              <Route path="/tools/code/json-formatter" element={<JsonFormatter />} />
-              <Route path="/tools/code/css-beautifier" element={<CssBeautifier />} />
-              <Route path="/tools/code/javascript-minifier" element={<JavaScriptMinifier />} />
-              <Route path="/tools/code/html-minifier" element={<HtmlMinifier />} />
+              <Route path="/code/json-formatter" element={<JsonFormatter />} />
+              <Route path="/code/css-beautifier" element={<CssBeautifier />} />
+              <Route path="/code/javascript-minifier" element={<JavaScriptMinifier />} />
+              <Route path="/code/html-minifier" element={<HtmlMinifier />} />
               
               {/* Math & Conversion Tools */}
-              <Route path="/tools/math/unit-converter" element={<UnitConverter />} />
-              <Route path="/tools/math/age-calculator" element={<AgeCalculator />} />
-              <Route path="/tools/math/percentage-calculator" element={<PercentageCalculator />} />
-              <Route path="/tools/math/scientific-calculator" element={<ScientificCalculator />} />
+              <Route path="/math/unit-converter" element={<UnitConverter />} />
+              <Route path="/math/age-calculator" element={<AgeCalculator />} />
+              <Route path="/math/percentage-calculator" element={<PercentageCalculator />} />
+              <Route path="/math/scientific-calculator" element={<ScientificCalculator />} />
               
               {/* Color Tools */}
-              <Route path="/tools/color/color-picker" element={<ColorPicker />} />
-              <Route path="/tools/color/hex-converter" element={<HexConverter />} />
-              <Route path="/tools/color/gradient-generator" element={<GradientGenerator />} />
+              <Route path="/color/color-picker" element={<ColorPicker />} />
+              <Route path="/color/hex-converter" element={<HexConverter />} />
+              <Route path="/color/gradient-generator" element={<GradientGenerator />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>

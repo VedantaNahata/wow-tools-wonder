@@ -91,77 +91,77 @@ const Index = () => {
           name: "Case Converter",
           description: "Convert text between uppercase, lowercase, title case, and more formats instantly.",
           icon: Type,
-          route: "/tools/text/case-converter",
+          route: "/text/case-converter",
           color: "from-blue-500 to-cyan-500"
         },
         {
           name: "Word Counter",
           description: "Count words, characters, paragraphs, and reading time in your text.",
           icon: FileText,
-          route: "/tools/text/word-counter",
+          route: "/text/word-counter",
           color: "from-green-500 to-emerald-500"
         },
         {
           name: "Text Reverser",
           description: "Reverse entire text or individual words with multiple reversal options.",
           icon: RotateCcw,
-          route: "/tools/text/text-reverser",
+          route: "/text/text-reverser",
           color: "from-purple-500 to-pink-500"
         },
         {
           name: "Text Cleaner",
           description: "Remove extra spaces, line breaks, and clean up messy text formatting.",
           icon: Eraser,
-          route: "/tools/text/text-cleaner",
+          route: "/text/text-cleaner",
           color: "from-orange-500 to-red-500"
         },
         {
           name: "Lorem Generator",
           description: "Generate Lorem Ipsum placeholder text for your design projects.",
           icon: FileText,
-          route: "/tools/text/lorem-generator",
+          route: "/text/lorem-generator",
           color: "from-violet-500 to-purple-500"
         },
         {
           name: "Duplicate Line Remover",
           description: "Remove duplicate lines from text - perfect for cleaning up lists and code.",
           icon: Copy,
-          route: "/tools/text/duplicate-line-remover",
+          route: "/text/duplicate-line-remover",
           color: "from-indigo-500 to-purple-500"
         },
         {
           name: "Text Sorter",
           description: "Sort lines alphabetically (A-Z, Z-A) or numerically with multiple options.",
           icon: ArrowUpDown,
-          route: "/tools/text/text-sorter",
+          route: "/text/text-sorter",
           color: "from-pink-500 to-rose-500"
         },
         {
           name: "Word Frequency Counter",
           description: "Analyze text and see how often each word appears with detailed statistics.",
           icon: BarChart3,
-          route: "/tools/text/word-frequency-counter",
+          route: "/text/word-frequency-counter",
           color: "from-teal-500 to-cyan-500"
         },
         {
           name: "Find and Replace",
           description: "Search for specific text and replace it with new content instantly.",
           icon: SearchIcon,
-          route: "/tools/text/find-and-replace",
+          route: "/text/find-and-replace",
           color: "from-amber-500 to-orange-500"
         },
         {
           name: "Text Encryptor",
           description: "Encrypt and decrypt text using Caesar cipher or Base64 encoding methods.",
           icon: Shield,
-          route: "/tools/text/text-encryptor",
+          route: "/text/text-encryptor",
           color: "from-red-500 to-pink-500"
         },
         {
           name: "Text to Binary",
           description: "Convert text to binary code and binary back to text with ease.",
           icon: Binary,
-          route: "/tools/text/text-to-binary",
+          route: "/text/text-to-binary",
           color: "from-slate-500 to-gray-500"
         }
       ]
@@ -177,14 +177,14 @@ const Index = () => {
           name: "Base64 Converter",
           description: "Convert images to Base64 format and back for web development and data transfer.",
           icon: ImageIcon,
-          route: "/tools/image/base64-converter",
+          route: "/image/base64-converter",
           color: "from-purple-500 to-pink-500"
         },
         {
           name: "Image Compressor",
           description: "Compress images to reduce file size while maintaining quality.",
           icon: Archive,
-          route: "/tools/image/image-compressor",
+          route: "/image/image-compressor",
           color: "from-green-500 to-emerald-500"
         }
       ]
@@ -200,70 +200,70 @@ const Index = () => {
           name: "Meta Tag Generator",
           description: "Create SEO-optimized meta tags for titles, descriptions, Open Graph, and Twitter Cards.",
           icon: Tags,
-          route: "/tools/seo/meta-tag-generator",
+          route: "/seo/meta-tag-generator",
           color: "from-green-500 to-emerald-500"
         },
         {
           name: "Robots.txt Generator",
           description: "Generate customizable robots.txt files for controlling search engine crawlers.",
           icon: FileCode,
-          route: "/tools/seo/robots-generator",
+          route: "/seo/robots-generator",
           color: "from-blue-500 to-cyan-500"
         },
         {
           name: "Sitemap Generator",
           description: "Create simple XML sitemaps from a list of URLs for better search indexing.",
           icon: MapPin,
-          route: "/tools/seo/sitemap-generator",
+          route: "/seo/sitemap-generator",
           color: "from-purple-500 to-pink-500"
         },
         {
           name: "Open Graph Preview Tool",
           description: "Preview how your link will look when shared on social media platforms.",
           icon: Eye,
-          route: "/tools/seo/og-preview",
+          route: "/seo/og-preview",
           color: "from-orange-500 to-red-500"
         },
         {
           name: "URL Redirect Checker",
           description: "Check the redirect path of any URL (301, 302, etc.) and analyze redirect chains.",
           icon: LinkIcon,
-          route: "/tools/seo/redirect-checker",
+          route: "/seo/redirect-checker",
           color: "from-indigo-500 to-purple-500"
         },
         {
           name: "SERP Snippet Preview",
           description: "Simulate how your page title & meta description will appear in search results.",
           icon: Monitor,
-          route: "/tools/seo/serp-preview",
+          route: "/seo/serp-preview",
           color: "from-pink-500 to-rose-500"
         },
         {
           name: "Page Size Checker",
           description: "Calculate the size of a given URL's content and resource weight analysis.",
           icon: BarChart3,
-          route: "/tools/seo/page-size-checker",
+          route: "/seo/page-size-checker",
           color: "from-teal-500 to-cyan-500"
         },
         {
           name: "Broken Link Checker",
           description: "Scan pasted HTML code for broken anchor tags and invalid links.",
           icon: AlertTriangle,
-          route: "/tools/seo/broken-link-checker",
+          route: "/seo/broken-link-checker",
           color: "from-red-500 to-pink-500"
         },
         {
           name: "Alt Tag Checker",
           description: "Check for missing or empty alt attributes in pasted image HTML code.",
           icon: ImageOff,
-          route: "/tools/seo/alt-tag-checker",
+          route: "/seo/alt-tag-checker",
           color: "from-amber-500 to-orange-500"
         },
         {
           name: "HTML Meta Tag Analyzer",
           description: "Analyze pasted HTML code and extract all SEO-relevant meta tags.",
           icon: Code,
-          route: "/tools/seo/meta-tag-analyzer",
+          route: "/seo/meta-tag-analyzer",
           color: "from-violet-500 to-purple-500"
         }
       ]
@@ -279,28 +279,28 @@ const Index = () => {
           name: "JSON Formatter",
           description: "Format, validate, and beautify JSON data with syntax highlighting.",
           icon: Braces,
-          route: "/tools/code/json-formatter",
+          route: "/code/json-formatter",
           color: "from-orange-500 to-red-500"
         },
         {
           name: "CSS Beautifier",
           description: "Format and beautify CSS code with proper indentation and structure.",
           icon: Paintbrush,
-          route: "/tools/code/css-beautifier",
+          route: "/code/css-beautifier",
           color: "from-blue-500 to-cyan-500"
         },
         {
           name: "JavaScript Minifier",
           description: "Minify JavaScript code by removing whitespace and comments.",
           icon: Zap,
-          route: "/tools/code/javascript-minifier",
+          route: "/code/javascript-minifier",
           color: "from-yellow-500 to-orange-500"
         },
         {
           name: "HTML Minifier",
           description: "Remove unnecessary characters and compress HTML code.",
           icon: Minimize2,
-          route: "/tools/code/html-minifier",
+          route: "/code/html-minifier",
           color: "from-red-500 to-pink-500"
         }
       ]
@@ -316,84 +316,84 @@ const Index = () => {
           name: "Unit Converter",
           description: "Convert between different units of measurement with precision.",
           icon: Ruler,
-          route: "/tools/math/unit-converter",
+          route: "/math/unit-converter",
           color: "from-indigo-500 to-purple-500"
         },
         {
           name: "Age Calculator",
           description: "Calculate age, days lived, and other time-based calculations.",
           icon: Calendar,
-          route: "/tools/math/age-calculator",
+          route: "/math/age-calculator",
           color: "from-green-500 to-emerald-500"
         },
         {
           name: "Percentage Calculator",
           description: "Calculate percentage increase, decrease, and proportion values.",
           icon: Percent,
-          route: "/tools/math/percentage-calculator",
+          route: "/math/percentage-calculator",
           color: "from-blue-500 to-cyan-500"
         },
         {
           name: "Scientific Calculator",
           description: "A full-featured calculator with trigonometric, logarithmic, and power functions.",
           icon: Calculator,
-          route: "/tools/math/scientific-calculator",
+          route: "/math/scientific-calculator",
           color: "from-purple-500 to-pink-500"
         },
         {
           name: "Interest Calculator",
           description: "Compute simple and compound interest with given principal, rate, and time.",
           icon: BarChart3,
-          route: "/tools/math/interest-calculator",
+          route: "/math/interest-calculator",
           color: "from-orange-500 to-red-500"
         },
         {
           name: "Quadratic Equation Solver",
           description: "Solve and visualize roots of quadratic equations.",
           icon: SquareAsterisk,
-          route: "/tools/math/quadratic-solver",
+          route: "/math/quadratic-solver",
           color: "from-teal-500 to-cyan-500"
         },
         {
           name: "Factorial Calculator",
           description: "Enter a number and get its factorial instantly.",
           icon: Plus,
-          route: "/tools/math/factorial-calculator",
+          route: "/math/factorial-calculator",
           color: "from-pink-500 to-rose-500"
         },
         {
           name: "Prime Number Checker",
           description: "Check if a number is prime with detailed explanation.",
           icon: Hash,
-          route: "/tools/math/prime-checker",
+          route: "/math/prime-checker",
           color: "from-violet-500 to-purple-500"
         },
         {
           name: "LCM & HCF Finder",
           description: "Calculate Least Common Multiple and Highest Common Factor.",
           icon: ArrowUpDown,
-          route: "/tools/math/lcm-hcf-finder",
+          route: "/math/lcm-hcf-finder",
           color: "from-amber-500 to-orange-500"
         },
         {
           name: "Matrix Calculator",
           description: "Add, subtract, or multiply two matrices.",
           icon: Table,
-          route: "/tools/math/matrix-calculator",
+          route: "/math/matrix-calculator",
           color: "from-slate-500 to-gray-500"
         },
         {
           name: "Number Base Converter",
           description: "Convert between binary, octal, decimal, and hexadecimal.",
           icon: Binary,
-          route: "/tools/math/base-converter",
+          route: "/math/base-converter",
           color: "from-red-500 to-pink-500"
         },
         {
           name: "Algebraic Expression Simplifier",
           description: "Simplify algebraic expressions like 2x + 3x - 5.",
           icon: SquareAsterisk,
-          route: "/tools/math/expression-simplifier",
+          route: "/math/expression-simplifier",
           color: "from-green-500 to-emerald-500"
         }
       ]
@@ -409,70 +409,70 @@ const Index = () => {
           name: "Color Picker",
           description: "Choose any color and get its HEX, RGB, and HSL values instantly.",
           icon: Droplet,
-          route: "/tools/color/color-picker",
+          route: "/color/color-picker",
           color: "from-pink-500 to-rose-500"
         },
         {
           name: "Hex Converter",
           description: "Convert between HEX, RGB, HSL, and other color formats with live preview.",
-          icon: HashIcon,
-          route: "/tools/color/hex-converter",
+          icon: Hash,
+          route: "/color/hex-converter",
           color: "from-purple-500 to-pink-500"
         },
         {
           name: "Gradient Generator",
           description: "Create linear/radial gradients, adjust direction & colors, and copy CSS code.",
           icon: PaintBucket,
-          route: "/tools/color/gradient-generator",
+          route: "/color/gradient-generator",
           color: "from-blue-500 to-cyan-500"
         },
         {
           name: "Color Palette Generator",
           description: "Enter a base color and auto-generate 5-tone harmonious palettes.",
           icon: Layers,
-          route: "/tools/color/palette-generator",
+          route: "/color/palette-generator",
           color: "from-green-500 to-emerald-500"
         },
         {
           name: "Contrast Checker Tool",
           description: "Enter background and text colors to get accessibility rating (WCAG compliance).",
           icon: Contrast,
-          route: "/tools/color/contrast-checker",
+          route: "/color/contrast-checker",
           color: "from-orange-500 to-red-500"
         },
         {
           name: "Random Color Generator",
           description: "Click to get a completely random color with its code and preview.",
           icon: Shuffle,
-          route: "/tools/color/random-generator",
+          route: "/color/random-generator",
           color: "from-indigo-500 to-purple-500"
         },
         {
           name: "Shades & Tints Generator",
           description: "Enter one color and get multiple lighter/darker versions.",
           icon: Layers,
-          route: "/tools/color/shades-tints",
+          route: "/color/shades-tints",
           color: "from-teal-500 to-cyan-500"
         },
         {
           name: "CSS Color Names Explorer",
           description: "View all 140+ named CSS colors with previews and HEX codes.",
           icon: Eye,
-          route: "/tools/color/css-names",
+          route: "/color/css-names",
           color: "from-amber-500 to-orange-500"
         },
         {
           name: "Color to Image Generator",
           description: "Convert a solid color to a downloadable image for backgrounds.",
           icon: ImageIcon,
-          route: "/tools/color/color-to-image",
+          route: "/color/color-to-image",
           color: "from-red-500 to-pink-500"
         },
         {
           name: "Color Code Extractor",
           description: "Upload an image and extract dominant HEX colors using canvas.",
           icon: Pipette,
-          route: "/tools/color/color-extractor",
+          route: "/color/color-extractor",
           color: "from-violet-500 to-purple-500"
         }
       ]
