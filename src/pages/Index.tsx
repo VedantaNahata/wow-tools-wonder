@@ -450,7 +450,7 @@ const Index = () => {
         {
           name: "Shades & Tints Generator",
           description: "Enter one color and get multiple lighter/darker versions.",
-          icon: Layers3,
+          icon: Layers,
           route: "/tools/color/shades-tints",
           color: "from-teal-500 to-cyan-500"
         },
@@ -501,11 +501,6 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
                 <Button size="lg" className="text-lg px-8 py-4 h-auto" onClick={handleExploreClick}>
                   Explore 50+ Tools <ArrowRight className="ml-2 h-6 w-6" />
-                </Button>
-                <Button size="lg" variant="outline" className="text-lg px-8 py-4 h-auto" asChild>
-                  <Link to="/tools/text/case-converter" target="_blank" rel="noopener noreferrer">
-                    Try Most Popular Tool
-                  </Link>
                 </Button>
               </div>
               <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
