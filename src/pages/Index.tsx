@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -45,18 +44,17 @@ import {
   ImageOff,
   Tags,
   Percent,
-  SquareRoot,
+  SquareAsterisk,
   Timer,
   Plus,
   Thermometer,
   Table,
-  Gradient,
+  PaintBucket,
   Contrast,
-  Random,
+  Shuffle,
   Layers,
-  ColorPicker,
-  Layers3,
-  HexIcon,
+  Droplet,
+  Hash as HashIcon,
   Undo
 } from "lucide-react";
 
@@ -352,7 +350,7 @@ const Index = () => {
         {
           name: "Quadratic Equation Solver",
           description: "Solve and visualize roots of quadratic equations.",
-          icon: SquareRoot,
+          icon: SquareAsterisk,
           route: "/tools/math/quadratic-solver",
           color: "from-teal-500 to-cyan-500"
         },
@@ -394,7 +392,7 @@ const Index = () => {
         {
           name: "Algebraic Expression Simplifier",
           description: "Simplify algebraic expressions like 2x + 3x - 5.",
-          icon: SquareRoot,
+          icon: SquareAsterisk,
           route: "/tools/math/expression-simplifier",
           color: "from-green-500 to-emerald-500"
         }
@@ -410,21 +408,21 @@ const Index = () => {
         {
           name: "Color Picker",
           description: "Choose any color and get its HEX, RGB, and HSL values instantly.",
-          icon: ColorPicker,
+          icon: Droplet,
           route: "/tools/color/color-picker",
           color: "from-pink-500 to-rose-500"
         },
         {
           name: "Hex Converter",
           description: "Convert between HEX, RGB, HSL, and other color formats with live preview.",
-          icon: HexIcon,
+          icon: HashIcon,
           route: "/tools/color/hex-converter",
           color: "from-purple-500 to-pink-500"
         },
         {
           name: "Gradient Generator",
           description: "Create linear/radial gradients, adjust direction & colors, and copy CSS code.",
-          icon: Gradient,
+          icon: PaintBucket,
           route: "/tools/color/gradient-generator",
           color: "from-blue-500 to-cyan-500"
         },
@@ -445,7 +443,7 @@ const Index = () => {
         {
           name: "Random Color Generator",
           description: "Click to get a completely random color with its code and preview.",
-          icon: Random,
+          icon: Shuffle,
           route: "/tools/color/random-generator",
           color: "from-indigo-500 to-purple-500"
         },
