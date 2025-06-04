@@ -492,7 +492,7 @@ const Index = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
             <div className="animate-fade-in">
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight">
-                Wowsome<span className="text-primary">Tools</span>
+                Wowsome <span className="text-primary">Tools</span>
               </h1>
               <p className="text-xl md:text-3xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
                 Your ultimate collection of <span className="text-primary font-semibold">free online tools</span> for developers, designers, 
