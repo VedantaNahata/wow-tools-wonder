@@ -4,6 +4,7 @@ import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
@@ -153,31 +154,31 @@ const CssColorNames = () => {
     { name: "yellowgreen", hex: "#9ACD32" }
   ];
 
-  const filteredColors = cssColors.filter(color => 
-    color.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredColors = cssColors.filter(color =>
+    color.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    color.hex.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    alert(`Copied ${text} to clipboard!`);
+  const copyColor = (value: string) => {
+    navigator.clipboard.writeText(value);
   };
 
   const faqs = [
     {
-      question: "What are CSS color names?",
-      answer: "CSS color names are predefined color keywords that can be used in CSS instead of hex codes, RGB values, or other color formats."
+      question: "Can I use these color names in CSS?",
+      answer: "Yes! All these color names are standard CSS named colors that work in all modern browsers. You can use them directly in CSS like 'color: red;' or 'background-color: lightblue;'"
     },
     {
-      question: "Are CSS color names supported in all browsers?",
-      answer: "Yes, CSS color names are widely supported across all modern browsers and are part of the CSS specification."
+      question: "Are HEX codes better than color names?",
+      answer: "Both work fine, but HEX codes give you access to millions more colors. Named colors are convenient for common colors and quick prototyping."
     }
   ];
 
   return (
     <SEOWrapper
-      title="CSS Color Names Explorer - Browse All CSS Named Colors"
-      description="Explore all 140+ CSS named colors with their hex values. Search, browse, and copy CSS color names and hex codes for your projects."
-      keywords="CSS color names, named colors, CSS colors, color keywords, web colors, HTML colors"
+      title="CSS Color Names Explorer - All Named CSS Colors"
+      description="Browse all 140+ named CSS colors with previews and HEX codes. Copy color names or HEX values for your projects."
+      keywords="css color names, named colors, css colors, web colors, color reference"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -185,7 +186,7 @@ const CssColorNames = () => {
             CSS Color Names Explorer
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Browse and explore all CSS named colors with their corresponding hex values.
+            Browse all 140+ named CSS colors with live previews and HEX codes.
           </p>
         </div>
 
@@ -195,7 +196,7 @@ const CssColorNames = () => {
           <div className="lg:col-span-3">
             <Card>
               <CardHeader>
-                <CardTitle>CSS Color Names ({filteredColors.length} colors)</CardTitle>
+                <CardTitle>CSS Color Names</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
@@ -203,35 +204,42 @@ const CssColorNames = () => {
                   <Input
                     id="search"
                     type="text"
-                    placeholder="Search color names..."
+                    placeholder="Search by name or HEX code..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="text-sm text-muted-foreground">
+                  Showing {filteredColors.length} of {cssColors.length} colors
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredColors.map((color, index) => (
-                    <Card key={index} className="hover:shadow-lg transition-all">
-                      <CardContent className="p-4">
-                        <div 
-                          className="w-full h-16 rounded-lg mb-3 border"
-                          style={{ backgroundColor: color.hex }}
-                        ></div>
-                        <div className="space-y-2">
-                          <div 
-                            className="cursor-pointer p-2 rounded bg-muted hover:bg-muted/80 transition-colors"
-                            onClick={() => copyToClipboard(color.name)}
+                    <Card key={index} className="overflow-hidden">
+                      <div 
+                        className="h-20 cursor-pointer hover:scale-105 transition-transform"
+                        style={{ backgroundColor: color.hex }}
+                        onClick={() => copyColor(color.hex)}
+                      />
+                      <CardContent className="p-3 space-y-2">
+                        <div className="space-y-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyColor(color.name)}
+                            className="w-full justify-start font-mono text-sm"
                           >
-                            <p className="text-sm font-medium">Name:</p>
-                            <p className="font-mono text-xs">{color.name}</p>
-                          </div>
-                          <div 
-                            className="cursor-pointer p-2 rounded bg-muted hover:bg-muted/80 transition-colors"
-                            onClick={() => copyToClipboard(color.hex)}
+                            {color.name}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyColor(color.hex)}
+                            className="w-full justify-start font-mono text-sm"
                           >
-                            <p className="text-sm font-medium">Hex:</p>
-                            <p className="font-mono text-xs">{color.hex}</p>
-                          </div>
+                            {color.hex}
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
@@ -239,8 +247,8 @@ const CssColorNames = () => {
                 </div>
 
                 {filteredColors.length === 0 && (
-                  <div className="text-center py-12">
-                    <p className="text-muted-foreground">No colors found matching your search.</p>
+                  <div className="text-center py-8 text-muted-foreground">
+                    No colors found matching "{searchTerm}"
                   </div>
                 )}
               </CardContent>

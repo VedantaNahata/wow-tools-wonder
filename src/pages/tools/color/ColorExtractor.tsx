@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import AdSenseBox from "@/components/AdSenseBox";
@@ -13,24 +14,20 @@ const ColorExtractor = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageSrc = e.target?.result as string;
-        setImagePreview(imageSrc);
-        extractColors(imageSrc);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert('Please select a valid image file');
-    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imageUrl = e.target?.result as string;
+      setImagePreview(imageUrl);
+      extractColors(imageUrl);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const extractColors = (imageSrc: string) => {
+  const extractColors = (imageUrl: string) => {
     const img = new Image();
     img.onload = () => {
       const canvas = canvasRef.current;
@@ -45,63 +42,72 @@ const ColorExtractor = () => {
 
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const pixels = imageData.data;
-      const colorCount: { [key: string]: number } = {};
-
+      
+      const colorMap = new Map<string, number>();
+      
+      // Sample every 10th pixel for performance
       for (let i = 0; i < pixels.length; i += 40) {
         const r = pixels[i];
         const g = pixels[i + 1];
         const b = pixels[i + 2];
-        const alpha = pixels[i + 3];
-
-        if (alpha < 128) continue;
-
-        const hex = rgbToHex(r, g, b);
-        colorCount[hex] = (colorCount[hex] || 0) + 1;
+        const a = pixels[i + 3];
+        
+        if (a > 128) { // Only consider non-transparent pixels
+          const hex = rgbToHex(r, g, b);
+          colorMap.set(hex, (colorMap.get(hex) || 0) + 1);
+        }
       }
 
-      const sortedColors = Object.entries(colorCount)
-        .sort(([,a], [,b]) => b - a)
+      // Sort by frequency and get top colors
+      const sortedColors = Array.from(colorMap.entries())
+        .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
         .map(([color]) => color);
 
       setExtractedColors(sortedColors);
     };
-    img.src = imageSrc;
+    img.src = imageUrl;
   };
 
   const rgbToHex = (r: number, g: number, b: number): string => {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    return "#" + [r, g, b].map(x => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
+    }).join("");
   };
 
-  const copyToClipboard = (color: string) => {
+  const copyColor = (color: string) => {
     navigator.clipboard.writeText(color);
-    alert(`Copied ${color} to clipboard!`);
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
   };
 
   const faqs = [
     {
-      question: "How does color extraction work?",
-      answer: "The tool analyzes pixel data from your uploaded image and identifies the most frequently occurring colors, then displays them as HEX color codes."
+      question: "What image formats are supported?",
+      answer: "The tool supports JPEG, PNG, GIF, and other common web image formats that can be displayed in a browser canvas."
     },
     {
-      question: "What image formats are supported?",
-      answer: "Most common image formats are supported including PNG, JPG, JPEG, GIF, and WebP."
+      question: "How many colors can be extracted?",
+      answer: "The tool extracts up to 10 dominant colors from your image, ranked by frequency of occurrence in the image."
     }
   ];
 
   return (
     <SEOWrapper
-      title="Color Extractor - Extract Colors from Images"
-      description="Extract dominant HEX colors from any image. Upload an image and get the most prominent color palette with copyable HEX codes."
-      keywords="color extractor, image color picker, dominant colors, hex color extraction, color palette from image"
+      title="Color Extractor from Image - Extract Dominant Colors"
+      description="Upload an image and extract its dominant colors as HEX codes. Perfect for color palette inspiration and design work."
+      keywords="color extractor, extract colors from image, dominant colors, image color palette, color picker from image"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Color Code Extractor
+            Color Extractor from Image
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Extract dominant colors from any image and get their HEX color codes.
+            Upload an image and extract its dominant HEX colors for design inspiration.
           </p>
         </div>
 
@@ -114,70 +120,70 @@ const ColorExtractor = () => {
                 <CardTitle>Color Extractor</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="imageUpload">Upload Image</Label>
-                  <input
+                <div className="space-y-4">
+                  <Input
                     ref={fileInputRef}
-                    id="imageUpload"
                     type="file"
                     accept="image/*"
-                    onChange={handleImageUpload}
-                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                    onChange={handleFileUpload}
+                    className="hidden"
                   />
-                </div>
+                  <Button onClick={triggerFileInput} className="w-full">
+                    Upload Image
+                  </Button>
 
-                <canvas ref={canvasRef} style={{ display: 'none' }} />
+                  <div className="text-sm text-muted-foreground text-center">
+                    JPG, PNG, or GIF up to 5MB
+                  </div>
+                </div>
 
                 {imagePreview && (
                   <div className="space-y-4">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-2">Uploaded Image</h3>
-                      <img 
-                        src={imagePreview} 
-                        alt="Uploaded" 
-                        className="max-w-full h-auto max-h-96 rounded-lg border"
+                    <h3 className="text-lg font-semibold">Source Image</h3>
+                    <div className="flex justify-center">
+                      <img
+                        src={imagePreview}
+                        alt="Uploaded preview"
+                        className="max-h-60 max-w-full rounded border"
                       />
                     </div>
-
-                    {extractedColors.length > 0 && (
-                      <div>
-                        <h3 className="text-lg font-semibold mb-4">Extracted Colors</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                          {extractedColors.map((color, index) => (
-                            <Card key={index} className="cursor-pointer hover:shadow-lg transition-all">
-                              <CardContent className="p-4">
-                                <div 
-                                  className="w-full h-20 rounded-lg mb-2 border"
-                                  style={{ backgroundColor: color }}
-                                ></div>
-                                <p className="text-center font-mono text-sm">{color.toUpperCase()}</p>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="w-full mt-2"
-                                  onClick={() => copyToClipboard(color)}
-                                >
-                                  Copy
-                                </Button>
-                              </CardContent>
-                            </Card>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    <canvas ref={canvasRef} className="hidden" />
                   </div>
                 )}
 
-                {!imagePreview && (
-                  <div className="text-center py-12 border-2 border-dashed border-muted-foreground/30 rounded-lg">
-                    <p className="text-muted-foreground">Upload an image to extract its dominant colors</p>
+                {extractedColors.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Extracted Colors</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                      {extractedColors.map((color, index) => (
+                        <div key={index} className="space-y-2">
+                          <div
+                            className="w-full h-16 rounded border cursor-pointer hover:scale-105 transition-transform"
+                            style={{ backgroundColor: color }}
+                            onClick={() => copyColor(color)}
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => copyColor(color)}
+                            className="w-full font-mono text-xs"
+                          >
+                            {color.toUpperCase()}
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="text-sm text-muted-foreground">
+                      Click any color to copy its HEX code to your clipboard.
+                    </div>
                   </div>
                 )}
               </CardContent>
             </Card>
 
             <div className="mt-8">
-              <ToolFAQ toolName="Color Code Extractor" faqs={faqs} />
+              <ToolFAQ toolName="Color Extractor" faqs={faqs} />
             </div>
           </div>
           <div>

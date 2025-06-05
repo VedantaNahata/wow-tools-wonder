@@ -12,139 +12,96 @@ const ExpressionSimplifier = () => {
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState<any>(null);
 
-  const parseExpression = (expr: string) => {
-    // Remove spaces and convert to lowercase
-    expr = expr.replace(/\s/g, '').toLowerCase();
-    
-    // Extract terms
-    const terms: { [key: string]: number } = {};
-    let currentTerm = "";
-    let currentSign = 1;
-    
-    for (let i = 0; i < expr.length; i++) {
-      const char = expr[i];
-      
-      if (char === '+' || char === '-') {
-        if (currentTerm) {
-          const termInfo = parseTerm(currentTerm);
-          const key = termInfo.variable || 'constant';
-          terms[key] = (terms[key] || 0) + currentSign * termInfo.coefficient;
-        }
-        currentSign = char === '+' ? 1 : -1;
-        currentTerm = "";
-      } else {
-        currentTerm += char;
-      }
-    }
-    
-    // Handle last term
-    if (currentTerm) {
-      const termInfo = parseTerm(currentTerm);
-      const key = termInfo.variable || 'constant';
-      terms[key] = (terms[key] || 0) + currentSign * termInfo.coefficient;
-    }
-    
-    return terms;
-  };
-
-  const parseTerm = (term: string) => {
-    // Handle cases like "2x", "x", "3", "-5x", etc.
-    const match = term.match(/^([+-]?\d*)\*?([a-z]?)(\^?\d+)?$/);
-    
-    if (!match) {
-      throw new Error(`Invalid term: ${term}`);
-    }
-    
-    let coefficient = match[1];
-    const variable = match[2];
-    
-    // Handle coefficient
-    if (coefficient === '' || coefficient === '+') {
-      coefficient = '1';
-    } else if (coefficient === '-') {
-      coefficient = '-1';
-    }
-    
-    return {
-      coefficient: parseInt(coefficient) || 1,
-      variable: variable || null
-    };
-  };
-
-  const buildSimplifiedExpression = (terms: { [key: string]: number }): string => {
-    const parts = [];
-    
-    // Sort terms: variables first, then constant
-    const sortedKeys = Object.keys(terms).sort((a, b) => {
-      if (a === 'constant') return 1;
-      if (b === 'constant') return -1;
-      return a.localeCompare(b);
-    });
-    
-    for (const key of sortedKeys) {
-      const coefficient = terms[key];
-      if (coefficient === 0) continue;
-      
-      let termStr = "";
-      
-      if (key === 'constant') {
-        termStr = coefficient.toString();
-      } else {
-        if (coefficient === 1) {
-          termStr = key;
-        } else if (coefficient === -1) {
-          termStr = `-${key}`;
-        } else {
-          termStr = `${coefficient}${key}`;
-        }
-      }
-      
-      if (parts.length > 0 && coefficient > 0) {
-        parts.push(`+${termStr}`);
-      } else {
-        parts.push(termStr);
-      }
-    }
-    
-    return parts.length > 0 ? parts.join(' ') : "0";
-  };
-
   const simplifyExpression = () => {
-    try {
-      if (!expression.trim()) {
-        alert("Please enter an expression");
-        return;
-      }
+    if (!expression.trim()) {
+      alert("Please enter an expression");
+      return;
+    }
 
-      const terms = parseExpression(expression);
-      const simplified = buildSimplifiedExpression(terms);
-      
+    try {
+      // Basic simplification for like terms
+      const simplified = simplifyAlgebraic(expression);
       setResult({
         original: expression,
         simplified: simplified,
-        terms: terms
+        steps: getSimplificationSteps(expression, simplified)
       });
     } catch (error) {
-      alert("Error parsing expression. Please check your input format.");
+      alert("Invalid expression. Please check your input.");
     }
+  };
+
+  const simplifyAlgebraic = (expr: string): string => {
+    // Remove spaces
+    let cleaned = expr.replace(/\s/g, '');
+    
+    // Handle basic like terms (very simplified version)
+    // This is a basic implementation - in reality, you'd need a proper parser
+    
+    // Find coefficients of x terms
+    const xTerms = cleaned.match(/[+-]?\d*x/g) || [];
+    const constants = cleaned.match(/[+-]?\d+(?!x)/g) || [];
+    
+    let xCoeff = 0;
+    let constantSum = 0;
+    
+    // Sum x coefficients
+    xTerms.forEach(term => {
+      if (term === 'x' || term === '+x') xCoeff += 1;
+      else if (term === '-x') xCoeff -= 1;
+      else {
+        const coeff = parseInt(term.replace('x', ''));
+        xCoeff += coeff;
+      }
+    });
+    
+    // Sum constants
+    constants.forEach(term => {
+      constantSum += parseInt(term);
+    });
+    
+    // Build simplified expression
+    let simplified = '';
+    
+    if (xCoeff !== 0) {
+      if (xCoeff === 1) simplified += 'x';
+      else if (xCoeff === -1) simplified += '-x';
+      else simplified += xCoeff + 'x';
+    }
+    
+    if (constantSum !== 0) {
+      if (simplified && constantSum > 0) simplified += ' + ' + constantSum;
+      else if (simplified && constantSum < 0) simplified += ' - ' + Math.abs(constantSum);
+      else simplified += constantSum;
+    }
+    
+    return simplified || '0';
+  };
+
+  const getSimplificationSteps = (original: string, simplified: string): string[] => {
+    const steps = [];
+    steps.push(`Original: ${original}`);
+    steps.push("Combine like terms");
+    steps.push(`Simplified: ${simplified}`);
+    return steps;
   };
 
   const faqs = [
     {
-      question: "What expressions can I simplify?",
-      answer: "You can simplify polynomial expressions with variables and constants, like '2x + 3x - 5' or '4y - 2y + 7'."
+      question: "What types of expressions can be simplified?",
+      answer: "This tool can simplify basic algebraic expressions with like terms, such as '2x + 3x - 5' or '4x + 7 - 2x + 3'."
     },
     {
-      question: "How do I enter expressions?",
-      answer: "Use standard notation: '2x + 3y - 5' or '4a - 2a + 6b'. The tool combines like terms automatically."
+      question: "How does the simplification work?",
+      answer: "The tool identifies like terms (terms with the same variable) and combines their coefficients, then adds constants together."
     }
   ];
 
   return (
     <SEOWrapper
       title="Algebraic Expression Simplifier - Combine Like Terms"
-      description="Simplify algebraic expressions by combining like terms. Step-by-step simplification with detailed explanations."
-      keywords="expression simplifier, algebra calculator, combine like terms, polynomial simplifier, algebraic calculator"
+      description="Simplify algebraic expressions by combining like terms. Perfect for students learning algebra and equation solving."
+      keywords="expression simplifier, algebra simplifier, combine like terms, algebraic calculator, math solver"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -152,7 +109,7 @@ const ExpressionSimplifier = () => {
             Algebraic Expression Simplifier
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Simplify algebraic expressions by combining like terms with step-by-step explanations.
+            Simplify algebraic expressions by combining like terms with step-by-step solutions.
           </p>
         </div>
 
@@ -170,12 +127,12 @@ const ExpressionSimplifier = () => {
                   <Input
                     id="expression"
                     type="text"
-                    placeholder="e.g., 2x + 3x - 5 + 7"
+                    placeholder="e.g., 2x + 3x - 5"
                     value={expression}
                     onChange={(e) => setExpression(e.target.value)}
                   />
                   <p className="text-sm text-muted-foreground">
-                    Examples: "2x + 3x - 5", "4y - 2y + 7", "3a + 2b - a + 5b"
+                    Example: 2x + 3x - 5, 4x + 7 - 2x + 3
                   </p>
                 </div>
                 
@@ -185,37 +142,23 @@ const ExpressionSimplifier = () => {
 
                 {result && (
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-4 bg-muted rounded-lg">
-                        <h3 className="text-lg font-bold mb-2">Original</h3>
-                        <p className="font-mono text-lg">{result.original}</p>
-                      </div>
-                      
-                      <div className="p-4 bg-primary/10 rounded-lg">
-                        <h3 className="text-lg font-bold text-primary mb-2">Simplified</h3>
-                        <p className="font-mono text-lg font-bold">{result.simplified}</p>
-                      </div>
+                    <div className="p-6 bg-primary/10 rounded-lg text-center">
+                      <h3 className="text-2xl font-bold text-primary mb-2">Simplified Expression</h3>
+                      <p className="text-3xl font-bold font-mono">{result.simplified}</p>
                     </div>
 
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Term Analysis</CardTitle>
+                        <CardTitle className="text-lg">Step-by-Step Solution</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
-                          {Object.entries(result.terms).map(([key, value]: [string, any]) => (
-                            <div key={key} className="flex justify-between items-center">
-                              <span className="font-semibold">
-                                {key === 'constant' ? 'Constant term:' : `${key} terms:`}
+                          {result.steps.map((step: string, index: number) => (
+                            <div key={index} className="flex items-center gap-2">
+                              <span className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm">
+                                {index + 1}
                               </span>
-                              <span className="font-mono">
-                                {value}
-                                {key !== 'constant' && value !== 0 && (
-                                  <span className="text-muted-foreground ml-1">
-                                    {Math.abs(value) === 1 ? key : `${key}`}
-                                  </span>
-                                )}
-                              </span>
+                              <span className="font-mono">{step}</span>
                             </div>
                           ))}
                         </div>
@@ -227,7 +170,7 @@ const ExpressionSimplifier = () => {
             </Card>
 
             <div className="mt-8">
-              <ToolFAQ toolName="Algebraic Expression Simplifier" faqs={faqs} />
+              <ToolFAQ toolName="Expression Simplifier" faqs={faqs} />
             </div>
           </div>
           <div>

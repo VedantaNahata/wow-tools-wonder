@@ -113,6 +113,11 @@ const ScientificCalculator = () => {
     setWaitingForOperand(true);
   };
 
+  const insertConstant = (value: number) => {
+    setDisplay(String(value));
+    setWaitingForOperand(true);
+  };
+
   const faqs = [
     {
       question: "How do I use trigonometric functions?",
@@ -156,7 +161,7 @@ const ScientificCalculator = () => {
                 <div className="max-w-md mx-auto">
                   {/* Display */}
                   <div className="mb-4 p-4 bg-muted rounded-lg">
-                    <div className="text-right text-2xl font-mono">{display}</div>
+                    <div className="text-right text-2xl font-mono overflow-hidden">{display}</div>
                   </div>
 
                   {/* Calculator Buttons */}
@@ -187,14 +192,14 @@ const ScientificCalculator = () => {
                     <Button variant="outline" onClick={() => inputNumber("5")} className="h-12">5</Button>
                     <Button variant="outline" onClick={() => inputNumber("6")} className="h-12">6</Button>
                     <Button variant="outline" onClick={() => performOperation("×")} className="h-12">×</Button>
-                    <Button variant="outline" onClick={() => inputNumber(Math.PI.toString())} className="h-12">π</Button>
+                    <Button variant="outline" onClick={() => insertConstant(Math.PI)} className="h-12">π</Button>
 
                     {/* Row 5 */}
                     <Button variant="outline" onClick={() => inputNumber("1")} className="h-12">1</Button>
                     <Button variant="outline" onClick={() => inputNumber("2")} className="h-12">2</Button>
                     <Button variant="outline" onClick={() => inputNumber("3")} className="h-12">3</Button>
                     <Button variant="outline" onClick={() => performOperation("-")} className="h-12">-</Button>
-                    <Button variant="outline" onClick={() => inputNumber(Math.E.toString())} className="h-12">e</Button>
+                    <Button variant="outline" onClick={() => insertConstant(Math.E)} className="h-12">e</Button>
 
                     {/* Row 6 */}
                     <Button variant="outline" onClick={() => inputNumber("0")} className="h-12 col-span-2">0</Button>

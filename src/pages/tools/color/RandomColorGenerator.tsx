@@ -3,46 +3,39 @@ import { useState } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
 const RandomColorGenerator = () => {
-  const [colors, setColors] = useState<string[]>([]);
-  const [colorCount, setColorCount] = useState("6");
+  const [currentColor, setCurrentColor] = useState("#3B82F6");
+  const [colorHistory, setColorHistory] = useState<string[]>([]);
 
   const generateRandomColor = () => {
-    return "#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    const color = "#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    setCurrentColor(color);
+    setColorHistory(prev => [color, ...prev.slice(0, 9)]);
   };
 
-  const generateColors = () => {
-    const count = parseInt(colorCount) || 6;
-    const newColors = Array.from({ length: count }, generateRandomColor);
-    setColors(newColors);
-  };
-
-  const copyToClipboard = (color: string) => {
+  const copyColor = (color: string) => {
     navigator.clipboard.writeText(color);
-    alert(`Copied ${color} to clipboard!`);
   };
 
   const faqs = [
     {
-      question: "How are random colors generated?",
-      answer: "Random colors are generated using JavaScript's Math.random() function to create random hexadecimal values for RGB components."
+      question: "How random are the colors?",
+      answer: "Colors are generated using JavaScript's Math.random() function, creating truly random RGB values for maximum variety."
     },
     {
-      question: "Can I generate specific types of colors?",
-      answer: "This tool generates completely random colors. For specific color schemes, try our Color Palette Generator tool."
+      question: "Can I save colors I like?",
+      answer: "Click any color in the history to copy it to your clipboard for use in your projects."
     }
   ];
 
   return (
     <SEOWrapper
-      title="Random Color Generator - Generate Random Hex Colors"
-      description="Generate random colors instantly with HEX codes. Perfect for design inspiration, testing, and creative projects."
-      keywords="random color generator, random hex colors, color inspiration, random color picker"
+      title="Random Color Generator - Generate Random Colors"
+      description="Generate completely random colors with previews and HEX codes. Perfect for design inspiration and creative projects."
+      keywords="random color generator, random color, color inspiration, hex color generator"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -50,7 +43,7 @@ const RandomColorGenerator = () => {
             Random Color Generator
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Generate random colors instantly for design inspiration and creative projects.
+            Click to get completely random colors with previews and HEX codes for instant inspiration.
           </p>
         </div>
 
@@ -63,46 +56,45 @@ const RandomColorGenerator = () => {
                 <CardTitle>Random Color Generator</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="flex gap-4 items-end">
+                <div className="text-center space-y-4">
+                  <div 
+                    className="w-full h-48 rounded-lg border mx-auto cursor-pointer hover:scale-105 transition-transform"
+                    style={{ backgroundColor: currentColor }}
+                    onClick={() => copyColor(currentColor)}
+                  />
+                  
                   <div className="space-y-2">
-                    <Label htmlFor="colorCount">Number of Colors</Label>
-                    <Input
-                      id="colorCount"
-                      type="number"
-                      value={colorCount}
-                      onChange={(e) => setColorCount(e.target.value)}
-                      min="1"
-                      max="20"
-                      className="w-32"
-                    />
+                    <p className="text-3xl font-bold font-mono">{currentColor.toUpperCase()}</p>
+                    <p className="text-muted-foreground">Click the color box to copy</p>
                   </div>
-                  <Button onClick={generateColors}>
-                    Generate Random Colors
+
+                  <Button onClick={generateRandomColor} size="lg" className="text-lg px-8 py-3">
+                    Generate Random Color
                   </Button>
                 </div>
 
-                {colors.length > 0 && (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {colors.map((color, index) => (
-                      <Card key={index} className="cursor-pointer hover:shadow-lg transition-all" onClick={() => copyToClipboard(color)}>
-                        <CardContent className="p-4">
-                          <div 
-                            className="w-full h-20 rounded-lg mb-2 border"
+                {colorHistory.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-semibold">Color History</h3>
+                    <div className="grid grid-cols-5 gap-3">
+                      {colorHistory.map((color, index) => (
+                        <div key={index} className="space-y-2">
+                          <div
+                            className="w-full h-16 rounded border cursor-pointer hover:scale-105 transition-transform"
                             style={{ backgroundColor: color }}
-                          ></div>
-                          <p className="text-center font-mono text-sm">{color.toUpperCase()}</p>
-                          <Button variant="outline" size="sm" className="w-full mt-2">
-                            Copy
+                            onClick={() => copyColor(color)}
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => copyColor(color)}
+                            className="w-full font-mono text-xs"
+                          >
+                            {color}
                           </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-
-                {colors.length === 0 && (
-                  <div className="text-center py-12 border-2 border-dashed border-muted-foreground/30 rounded-lg">
-                    <p className="text-muted-foreground">Click "Generate Random Colors" to get started</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </CardContent>

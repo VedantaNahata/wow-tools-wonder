@@ -10,14 +10,17 @@ import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
 const PaletteGenerator = () => {
-  const [baseColor, setBaseColor] = useState("#3b82f6");
+  const [baseColor, setBaseColor] = useState("#3B82F6");
   const [paletteType, setPaletteType] = useState("complementary");
   const [palette, setPalette] = useState<string[]>([]);
 
-  const hexToHsl = (hex: string): [number, number, number] => {
-    const r = parseInt(hex.slice(1, 3), 16) / 255;
-    const g = parseInt(hex.slice(3, 5), 16) / 255;
-    const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const hexToHsl = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return { h: 0, s: 0, l: 0 };
+    
+    const r = parseInt(result[1], 16) / 255;
+    const g = parseInt(result[2], 16) / 255;
+    const b = parseInt(result[3], 16) / 255;
 
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
@@ -34,91 +37,93 @@ const PaletteGenerator = () => {
       h /= 6;
     }
 
-    return [h * 360, s * 100, l * 100];
+    return { h: h * 360, s: s * 100, l: l * 100 };
   };
 
-  const hslToHex = (h: number, s: number, l: number): string => {
-    h /= 360;
+  const hslToHex = (h: number, s: number, l: number) => {
     s /= 100;
     l /= 100;
 
-    const hue2rgb = (p: number, q: number, t: number) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1/6) return p + (q - p) * 6 * t;
-      if (t < 1/2) return q;
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-      return p;
-    };
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = l - c / 2;
+    let r = 0, g = 0, b = 0;
 
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
+    if (0 <= h && h < 60) {
+      r = c; g = x; b = 0;
+    } else if (60 <= h && h < 120) {
+      r = x; g = c; b = 0;
+    } else if (120 <= h && h < 180) {
+      r = 0; g = c; b = x;
+    } else if (180 <= h && h < 240) {
+      r = 0; g = x; b = c;
+    } else if (240 <= h && h < 300) {
+      r = x; g = 0; b = c;
+    } else if (300 <= h && h < 360) {
+      r = c; g = 0; b = x;
+    }
 
-    const r = Math.round(hue2rgb(p, q, h + 1/3) * 255);
-    const g = Math.round(hue2rgb(p, q, h) * 255);
-    const b = Math.round(hue2rgb(p, q, h - 1/3) * 255);
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
 
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
   };
 
   const generatePalette = () => {
-    const [h, s, l] = hexToHsl(baseColor);
-    let colors: string[] = [baseColor];
+    const hsl = hexToHsl(baseColor);
+    const colors = [baseColor];
 
     switch (paletteType) {
       case "complementary":
-        colors.push(hslToHex((h + 180) % 360, s, l));
-        colors.push(hslToHex(h, s * 0.7, l * 1.2));
-        colors.push(hslToHex((h + 180) % 360, s * 0.7, l * 1.2));
-        colors.push(hslToHex(h, s * 0.5, l * 0.8));
+        colors.push(hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l));
+        colors.push(hslToHex(hsl.h, hsl.s * 0.7, Math.min(hsl.l + 20, 90)));
+        colors.push(hslToHex(hsl.h, hsl.s * 0.7, Math.max(hsl.l - 20, 10)));
+        colors.push(hslToHex((hsl.h + 180) % 360, hsl.s * 0.7, hsl.l));
         break;
-      
       case "triadic":
-        colors.push(hslToHex((h + 120) % 360, s, l));
-        colors.push(hslToHex((h + 240) % 360, s, l));
-        colors.push(hslToHex(h, s * 0.6, l * 1.1));
-        colors.push(hslToHex(h, s * 0.8, l * 0.9));
+        colors.push(hslToHex((hsl.h + 120) % 360, hsl.s, hsl.l));
+        colors.push(hslToHex((hsl.h + 240) % 360, hsl.s, hsl.l));
+        colors.push(hslToHex(hsl.h, hsl.s * 0.5, Math.min(hsl.l + 30, 90)));
+        colors.push(hslToHex(hsl.h, hsl.s * 0.5, Math.max(hsl.l - 30, 10)));
         break;
-      
       case "analogous":
-        colors.push(hslToHex((h + 30) % 360, s, l));
-        colors.push(hslToHex((h - 30 + 360) % 360, s, l));
-        colors.push(hslToHex((h + 60) % 360, s * 0.8, l));
-        colors.push(hslToHex((h - 60 + 360) % 360, s * 0.8, l));
+        colors.push(hslToHex((hsl.h + 30) % 360, hsl.s, hsl.l));
+        colors.push(hslToHex((hsl.h - 30 + 360) % 360, hsl.s, hsl.l));
+        colors.push(hslToHex((hsl.h + 60) % 360, hsl.s, hsl.l));
+        colors.push(hslToHex((hsl.h - 60 + 360) % 360, hsl.s, hsl.l));
         break;
-      
       case "monochromatic":
-        colors.push(hslToHex(h, s, Math.min(l * 1.3, 90)));
-        colors.push(hslToHex(h, s, l * 0.7));
-        colors.push(hslToHex(h, s * 0.6, l));
-        colors.push(hslToHex(h, s * 1.2, Math.max(l * 0.5, 10)));
+        colors.push(hslToHex(hsl.h, hsl.s, Math.min(hsl.l + 20, 90)));
+        colors.push(hslToHex(hsl.h, hsl.s, Math.max(hsl.l - 20, 10)));
+        colors.push(hslToHex(hsl.h, Math.min(hsl.s + 20, 100), hsl.l));
+        colors.push(hslToHex(hsl.h, Math.max(hsl.s - 20, 0), hsl.l));
         break;
     }
 
     setPalette(colors);
   };
 
-  const copyToClipboard = (color: string) => {
+  const copyColor = (color: string) => {
     navigator.clipboard.writeText(color);
-    alert(`Copied ${color} to clipboard!`);
   };
 
   const faqs = [
     {
       question: "What are the different palette types?",
-      answer: "Complementary uses opposite colors on the color wheel, Triadic uses three evenly spaced colors, Analogous uses adjacent colors, and Monochromatic uses variations of a single hue."
+      answer: "Complementary uses opposite colors, triadic uses three evenly spaced colors, analogous uses adjacent colors, and monochromatic uses variations of one color."
     },
     {
       question: "How do I use these color palettes?",
-      answer: "These palettes are perfect for web design, branding, interior design, or any project where you need harmonious color combinations."
+      answer: "These palettes are great for web design, branding, and art projects. Click any color to copy its hex code."
     }
   ];
 
   return (
     <SEOWrapper
       title="Color Palette Generator - Create Harmonious Color Schemes"
-      description="Generate beautiful color palettes from any base color. Create complementary, triadic, analogous, and monochromatic color schemes."
-      keywords="color palette generator, color scheme, complementary colors, triadic colors, analogous colors, color harmony"
+      description="Generate beautiful color palettes from a base color. Create complementary, triadic, analogous, and monochromatic color schemes."
+      keywords="color palette generator, color scheme, complementary colors, triadic colors, color harmony"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -126,7 +131,7 @@ const PaletteGenerator = () => {
             Color Palette Generator
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Generate harmonious color palettes from any base color using color theory principles.
+            Enter a base color and auto-generate harmonious color palettes for your designs.
           </p>
         </div>
 
@@ -139,26 +144,24 @@ const PaletteGenerator = () => {
                 <CardTitle>Palette Generator</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="baseColor">Base Color</Label>
                     <div className="flex gap-2">
-                      <Input
-                        id="baseColor"
-                        type="text"
-                        value={baseColor}
-                        onChange={(e) => setBaseColor(e.target.value)}
-                        placeholder="#3b82f6"
-                      />
                       <input
                         type="color"
                         value={baseColor}
                         onChange={(e) => setBaseColor(e.target.value)}
                         className="w-12 h-10 rounded border cursor-pointer"
                       />
+                      <Input
+                        type="text"
+                        value={baseColor}
+                        onChange={(e) => setBaseColor(e.target.value)}
+                      />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label>Palette Type</Label>
                     <Select value={paletteType} onValueChange={setPaletteType}>
@@ -173,25 +176,36 @@ const PaletteGenerator = () => {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  <div className="flex items-end">
+                    <Button onClick={generatePalette} className="w-full">
+                      Generate Palette
+                    </Button>
+                  </div>
                 </div>
 
-                <Button onClick={generatePalette} className="w-full">
-                  Generate Palette
-                </Button>
-
                 {palette.length > 0 && (
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    {palette.map((color, index) => (
-                      <Card key={index} className="cursor-pointer hover:shadow-lg transition-all" onClick={() => copyToClipboard(color)}>
-                        <CardContent className="p-4">
-                          <div 
-                            className="w-full h-20 rounded-lg mb-2 border"
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-semibold">Generated Palette</h3>
+                    <div className="grid grid-cols-5 gap-2">
+                      {palette.map((color, index) => (
+                        <div key={index} className="space-y-2">
+                          <div
+                            className="w-full h-24 rounded border cursor-pointer hover:scale-105 transition-transform"
                             style={{ backgroundColor: color }}
-                          ></div>
-                          <p className="text-center font-mono text-sm">{color.toUpperCase()}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
+                            onClick={() => copyColor(color)}
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => copyColor(color)}
+                            className="w-full font-mono text-xs"
+                          >
+                            {color}
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </CardContent>
