@@ -86,66 +86,66 @@ const App = () => (
               <Route path="/" element={<Index />} />
               
               {/* Text Tools - Updated routing structure */}
-              <Route path="/tools/text/case-converter" element={<CaseConverter />} />
-              <Route path="/tools/text/word-counter" element={<WordCounter />} />
-              <Route path="/tools/text/lorem-generator" element={<LoremGenerator />} />
-              <Route path="/tools/text/text-reverser" element={<TextReverser />} />
-              <Route path="/tools/text/text-cleaner" element={<TextCleaner />} />
-              <Route path="/tools/text/duplicate-line-remover" element={<DuplicateLineRemover />} />
-              <Route path="/tools/text/text-sorter" element={<TextSorter />} />
-              <Route path="/tools/text/word-frequency-counter" element={<WordFrequencyCounter />} />
-              <Route path="/tools/text/find-and-replace" element={<FindAndReplace />} />
-              <Route path="/tools/text/text-encryptor" element={<TextEncryptor />} />
-              <Route path="/tools/text/text-to-binary" element={<TextToBinary />} />
+              <Route path="/text/case-converter" element={<CaseConverter />} />
+              <Route path="/text/word-counter" element={<WordCounter />} />
+              <Route path="/text/lorem-generator" element={<LoremGenerator />} />
+              <Route path="/text/text-reverser" element={<TextReverser />} />
+              <Route path="/text/text-cleaner" element={<TextCleaner />} />
+              <Route path="/text/duplicate-line-remover" element={<DuplicateLineRemover />} />
+              <Route path="/text/text-sorter" element={<TextSorter />} />
+              <Route path="/text/word-frequency-counter" element={<WordFrequencyCounter />} />
+              <Route path="/text/find-and-replace" element={<FindAndReplace />} />
+              <Route path="/text/text-encryptor" element={<TextEncryptor />} />
+              <Route path="/text/text-to-binary" element={<TextToBinary />} />
               
               {/* Image Tools */}
-              <Route path="/tools/image/base64-converter" element={<Base64Converter />} />
-              <Route path="/tools/image/image-compressor" element={<ImageCompressor />} />
+              <Route path="/image/base64-converter" element={<Base64Converter />} />
+              <Route path="/image/image-compressor" element={<ImageCompressor />} />
               
               {/* Web & SEO Tools */}
-              <Route path="/tools/seo/meta-tag-generator" element={<MetaTagGenerator />} />
-              <Route path="/tools/seo/robots-tester" element={<RobotsTester />} />
-              <Route path="/tools/seo/robots-generator" element={<RobotsGenerator />} />
-              <Route path="/tools/seo/sitemap-generator" element={<SitemapGenerator />} />
-              <Route path="/tools/seo/og-preview" element={<OgPreview />} />
-              <Route path="/tools/seo/redirect-checker" element={<RedirectChecker />} />
-              <Route path="/tools/seo/serp-preview" element={<SerpPreview />} />
-              <Route path="/tools/seo/page-size-checker" element={<PageSizeChecker />} />
-              <Route path="/tools/seo/broken-link-checker" element={<BrokenLinkChecker />} />
-              <Route path="/tools/seo/alt-tag-checker" element={<AltTagChecker />} />
-              <Route path="/tools/seo/meta-tag-analyzer" element={<MetaTagAnalyzer />} />
+              <Route path="/seo/meta-tag-generator" element={<MetaTagGenerator />} />
+              <Route path="/seo/robots-tester" element={<RobotsTester />} />
+              <Route path="/seo/robots-generator" element={<RobotsGenerator />} />
+              <Route path="/seo/sitemap-generator" element={<SitemapGenerator />} />
+              <Route path="/seo/og-preview" element={<OgPreview />} />
+              <Route path="/seo/redirect-checker" element={<RedirectChecker />} />
+              <Route path="/seo/serp-preview" element={<SerpPreview />} />
+              <Route path="/seo/page-size-checker" element={<PageSizeChecker />} />
+              <Route path="/seo/broken-link-checker" element={<BrokenLinkChecker />} />
+              <Route path="/seo/alt-tag-checker" element={<AltTagChecker />} />
+              <Route path="/seo/meta-tag-analyzer" element={<MetaTagAnalyzer />} />
               
               {/* Code Tools */}
-              <Route path="/tools/code/json-formatter" element={<JsonFormatter />} />
-              <Route path="/tools/code/css-beautifier" element={<CssBeautifier />} />
-              <Route path="/tools/code/javascript-minifier" element={<JavaScriptMinifier />} />
-              <Route path="/tools/code/html-minifier" element={<HtmlMinifier />} />
+              <Route path="/code/json-formatter" element={<JsonFormatter />} />
+              <Route path="/code/css-beautifier" element={<CssBeautifier />} />
+              <Route path="/code/javascript-minifier" element={<JavaScriptMinifier />} />
+              <Route path="/code/html-minifier" element={<HtmlMinifier />} />
               
               {/* Math & Conversion Tools */}
-              <Route path="/tools/math/unit-converter" element={<UnitConverter />} />
-              <Route path="/tools/math/age-calculator" element={<AgeCalculator />} />
-              <Route path="/tools/math/percentage-calculator" element={<PercentageCalculator />} />
-              <Route path="/tools/math/scientific-calculator" element={<ScientificCalculator />} />
-              <Route path="/tools/math/interest-calculator" element={<InterestCalculator />} />
-              <Route path="/tools/math/factorial-calculator" element={<FactorialCalculator />} />
-              <Route path="/tools/math/quadratic-solver" element={<QuadraticSolver />} />
-              <Route path="/tools/math/prime-checker" element={<PrimeChecker />} />
-              <Route path="/tools/math/lcm-hcf-finder" element={<LcmHcfFinder />} />
-              <Route path="/tools/math/matrix-calculator" element={<MatrixCalculator />} />
-              <Route path="/tools/math/base-converter" element={<BaseConverter />} />
-              <Route path="/tools/math/expression-simplifier" element={<ExpressionSimplifier />} />
+              <Route path="/math/unit-converter" element={<UnitConverter />} />
+              <Route path="/math/age-calculator" element={<AgeCalculator />} />
+              <Route path="/math/percentage-calculator" element={<PercentageCalculator />} />
+              <Route path="/math/scientific-calculator" element={<ScientificCalculator />} />
+              <Route path="/math/interest-calculator" element={<InterestCalculator />} />
+              <Route path="/math/factorial-calculator" element={<FactorialCalculator />} />
+              <Route path="/math/quadratic-solver" element={<QuadraticSolver />} />
+              <Route path="/math/prime-checker" element={<PrimeChecker />} />
+              <Route path="/math/lcm-hcf-finder" element={<LcmHcfFinder />} />
+              <Route path="/math/matrix-calculator" element={<MatrixCalculator />} />
+              <Route path="/math/base-converter" element={<BaseConverter />} />
+              <Route path="/math/expression-simplifier" element={<ExpressionSimplifier />} />
               
               {/* Color Tools */}
-              <Route path="/tools/color/color-picker" element={<ColorPicker />} />
-              <Route path="/tools/color/hex-converter" element={<HexConverter />} />
-              <Route path="/tools/color/gradient-generator" element={<GradientGenerator />} />
-              <Route path="/tools/color/palette-generator" element={<PaletteGenerator />} />
-              <Route path="/tools/color/contrast-checker" element={<ContrastChecker />} />
-              <Route path="/tools/color/random-generator" element={<RandomColorGenerator />} />
-              <Route path="/tools/color/shades-tints" element={<ShadesTintsGenerator />} />
-              <Route path="/tools/color/css-names" element={<CssColorNames />} />
-              <Route path="/tools/color/color-to-image" element={<ColorToImage />} />
-              <Route path="/tools/color/color-extractor" element={<ColorExtractor />} />
+              <Route path="/color/color-picker" element={<ColorPicker />} />
+              <Route path="/color/hex-converter" element={<HexConverter />} />
+              <Route path="/color/gradient-generator" element={<GradientGenerator />} />
+              <Route path="/color/palette-generator" element={<PaletteGenerator />} />
+              <Route path="/color/contrast-checker" element={<ContrastChecker />} />
+              <Route path="/color/random-generator" element={<RandomColorGenerator />} />
+              <Route path="/color/shades-tints" element={<ShadesTintsGenerator />} />
+              <Route path="/color/css-names" element={<CssColorNames />} />
+              <Route path="/color/color-to-image" element={<ColorToImage />} />
+              <Route path="/color/color-extractor" element={<ColorExtractor />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
