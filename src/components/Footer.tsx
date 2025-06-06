@@ -2,6 +2,30 @@
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const handleSmoothScroll = (targetId: string) => {
+    // First navigate to home if not already there
+    if (window.location.pathname !== '/') {
+      window.location.href = '/';
+      setTimeout(() => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  };
+
   return (
     <footer className="bg-muted/30 border-t">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -35,18 +59,30 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="font-medium text-foreground">Categories</h4>
             <div className="space-y-2 text-sm">
-              <a href="#tools" className="block text-muted-foreground hover:text-foreground transition-colors">
+              <button 
+                onClick={() => handleSmoothScroll('text-tools')} 
+                className="block text-muted-foreground hover:text-foreground transition-colors text-left cursor-pointer"
+              >
                 Text Tools
-              </a>
-              <a href="#tools" className="block text-muted-foreground hover:text-foreground transition-colors">
+              </button>
+              <button 
+                onClick={() => handleSmoothScroll('seo-tools')} 
+                className="block text-muted-foreground hover:text-foreground transition-colors text-left cursor-pointer"
+              >
                 SEO Tools
-              </a>
-              <a href="#tools" className="block text-muted-foreground hover:text-foreground transition-colors">
+              </button>
+              <button 
+                onClick={() => handleSmoothScroll('code-tools')} 
+                className="block text-muted-foreground hover:text-foreground transition-colors text-left cursor-pointer"
+              >
                 Code Tools
-              </a>
-              <a href="#tools" className="block text-muted-foreground hover:text-foreground transition-colors">
+              </button>
+              <button 
+                onClick={() => handleSmoothScroll('color-tools')} 
+                className="block text-muted-foreground hover:text-foreground transition-colors text-left cursor-pointer"
+              >
                 Color Tools
-              </a>
+              </button>
             </div>
           </div>
           
@@ -54,12 +90,20 @@ const Footer = () => {
             <h4 className="font-medium text-foreground">Company</h4>
             <div className="space-y-2 text-sm">
               <a 
-                href="https://wowsometools.com" 
+                href="https://wowsometools.com/about" 
                 className="block text-muted-foreground hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 About Us
+              </a>
+              <a 
+                href="https://wowsometools.com/features" 
+                className="block text-muted-foreground hover:text-foreground transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Features
               </a>
               <a 
                 href="https://wowsometools.com/contact" 

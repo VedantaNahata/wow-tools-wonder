@@ -86,6 +86,7 @@ const Index = () => {
       icon: Text,
       color: "from-blue-500 to-cyan-500",
       initialCount: 4,
+      sectionId: "text-tools",
       tools: [
         {
           name: "Case Converter",
@@ -172,6 +173,7 @@ const Index = () => {
       icon: Image,
       color: "from-purple-500 to-pink-500",
       initialCount: 2,
+      sectionId: "image-tools",
       tools: [
         {
           name: "Base64 Converter",
@@ -195,6 +197,7 @@ const Index = () => {
       icon: Search,
       color: "from-green-500 to-emerald-500",
       initialCount: 4,
+      sectionId: "seo-tools",
       tools: [
         {
           name: "Meta Tag Generator",
@@ -273,7 +276,8 @@ const Index = () => {
       description: "Format, minify, and validate your code",
       icon: Code,
       color: "from-orange-500 to-red-500",
-      initialCount: 3,
+      initialCount: 4,
+      sectionId: "code-tools",
       tools: [
         {
           name: "JSON Formatter",
@@ -302,6 +306,62 @@ const Index = () => {
           icon: Minimize2,
           route: "/code/html-minifier",
           color: "from-red-500 to-pink-500"
+        },
+        {
+          name: "JavaScript Beautifier",
+          description: "Format messy JS code into clean, indented code",
+          icon: FileCode,
+          route: "/code/javascript-beautifier",
+          color: "from-green-500 to-emerald-500"
+        },
+        {
+          name: "HTML Beautifier",
+          description: "Auto-format your HTML for better readability",
+          icon: Code,
+          route: "/code/html-beautifier",
+          color: "from-purple-500 to-pink-500"
+        },
+        {
+          name: "CSS Minifier",
+          description: "Minify CSS code to reduce file size for production",
+          icon: Code,
+          route: "/code/css-minifier",
+          color: "from-orange-500 to-red-500"
+        },
+        {
+          name: "HTML Table Generator",
+          description: "Create custom HTML tables by entering rows, columns, and data",
+          icon: Table,
+          route: "/code/html-table-generator",
+          color: "from-indigo-500 to-purple-500"
+        },
+        {
+          name: "Excel to HTML Converter",
+          description: "Paste Excel cells or upload CSV → get responsive HTML table code",
+          icon: Archive,
+          route: "/code/excel-to-html",
+          color: "from-teal-500 to-cyan-500"
+        },
+        {
+          name: "Markdown Table Generator",
+          description: "Create markdown tables via a simple UI, then export the code",
+          icon: Table,
+          route: "/code/markdown-table-generator",
+          color: "from-pink-500 to-rose-500"
+        },
+        {
+          name: "CSV to Table Converter",
+          description: "Paste or upload CSV → view formatted table + export as HTML/Markdown",
+          icon: ArrowUpDown,
+          route: "/code/csv-to-table",
+          color: "from-amber-500 to-orange-500"
+        },
+        {
+          name: "JSON to HTML Table",
+          description: "Paste JSON array of objects → get a clean HTML table",
+          icon: Table,
+          route: "/code/json-to-html-table",
+          color: "from-violet-500 to-purple-500"
         }
       ]
     },
@@ -311,6 +371,7 @@ const Index = () => {
       icon: Calculator,
       color: "from-indigo-500 to-purple-500",
       initialCount: 4,
+      sectionId: "math-tools",
       tools: [
         {
           name: "Unit Converter",
@@ -404,6 +465,7 @@ const Index = () => {
       icon: Palette,
       color: "from-pink-500 to-rose-500",
       initialCount: 4,
+      sectionId: "color-tools",
       tools: [
         {
           name: "Color Picker",
@@ -538,7 +600,7 @@ const Index = () => {
                 const hasMoreTools = category.tools.length > category.initialCount;
 
                 return (
-                  <div key={key} className="space-y-8">
+                  <div key={key} className="space-y-8" id={category.sectionId}>
                     {/* Category Header */}
                     <div className="flex items-center gap-4 mb-8">
                       <div className={`inline-flex p-4 rounded-xl bg-gradient-to-r ${category.color}`}>
