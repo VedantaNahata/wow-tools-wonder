@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -44,6 +43,10 @@ import JsonFormatter from "./pages/tools/code/JsonFormatter";
 import CssBeautifier from "./pages/tools/code/CssBeautifier";
 import JavaScriptMinifier from "./pages/tools/code/JavaScriptMinifier";
 import HtmlMinifier from "./pages/tools/code/HtmlMinifier";
+import JavaScriptBeautifier from "./pages/tools/code/JavaScriptBeautifier";
+import HtmlBeautifier from "./pages/tools/code/HtmlBeautifier";
+import CssMinifier from "./pages/tools/code/CssMinifier";
+import HtmlTableGenerator from "./pages/tools/code/HtmlTableGenerator";
 
 // Math & Conversion Tools
 import UnitConverter from "./pages/tools/math/UnitConverter";
@@ -85,7 +88,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               
-              {/* Text Tools - Updated routing structure */}
+              {/* Text Tools */}
               <Route path="/text/case-converter" element={<CaseConverter />} />
               <Route path="/text/word-counter" element={<WordCounter />} />
               <Route path="/text/lorem-generator" element={<LoremGenerator />} />
@@ -120,6 +123,10 @@ const App = () => (
               <Route path="/code/css-beautifier" element={<CssBeautifier />} />
               <Route path="/code/javascript-minifier" element={<JavaScriptMinifier />} />
               <Route path="/code/html-minifier" element={<HtmlMinifier />} />
+              <Route path="/code/javascript-beautifier" element={<JavaScriptBeautifier />} />
+              <Route path="/code/html-beautifier" element={<HtmlBeautifier />} />
+              <Route path="/code/css-minifier" element={<CssMinifier />} />
+              <Route path="/code/html-table-generator" element={<HtmlTableGenerator />} />
               
               {/* Math & Conversion Tools */}
               <Route path="/math/unit-converter" element={<UnitConverter />} />
