@@ -207,7 +207,7 @@ const CsvToTableConverter = () => {
                       <Checkbox
                         id="headers"
                         checked={hasHeaders}
-                        onCheckedChange={setHasHeaders}
+                        onCheckedChange={(checked) => setHasHeaders(checked === true)}
                       />
                       <Label htmlFor="headers">First row is headers</Label>
                     </div>

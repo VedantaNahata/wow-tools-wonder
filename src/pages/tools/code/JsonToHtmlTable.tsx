@@ -215,7 +215,7 @@ const JsonToHtmlTable = () => {
                     <Checkbox
                       id="headers"
                       checked={includeHeaders}
-                      onCheckedChange={setIncludeHeaders}
+                      onCheckedChange={(checked) => setIncludeHeaders(checked === true)}
                     />
                     <Label htmlFor="headers">Include Headers</Label>
                   </div>
@@ -223,7 +223,7 @@ const JsonToHtmlTable = () => {
                     <Checkbox
                       id="responsive"
                       checked={responsive}
-                      onCheckedChange={setResponsive}
+                      onCheckedChange={(checked) => setResponsive(checked === true)}
                     />
                     <Label htmlFor="responsive">Responsive</Label>
                   </div>
@@ -231,7 +231,7 @@ const JsonToHtmlTable = () => {
                     <Checkbox
                       id="bordered"
                       checked={bordered}
-                      onCheckedChange={setBordered}
+                      onCheckedChange={(checked) => setBordered(checked === true)}
                     />
                     <Label htmlFor="bordered">Bordered</Label>
                   </div>
@@ -239,7 +239,7 @@ const JsonToHtmlTable = () => {
                     <Checkbox
                       id="striped"
                       checked={striped}
-                      onCheckedChange={setStriped}
+                      onCheckedChange={(checked) => setStriped(checked === true)}
                     />
                     <Label htmlFor="striped">Striped Rows</Label>
                   </div>

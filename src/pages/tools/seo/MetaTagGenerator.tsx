@@ -380,7 +380,7 @@ const MetaTagGenerator = () => {
                       <Checkbox
                         id="includeBasic"
                         checked={includeBasic}
-                        onCheckedChange={setIncludeBasic}
+                        onCheckedChange={(checked) => setIncludeBasic(checked === true)}
                       />
                       <Label htmlFor="includeBasic">Basic Tags</Label>
                     </div>
@@ -388,7 +388,7 @@ const MetaTagGenerator = () => {
                       <Checkbox
                         id="includeOG"
                         checked={includeOG}
-                        onCheckedChange={setIncludeOG}
+                        onCheckedChange={(checked) => setIncludeOG(checked === true)}
                       />
                       <Label htmlFor="includeOG">Open Graph</Label>
                     </div>
@@ -396,7 +396,7 @@ const MetaTagGenerator = () => {
                       <Checkbox
                         id="includeTwitter"
                         checked={includeTwitter}
-                        onCheckedChange={setIncludeTwitter}
+                        onCheckedChange={(checked) => setIncludeTwitter(checked === true)}
                       />
                       <Label htmlFor="includeTwitter">Twitter Cards</Label>
                     </div>
@@ -404,7 +404,7 @@ const MetaTagGenerator = () => {
                       <Checkbox
                         id="includeSchema"
                         checked={includeSchema}
-                        onCheckedChange={setIncludeSchema}
+                        onCheckedChange={(checked) => setIncludeSchema(checked === true)}
                       />
                       <Label htmlFor="includeSchema">Schema Markup</Label>
                     </div>
