@@ -78,6 +78,10 @@ import CssColorNames from "./pages/tools/color/CssColorNames";
 import ColorToImage from "./pages/tools/color/ColorToImage";
 import ColorExtractor from "./pages/tools/color/ColorExtractor";
 
+// Add new imports for category pages
+import CodeTools from "./pages/categories/CodeTools";
+import SeoTools from "./pages/categories/SeoTools";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -91,6 +95,10 @@ const App = () => (
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
+              
+              {/* Category Pages */}
+              <Route path="/categories/code-tools" element={<CodeTools />} />
+              <Route path="/categories/seo-tools" element={<SeoTools />} />
               
               {/* Text Tools */}
               <Route path="/text/case-converter" element={<CaseConverter />} />
