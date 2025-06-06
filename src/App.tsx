@@ -47,6 +47,10 @@ import JavaScriptBeautifier from "./pages/tools/code/JavaScriptBeautifier";
 import HtmlBeautifier from "./pages/tools/code/HtmlBeautifier";
 import CssMinifier from "./pages/tools/code/CssMinifier";
 import HtmlTableGenerator from "./pages/tools/code/HtmlTableGenerator";
+import ExcelToHtmlConverter from "./pages/tools/code/ExcelToHtmlConverter";
+import MarkdownTableGenerator from "./pages/tools/code/MarkdownTableGenerator";
+import CsvToTableConverter from "./pages/tools/code/CsvToTableConverter";
+import JsonToHtmlTable from "./pages/tools/code/JsonToHtmlTable";
 
 // Math & Conversion Tools
 import UnitConverter from "./pages/tools/math/UnitConverter";
@@ -127,6 +131,10 @@ const App = () => (
               <Route path="/code/html-beautifier" element={<HtmlBeautifier />} />
               <Route path="/code/css-minifier" element={<CssMinifier />} />
               <Route path="/code/html-table-generator" element={<HtmlTableGenerator />} />
+              <Route path="/code/excel-to-html" element={<ExcelToHtmlConverter />} />
+              <Route path="/code/markdown-table-generator" element={<MarkdownTableGenerator />} />
+              <Route path="/code/csv-to-table" element={<CsvToTableConverter />} />
+              <Route path="/code/json-to-html-table" element={<JsonToHtmlTable />} />
               
               {/* Math & Conversion Tools */}
               <Route path="/math/unit-converter" element={<UnitConverter />} />
