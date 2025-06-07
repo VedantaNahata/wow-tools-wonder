@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { Copy, Download, Eye, Plus, Minus } from "lucide-react";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
@@ -18,6 +20,9 @@ const HtmlTableGenerator = () => {
   const [tableData, setTableData] = useState<string[][]>([]);
   const [output, setOutput] = useState("");
   const [includeCSS, setIncludeCSS] = useState(true);
+  const [tableStyle, setTableStyle] = useState("modern");
+  const [borderStyle, setBorderStyle] = useState("solid");
+  const [tableName, setTableName] = useState("custom-table");
 
   const initializeTable = () => {
     const newData: string[][] = [];
@@ -35,10 +40,72 @@ const HtmlTableGenerator = () => {
     setTableData(newData);
   };
 
+  const addRow = () => {
+    if (tableData.length > 0) {
+      const newRow = Array(cols).fill("").map((_, index) => `Cell ${tableData.length + 1}-${index + 1}`);
+      setTableData([...tableData, newRow]);
+      setRows(rows + 1);
+    }
+  };
+
+  const removeRow = () => {
+    if (tableData.length > 1) {
+      setTableData(tableData.slice(0, -1));
+      setRows(rows - 1);
+    }
+  };
+
+  const addColumn = () => {
+    if (tableData.length > 0) {
+      const newData = tableData.map((row, rowIndex) => {
+        if (rowIndex === 0 && hasHeader) {
+          return [...row, `Header ${row.length + 1}`];
+        }
+        return [...row, `Cell ${rowIndex + 1}-${row.length + 1}`];
+      });
+      setTableData(newData);
+      setCols(cols + 1);
+    }
+  };
+
+  const removeColumn = () => {
+    if (cols > 1 && tableData.length > 0) {
+      const newData = tableData.map(row => row.slice(0, -1));
+      setTableData(newData);
+      setCols(cols - 1);
+    }
+  };
+
   const updateCell = (rowIndex: number, colIndex: number, value: string) => {
     const newData = [...tableData];
     newData[rowIndex][colIndex] = value;
     setTableData(newData);
+  };
+
+  const getTableStyles = () => {
+    const styles = {
+      modern: {
+        border: "1px solid #e5e7eb",
+        borderRadius: "8px",
+        overflow: "hidden",
+        fontFamily: "system-ui, -apple-system, sans-serif"
+      },
+      classic: {
+        border: "2px solid #374151",
+        fontFamily: "Georgia, serif"
+      },
+      minimal: {
+        border: "none",
+        fontFamily: "Arial, sans-serif"
+      },
+      dark: {
+        backgroundColor: "#1f2937",
+        color: "#f9fafb",
+        border: "1px solid #374151",
+        fontFamily: "system-ui, -apple-system, sans-serif"
+      }
+    };
+    return styles[tableStyle as keyof typeof styles] || styles.modern;
   };
 
   const generateHTML = () => {
@@ -50,39 +117,50 @@ const HtmlTableGenerator = () => {
     let html = "";
     
     if (includeCSS) {
+      const baseStyles = getTableStyles();
       html += `<style>
-.custom-table {
+.${tableName} {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
-  font-family: Arial, sans-serif;
+  ${Object.entries(baseStyles).map(([key, value]) => 
+    `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`
+  ).join('\n  ')}
 }
 
-.custom-table th,
-.custom-table td {
-  border: 1px solid #ddd;
+.${tableName} th,
+.${tableName} td {
+  border: 1px ${borderStyle} ${tableStyle === 'dark' ? '#374151' : '#ddd'};
   padding: 12px;
   text-align: left;
 }
 
-.custom-table th {
-  background-color: #f2f2f2;
+.${tableName} th {
+  background-color: ${tableStyle === 'dark' ? '#374151' : '#f2f2f2'};
   font-weight: bold;
 }
 
-.custom-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+.${tableName} tr:nth-child(even) {
+  background-color: ${tableStyle === 'dark' ? '#111827' : '#f9f9f9'};
 }
 
-.custom-table tr:hover {
-  background-color: #f5f5f5;
+.${tableName} tr:hover {
+  background-color: ${tableStyle === 'dark' ? '#1f2937' : '#f5f5f5'};
 }
+
+${tableStyle === 'minimal' ? `
+.${tableName} th,
+.${tableName} td {
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+}
+` : ''}
 </style>
 
 `;
     }
 
-    html += `<table class="custom-table">\n`;
+    html += `<table class="${tableName}">\n`;
     
     if (hasHeader) {
       html += "  <thead>\n    <tr>\n";
@@ -109,37 +187,54 @@ const HtmlTableGenerator = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(output);
-    toast.success("HTML table copied to clipboard!");
+    toast.success("✅ HTML table copied to clipboard!", {
+      duration: 2000,
+    });
+  };
+
+  const downloadHTML = () => {
+    const blob = new Blob([output], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${tableName}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("HTML file downloaded!");
   };
 
   const faqs = [
     {
-      question: "What CSS styling is included?",
-      answer: "The generated CSS includes responsive table styling with borders, padding, hover effects, and alternating row colors for better readability."
+      question: "Can I customize the table styling?",
+      answer: "Yes! Choose from modern, classic, minimal, or dark themes. You can also customize the table name, border style, and include/exclude CSS styling."
     },
     {
-      question: "Can I customize the table styling?",
-      answer: "Yes, the generated CSS can be modified to match your website's design. You can change colors, fonts, spacing, and other styling properties."
+      question: "How do I add or remove rows and columns?",
+      answer: "Use the + and - buttons next to the table to dynamically add or remove rows and columns. You can also modify the numbers in the configuration."
     },
     {
       question: "Is the generated table responsive?",
-      answer: "The basic table structure is provided. For full responsiveness, you may need to add additional CSS media queries for mobile devices."
+      answer: "The basic table structure is provided with modern styling. For full mobile responsiveness, you may need to add additional CSS media queries."
+    },
+    {
+      question: "Can I download the HTML file?",
+      answer: "Yes! Use the download button to save the complete HTML table with styling as a .html file that you can open in any browser."
     }
   ];
 
   return (
     <SEOWrapper
-      title="HTML Table Generator - Create Custom HTML Tables"
-      description="Generate custom HTML tables with styling. Create responsive tables with headers, custom content, and copy the complete HTML code."
-      keywords="html table generator, table creator, html table maker, responsive table, table html code"
+      title="Advanced HTML Table Generator - Create Custom Styled Tables"
+      description="Generate advanced HTML tables with custom styling, themes, and dynamic editing. Download or copy complete HTML code with CSS."
+      keywords="html table generator, advanced table creator, html table maker, responsive table, table html code, css styling"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            HTML Table Generator
+            Advanced HTML Table Generator
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Create custom HTML tables with styling and copy the complete code.
+            Create professional HTML tables with advanced styling options and dynamic editing capabilities.
           </p>
         </div>
 
@@ -154,26 +249,66 @@ const HtmlTableGenerator = () => {
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="rows">Number of Rows</Label>
+                    <Label htmlFor="rows">Rows</Label>
                     <Input
                       id="rows"
                       type="number"
                       min="1"
-                      max="20"
+                      max="50"
                       value={rows}
                       onChange={(e) => setRows(parseInt(e.target.value) || 1)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="cols">Number of Columns</Label>
+                    <Label htmlFor="cols">Columns</Label>
                     <Input
                       id="cols"
                       type="number"
                       min="1"
-                      max="10"
+                      max="20"
                       value={cols}
                       onChange={(e) => setCols(parseInt(e.target.value) || 1)}
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tableName">Table CSS Class</Label>
+                    <Input
+                      id="tableName"
+                      value={tableName}
+                      onChange={(e) => setTableName(e.target.value)}
+                      placeholder="custom-table"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label>Table Style</Label>
+                    <Select value={tableStyle} onValueChange={setTableStyle}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="modern">Modern</SelectItem>
+                        <SelectItem value="classic">Classic</SelectItem>
+                        <SelectItem value="minimal">Minimal</SelectItem>
+                        <SelectItem value="dark">Dark Theme</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Border Style</Label>
+                    <Select value={borderStyle} onValueChange={setBorderStyle}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="solid">Solid</SelectItem>
+                        <SelectItem value="dashed">Dashed</SelectItem>
+                        <SelectItem value="dotted">Dotted</SelectItem>
+                        <SelectItem value="double">Double</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2">
@@ -201,7 +336,23 @@ const HtmlTableGenerator = () => {
 
                 {tableData.length > 0 && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Edit Table Content</h3>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-semibold">Edit Table Content</h3>
+                      <div className="flex gap-2">
+                        <Button onClick={addRow} variant="outline" size="sm">
+                          <Plus className="h-4 w-4 mr-1" /> Row
+                        </Button>
+                        <Button onClick={removeRow} variant="outline" size="sm" disabled={rows <= 1}>
+                          <Minus className="h-4 w-4 mr-1" /> Row
+                        </Button>
+                        <Button onClick={addColumn} variant="outline" size="sm">
+                          <Plus className="h-4 w-4 mr-1" /> Col
+                        </Button>
+                        <Button onClick={removeColumn} variant="outline" size="sm" disabled={cols <= 1}>
+                          <Minus className="h-4 w-4 mr-1" /> Col
+                        </Button>
+                      </div>
+                    </div>
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse border border-gray-300">
                         <tbody>
@@ -223,6 +374,7 @@ const HtmlTableGenerator = () => {
                     </div>
 
                     <Button onClick={generateHTML} className="w-full">
+                      <Eye className="h-4 w-4 mr-2" />
                       Generate HTML Code
                     </Button>
                   </div>
@@ -232,18 +384,25 @@ const HtmlTableGenerator = () => {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <Label>Generated HTML Code</Label>
-                      <Button onClick={copyToClipboard} variant="outline" size="sm">
-                        Copy to Clipboard
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button onClick={copyToClipboard} variant="outline" size="sm">
+                          <Copy className="h-4 w-4 mr-1" />
+                          Copy
+                        </Button>
+                        <Button onClick={downloadHTML} variant="outline" size="sm">
+                          <Download className="h-4 w-4 mr-1" />
+                          Download
+                        </Button>
+                      </div>
                     </div>
                     <Textarea
                       value={output}
                       readOnly
-                      className="min-h-[300px] font-mono bg-muted"
+                      className="min-h-[300px] font-mono bg-muted text-sm"
                     />
                     
                     <div className="border rounded-lg p-4 bg-background">
-                      <h3 className="text-lg font-semibold mb-2">Preview</h3>
+                      <h3 className="text-lg font-semibold mb-2">Live Preview</h3>
                       <div dangerouslySetInnerHTML={{ __html: output }} />
                     </div>
                   </div>
@@ -252,7 +411,7 @@ const HtmlTableGenerator = () => {
             </Card>
 
             <div className="mt-8">
-              <ToolFAQ toolName="HTML Table Generator" faqs={faqs} />
+              <ToolFAQ toolName="Advanced HTML Table Generator" faqs={faqs} />
             </div>
           </div>
           <div>

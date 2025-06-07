@@ -51,12 +51,12 @@ const Navigation = () => {
             <Link to="/">
               <Button variant="ghost">Home</Button>
             </Link>
-            <a href="https://wowsometools.com/features" target="_blank" rel="noopener noreferrer">
+            <Link to="/features" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost">Features</Button>
-            </a>
-            <a href="https://wowsometools.com/about" target="_blank" rel="noopener noreferrer">
+            </Link>
+            <Link to="/about" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost">About</Button>
-            </a>
+            </Link>
             
             {/* Categories Dropdown */}
             <DropdownMenu>
@@ -106,9 +106,9 @@ const Navigation = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <a href="https://wowsometools.com/contact" target="_blank" rel="noopener noreferrer">
+            <Link to="/contact" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost">Contact</Button>
-            </a>
+            </Link>
           </div>
 
           <div className="md:hidden">
@@ -131,16 +131,16 @@ const Navigation = () => {
                   Home
                 </Button>
               </Link>
-              <a href="https://wowsometools.com/features" target="_blank" rel="noopener noreferrer">
+              <Link to="/features" target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
                   Features
                 </Button>
-              </a>
-              <a href="https://wowsometools.com/about" target="_blank" rel="noopener noreferrer">
+              </Link>
+              <Link to="/about" target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
                   About
                 </Button>
-              </a>
+              </Link>
               <Button 
                 variant="ghost" 
                 className="w-full justify-start cursor-pointer"
@@ -148,11 +148,11 @@ const Navigation = () => {
               >
                 All Tools
               </Button>
-              <a href="https://wowsometools.com/contact" target="_blank" rel="noopener noreferrer">
+              <Link to="/contact" target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" className="w-full justify-start" onClick={() => setIsMenuOpen(false)}>
                   Contact
                 </Button>
-              </a>
+              </Link>
             </div>
           </div>
         )}

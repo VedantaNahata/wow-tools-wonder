@@ -89,53 +89,53 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="font-medium text-foreground">Company</h4>
             <div className="space-y-2 text-sm">
-              <a 
-                href="https://wowsometools.com/about" 
+              <Link 
+                to="/about" 
                 className="block text-muted-foreground hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 About Us
-              </a>
-              <a 
-                href="https://wowsometools.com/features" 
+              </Link>
+              <Link 
+                to="/features" 
                 className="block text-muted-foreground hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Features
-              </a>
-              <a 
-                href="https://wowsometools.com/contact" 
+              </Link>
+              <Link 
+                to="/contact" 
                 className="block text-muted-foreground hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Contact
-              </a>
-              <a 
-                href="https://wowsometools.com/privacy" 
+              </Link>
+              <Link 
+                to="/privacy" 
                 className="block text-muted-foreground hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Privacy Policy
-              </a>
-              <a 
-                href="https://wowsometools.com/terms" 
+              </Link>
+              <Link 
+                to="/terms" 
                 className="block text-muted-foreground hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Terms of Service
-              </a>
+              </Link>
             </div>
           </div>
         </div>
         
         <div className="border-t mt-8 pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2025 <a href="https://wowsometools.com" className="hover:text-foreground transition-colors" target="_blank" rel="noopener noreferrer">WowsomeTools</a>. All rights reserved.
+            © 2025 WowsomeTools. All rights reserved.
           </p>
         </div>
       </div>
