@@ -7,20 +7,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
-import { Upload, Download, Archive, Trash2, Zap } from "lucide-react";
+import { Upload, Download, RotateCw, Trash2, FileImage } from "lucide-react";
 
-const ImageCompressor = () => {
+type ImageFormat = 'jpeg' | 'png' | 'webp';
+
+const ImageFormatConverter = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [compressedImageUrl, setCompressedImageUrl] = useState<string>("");
-  const [quality, setQuality] = useState<number>(80);
-  const [compressionType, setCompressionType] = useState<'lossy' | 'lossless'>('lossy');
+  const [convertedImageUrl, setConvertedImageUrl] = useState<string>("");
+  const [outputFormat, setOutputFormat] = useState<ImageFormat>('jpeg');
+  const [quality, setQuality] = useState<number>(90);
+  const [originalFormat, setOriginalFormat] = useState<string>("");
   const [originalSize, setOriginalSize] = useState<number>(0);
-  const [compressedSize, setCompressedSize] = useState<number>(0);
+  const [convertedSize, setConvertedSize] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
+
+  const formats = {
+    jpeg: {
+      label: "JPEG",
+      description: "Best for photos, smaller file size",
+      extension: "jpg",
+      supportsQuality: true
+    },
+    png: {
+      label: "PNG",
+      description: "Best for graphics with transparency",
+      extension: "png",
+      supportsQuality: false
+    },
+    webp: {
+      label: "WebP",
+      description: "Modern format, excellent compression",
+      extension: "webp",
+      supportsQuality: true
+    }
+  };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -34,18 +58,12 @@ const ImageCompressor = () => {
         return;
       }
 
-      if (file.size > 50 * 1024 * 1024) {
-        toast({
-          title: "File too large",
-          description: "Please select an image smaller than 50MB",
-          variant: "destructive"
-        });
-        return;
-      }
-
       setSelectedFile(file);
+      setOriginalFormat(file.type.split('/')[1].toUpperCase());
       setOriginalSize(file.size);
       setPreviewUrl(URL.createObjectURL(file));
+      setConvertedImageUrl("");
+      setConvertedSize(0);
     }
   };
 
@@ -54,8 +72,11 @@ const ImageCompressor = () => {
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
       setSelectedFile(file);
+      setOriginalFormat(file.type.split('/')[1].toUpperCase());
       setOriginalSize(file.size);
       setPreviewUrl(URL.createObjectURL(file));
+      setConvertedImageUrl("");
+      setConvertedSize(0);
     }
   };
 
@@ -63,11 +84,11 @@ const ImageCompressor = () => {
     event.preventDefault();
   };
 
-  const compressImage = async () => {
+  const convertImage = async () => {
     if (!selectedFile) {
       toast({
         title: "No image selected",
-        description: "Please select an image to compress",
+        description: "Please select an image to convert",
         variant: "destructive"
       });
       return;
@@ -87,39 +108,36 @@ const ImageCompressor = () => {
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
 
-        // Apply compression settings
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = compressionType === 'lossless' ? 'high' : 'medium';
+        // Clear canvas with white background for JPEG
+        if (outputFormat === 'jpeg') {
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
         ctx.drawImage(img, 0, 0);
 
-        // Convert to blob with quality setting
-        const outputFormat = selectedFile.type === 'image/png' && compressionType === 'lossless' 
-          ? 'image/png' 
-          : 'image/jpeg';
-        
-        const compressionQuality = compressionType === 'lossless' ? 1.0 : quality / 100;
+        const mimeType = `image/${outputFormat}`;
+        const qualityValue = formats[outputFormat].supportsQuality ? quality / 100 : 1.0;
 
         canvas.toBlob((blob) => {
           if (blob) {
             const url = URL.createObjectURL(blob);
-            setCompressedImageUrl(url);
-            setCompressedSize(blob.size);
+            setConvertedImageUrl(url);
+            setConvertedSize(blob.size);
             setIsProcessing(false);
 
-            const compressionRatio = ((originalSize - blob.size) / originalSize * 100).toFixed(1);
             toast({
-              title: "Compression complete",
-              description: `Size reduced by ${compressionRatio}%`
+              title: "Conversion complete",
+              description: `Successfully converted to ${outputFormat.toUpperCase()}`
             });
           }
-        }, outputFormat, compressionQuality);
+        }, mimeType, qualityValue);
       };
 
       img.onerror = () => {
         setIsProcessing(false);
         toast({
-          title: "Compression failed",
+          title: "Conversion failed",
           description: "Failed to load the image",
           variant: "destructive"
         });
@@ -129,24 +147,22 @@ const ImageCompressor = () => {
     } catch (error) {
       setIsProcessing(false);
       toast({
-        title: "Compression failed",
-        description: "An error occurred during compression",
+        title: "Conversion failed",
+        description: "An error occurred during conversion",
         variant: "destructive"
       });
     }
   };
 
-  const downloadCompressedImage = () => {
-    if (!compressedImageUrl || !selectedFile) return;
+  const downloadConvertedImage = () => {
+    if (!convertedImageUrl || !selectedFile) return;
 
     const link = document.createElement('a');
-    link.href = compressedImageUrl;
+    link.href = convertedImageUrl;
     
-    const extension = compressionType === 'lossless' && selectedFile.type === 'image/png' 
-      ? 'png' 
-      : 'jpg';
     const nameWithoutExt = selectedFile.name.replace(/\.[^/.]+$/, "");
-    link.download = `${nameWithoutExt}_compressed.${extension}`;
+    const extension = formats[outputFormat].extension;
+    link.download = `${nameWithoutExt}.${extension}`;
     
     document.body.appendChild(link);
     link.click();
@@ -154,16 +170,17 @@ const ImageCompressor = () => {
 
     toast({
       title: "Download started",
-      description: "Compressed image has been downloaded"
+      description: "Converted image has been downloaded"
     });
   };
 
   const clearAll = () => {
     setSelectedFile(null);
     setPreviewUrl("");
-    setCompressedImageUrl("");
+    setConvertedImageUrl("");
+    setOriginalFormat("");
     setOriginalSize(0);
-    setCompressedSize(0);
+    setConvertedSize(0);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -177,23 +194,26 @@ const ImageCompressor = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const compressionRatio = originalSize > 0 && compressedSize > 0 
-    ? ((originalSize - compressedSize) / originalSize * 100).toFixed(1)
+  const sizeChange = originalSize > 0 && convertedSize > 0 
+    ? ((convertedSize - originalSize) / originalSize * 100).toFixed(1)
     : '0';
+
+  const sizeChangeText = parseFloat(sizeChange) > 0 ? `+${sizeChange}%` : `${sizeChange}%`;
+  const sizeChangeColor = parseFloat(sizeChange) > 0 ? 'text-destructive' : 'text-green-600';
 
   return (
     <SEOWrapper
-      title="Image Compressor - Compress Images Online"
-      description="Compress images online to reduce file size while maintaining quality. Support for lossy and lossless compression with quality control."
-      keywords="image compressor, compress images, reduce file size, optimize images, image compression"
+      title="Image Format Converter - Convert JPG PNG WebP Online"
+      description="Convert images between JPG, PNG, and WebP formats online. High-quality conversion with customizable settings and instant download."
+      keywords="image converter, jpg to png, png to jpg, webp converter, image format, convert images"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Image Compressor
+            Image Format Converter
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Compress your images to reduce file size while maintaining quality. Choose between lossy and lossless compression.
+            Convert images between JPG, PNG, and WebP formats with customizable quality settings. All processing happens in your browser.
           </p>
         </div>
 
@@ -223,7 +243,7 @@ const ImageCompressor = () => {
                         Drop your image here or click to browse
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Supports JPG, PNG, GIF, WebP (max 50MB)
+                        Supports JPG, PNG, GIF, WebP, BMP
                       </p>
                     </div>
                     <Input
@@ -239,7 +259,7 @@ const ImageCompressor = () => {
                         <div>
                           <p className="font-medium">{selectedFile.name}</p>
                           <p className="text-sm text-muted-foreground">
-                            Original size: {formatFileSize(originalSize)}
+                            {originalFormat} • {formatFileSize(originalSize)}
                           </p>
                         </div>
                         <Button variant="outline" size="sm" onClick={clearAll}>
@@ -252,44 +272,38 @@ const ImageCompressor = () => {
                 </CardContent>
               </Card>
 
-              {/* Compression Settings */}
+              {/* Conversion Settings */}
               {selectedFile && (
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Archive className="h-5 w-5" />
-                      Compression Settings
+                      <RotateCw className="h-5 w-5" />
+                      Conversion Settings
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div>
-                        <Label>Compression Type</Label>
-                        <div className="flex gap-2 mt-2">
-                          <Button
-                            variant={compressionType === 'lossy' ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setCompressionType('lossy')}
-                          >
-                            Lossy (Smaller size)
-                          </Button>
-                          <Button
-                            variant={compressionType === 'lossless' ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setCompressionType('lossless')}
-                          >
-                            Lossless (Better quality)
-                          </Button>
+                        <Label>Output Format</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+                          {Object.entries(formats).map(([key, format]) => (
+                            <Button
+                              key={key}
+                              variant={outputFormat === key ? "default" : "outline"}
+                              className="h-auto p-4 flex flex-col items-start"
+                              onClick={() => setOutputFormat(key as ImageFormat)}
+                            >
+                              <div className="flex items-center gap-2 mb-1">
+                                <FileImage className="h-4 w-4" />
+                                <span className="font-semibold">{format.label}</span>
+                              </div>
+                              <span className="text-xs text-left">{format.description}</span>
+                            </Button>
+                          ))}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {compressionType === 'lossy' 
-                            ? 'Reduces file size more but may slightly reduce quality'
-                            : 'Maintains original quality but larger file size'
-                          }
-                        </p>
                       </div>
 
-                      {compressionType === 'lossy' && (
+                      {formats[outputFormat].supportsQuality && (
                         <div>
                           <Label htmlFor="quality">Quality: {quality}%</Label>
                           <Input
@@ -309,9 +323,9 @@ const ImageCompressor = () => {
                         </div>
                       )}
 
-                      <Button onClick={compressImage} disabled={isProcessing} className="w-full">
-                        <Zap className="h-4 w-4 mr-2" />
-                        {isProcessing ? "Compressing..." : "Compress Image"}
+                      <Button onClick={convertImage} disabled={isProcessing} className="w-full">
+                        <RotateCw className="h-4 w-4 mr-2" />
+                        {isProcessing ? "Converting..." : `Convert to ${outputFormat.toUpperCase()}`}
                       </Button>
                     </div>
                   </CardContent>
@@ -319,31 +333,33 @@ const ImageCompressor = () => {
               )}
 
               {/* Results */}
-              {compressedImageUrl && (
+              {convertedImageUrl && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Compression Results</CardTitle>
+                    <CardTitle>Conversion Results</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                         <div className="p-4 bg-muted/50 rounded-lg">
-                          <p className="text-sm text-muted-foreground">Original Size</p>
-                          <p className="text-lg font-semibold">{formatFileSize(originalSize)}</p>
+                          <p className="text-sm text-muted-foreground">Original</p>
+                          <p className="text-lg font-semibold">{originalFormat}</p>
+                          <p className="text-sm">{formatFileSize(originalSize)}</p>
                         </div>
                         <div className="p-4 bg-muted/50 rounded-lg">
-                          <p className="text-sm text-muted-foreground">Compressed Size</p>
-                          <p className="text-lg font-semibold">{formatFileSize(compressedSize)}</p>
+                          <p className="text-sm text-muted-foreground">Converted</p>
+                          <p className="text-lg font-semibold">{outputFormat.toUpperCase()}</p>
+                          <p className="text-sm">{formatFileSize(convertedSize)}</p>
                         </div>
                         <div className="p-4 bg-primary/10 rounded-lg">
-                          <p className="text-sm text-muted-foreground">Size Reduction</p>
-                          <p className="text-lg font-semibold text-primary">{compressionRatio}%</p>
+                          <p className="text-sm text-muted-foreground">Size Change</p>
+                          <p className={`text-lg font-semibold ${sizeChangeColor}`}>{sizeChangeText}</p>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="text-center">
-                          <p className="font-medium mb-2">Original</p>
+                          <p className="font-medium mb-2">Original ({originalFormat})</p>
                           <img
                             src={previewUrl}
                             alt="Original"
@@ -351,18 +367,18 @@ const ImageCompressor = () => {
                           />
                         </div>
                         <div className="text-center">
-                          <p className="font-medium mb-2">Compressed</p>
+                          <p className="font-medium mb-2">Converted ({outputFormat.toUpperCase()})</p>
                           <img
-                            src={compressedImageUrl}
-                            alt="Compressed"
+                            src={convertedImageUrl}
+                            alt="Converted"
                             className="max-w-full max-h-64 mx-auto rounded border"
                           />
                         </div>
                       </div>
 
-                      <Button onClick={downloadCompressedImage} className="w-full">
+                      <Button onClick={downloadConvertedImage} className="w-full">
                         <Download className="h-4 w-4 mr-2" />
-                        Download Compressed Image
+                        Download {outputFormat.toUpperCase()} Image
                       </Button>
                     </div>
                   </CardContent>
@@ -370,6 +386,44 @@ const ImageCompressor = () => {
               )}
 
               <canvas ref={canvasRef} className="hidden" />
+
+              {/* Format Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Format Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold text-primary mb-2">JPEG</h4>
+                      <ul className="space-y-1 text-muted-foreground">
+                        <li>• Best for photographs</li>
+                        <li>• Smaller file sizes</li>
+                        <li>• No transparency support</li>
+                        <li>• Lossy compression</li>
+                      </ul>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold text-primary mb-2">PNG</h4>
+                      <ul className="space-y-1 text-muted-foreground">
+                        <li>• Best for graphics/logos</li>
+                        <li>• Supports transparency</li>
+                        <li>• Larger file sizes</li>
+                        <li>• Lossless compression</li>
+                      </ul>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold text-primary mb-2">WebP</h4>
+                      <ul className="space-y-1 text-muted-foreground">
+                        <li>• Modern web format</li>
+                        <li>• Excellent compression</li>
+                        <li>• Supports transparency</li>
+                        <li>• Both lossy & lossless</li>
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
           <div>
@@ -381,4 +435,4 @@ const ImageCompressor = () => {
   );
 };
 
-export default ImageCompressor;
+export default ImageFormatConverter;

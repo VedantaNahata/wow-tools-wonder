@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import Navigation from "@/components/Navigation";
@@ -17,6 +18,11 @@ import ColorPicker from "@/pages/tools/color/ColorPicker";
 import ImageCompressor from "@/pages/tools/image/ImageCompressor";
 import Base64Converter from "@/pages/tools/image/Base64Converter";
 import RobotsTester from "@/pages/tools/seo/RobotsTester";
+import ImageToBase64 from "@/pages/tools/image/ImageToBase64";
+import Base64ToImage from "@/pages/tools/image/Base64ToImage";
+import ImageResizer from "@/pages/tools/image/ImageResizer";
+import ImageCropper from "@/pages/tools/image/ImageCropper";
+import ImageFormatConverter from "@/pages/tools/image/ImageFormatConverter";
 
 function App() {
   return (
@@ -39,6 +45,11 @@ function App() {
             <Route path="/color/color-picker" element={<ColorPicker />} />
             <Route path="/image/image-compressor" element={<ImageCompressor />} />
             <Route path="/image/base64-converter" element={<Base64Converter />} />
+            <Route path="/image/image-to-base64" element={<ImageToBase64 />} />
+            <Route path="/image/base64-to-image" element={<Base64ToImage />} />
+            <Route path="/image/image-resizer" element={<ImageResizer />} />
+            <Route path="/image/image-cropper" element={<ImageCropper />} />
+            <Route path="/image/format-converter" element={<ImageFormatConverter />} />
             <Route path="/seo/robots-tester" element={<RobotsTester />} />
             
             <Route path="*" element={<NotFound />} />

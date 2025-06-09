@@ -55,7 +55,11 @@ import {
   Layers,
   Droplet,
   Hash as HashIcon,
-  Undo
+  Undo,
+  Crop,
+  RotateCw,
+  ImageDown,
+  ImageUp
 } from "lucide-react";
 
 const Index = () => {
@@ -172,22 +176,50 @@ const Index = () => {
       description: "Process and convert images effortlessly",
       icon: Image,
       color: "from-purple-500 to-pink-500",
-      initialCount: 2,
+      initialCount: 4,
       sectionId: "image-tools",
       tools: [
         {
-          name: "Base64 Converter",
-          description: "Convert images to Base64 format and back for web development and data transfer.",
-          icon: ImageIcon,
-          route: "/image/base64-converter",
+          name: "Image to Base64 Converter",
+          description: "Upload any image and instantly convert it to Base64 string with download option.",
+          icon: ImageUp,
+          route: "/image/image-to-base64",
           color: "from-purple-500 to-pink-500"
         },
         {
+          name: "Base64 to Image Viewer",
+          description: "Paste Base64 string to preview and download the decoded image instantly.",
+          icon: ImageDown,
+          route: "/image/base64-to-image",
+          color: "from-blue-500 to-cyan-500"
+        },
+        {
+          name: "Image Resizer Tool",
+          description: "Resize images to custom dimensions while maintaining aspect ratio or stretching.",
+          icon: Image,
+          route: "/image/image-resizer",
+          color: "from-green-500 to-emerald-500"
+        },
+        {
           name: "Image Compressor",
-          description: "Compress images to reduce file size while maintaining quality.",
+          description: "Compress images with quality control using lossy or lossless compression.",
           icon: Archive,
           route: "/image/image-compressor",
-          color: "from-green-500 to-emerald-500"
+          color: "from-orange-500 to-red-500"
+        },
+        {
+          name: "Image Cropper Tool",
+          description: "Crop images to specific ratios (1:1, 16:9, custom) with interactive preview.",
+          icon: Crop,
+          route: "/image/image-cropper",
+          color: "from-indigo-500 to-purple-500"
+        },
+        {
+          name: "Image Format Converter",
+          description: "Convert between JPG, PNG, and WebP formats with quality settings.",
+          icon: RotateCw,
+          route: "/image/format-converter",
+          color: "from-teal-500 to-cyan-500"
         }
       ]
     },
@@ -557,8 +589,7 @@ const Index = () => {
                 Wowsome <span className="text-primary">Tools</span>
               </h1>
               <p className="text-xl md:text-3xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
-                Your ultimate collection of <span className="text-primary font-semibold">free online tools</span> for developers, designers, 
-                and digital professionals. All tools work directly in your browser.
+                A powerful suite of <span className="text-primary font-semibold">free online tools</span> for developers, creators, and pros — no installs, no limits, all in your browser.
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
                 <Button size="lg" className="text-lg px-8 py-4 h-auto" onClick={handleExploreClick}>
