@@ -1,15 +1,16 @@
 
 import { useState } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Copy, Download, Eye, Plus, Minus } from "lucide-react";
+import { Copy, Download, Eye, Plus, Minus, Code, Table as TableIcon, RefreshCw } from "lucide-react";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
@@ -23,6 +24,11 @@ const HtmlTableGenerator = () => {
   const [tableStyle, setTableStyle] = useState("modern");
   const [borderStyle, setBorderStyle] = useState("solid");
   const [tableName, setTableName] = useState("custom-table");
+  const [activeTab, setActiveTab] = useState("editor");
+  const [tableCaption, setTableCaption] = useState("");
+  const [customCssClasses, setCustomCssClasses] = useState("");
+  const [responsiveTable, setResponsiveTable] = useState(true);
+  const [hoverEffect, setHoverEffect] = useState(true);
 
   const initializeTable = () => {
     const newData: string[][] = [];
@@ -38,6 +44,7 @@ const HtmlTableGenerator = () => {
       newData.push(row);
     }
     setTableData(newData);
+    setActiveTab("editor");
   };
 
   const addRow = () => {
@@ -103,6 +110,16 @@ const HtmlTableGenerator = () => {
         color: "#f9fafb",
         border: "1px solid #374151",
         fontFamily: "system-ui, -apple-system, sans-serif"
+      },
+      material: {
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+        borderRadius: "4px",
+        overflow: "hidden",
+        fontFamily: "Roboto, sans-serif"
+      },
+      bootstrap: {
+        border: "1px solid #dee2e6",
+        fontFamily: "system-ui, -apple-system, sans-serif"
       }
     };
     return styles[tableStyle as keyof typeof styles] || styles.modern;
@@ -144,9 +161,9 @@ const HtmlTableGenerator = () => {
   background-color: ${tableStyle === 'dark' ? '#111827' : '#f9f9f9'};
 }
 
-.${tableName} tr:hover {
+${hoverEffect ? `.${tableName} tr:hover {
   background-color: ${tableStyle === 'dark' ? '#1f2937' : '#f5f5f5'};
-}
+}` : ''}
 
 ${tableStyle === 'minimal' ? `
 .${tableName} th,
@@ -155,12 +172,28 @@ ${tableStyle === 'minimal' ? `
   border-bottom: 1px solid #e5e7eb;
 }
 ` : ''}
+
+${responsiveTable ? `
+@media screen and (max-width: 768px) {
+  .${tableName} {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+` : ''}
+
+${customCssClasses ? customCssClasses : ''}
 </style>
 
 `;
     }
 
     html += `<table class="${tableName}">\n`;
+    
+    if (tableCaption) {
+      html += `  <caption>${tableCaption}</caption>\n`;
+    }
     
     if (hasHeader) {
       html += "  <thead>\n    <tr>\n";
@@ -187,9 +220,7 @@ ${tableStyle === 'minimal' ? `
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(output);
-    toast.success("✅ HTML table copied to clipboard!", {
-      duration: 2000,
-    });
+    toast.success("HTML table code copied to clipboard!");
   };
 
   const downloadHTML = () => {
@@ -203,10 +234,49 @@ ${tableStyle === 'minimal' ? `
     toast.success("HTML file downloaded!");
   };
 
+  // Generate sample data for the table
+  const generateSampleData = () => {
+    const sampleRows = rows;
+    const sampleCols = cols;
+    const sampleData: string[][] = [];
+    
+    // Create sample headers
+    const headers = [];
+    for (let j = 0; j < sampleCols; j++) {
+      switch (j % 4) {
+        case 0: headers.push("Product"); break;
+        case 1: headers.push("Category"); break;
+        case 2: headers.push("Price"); break;
+        case 3: headers.push("Stock"); break;
+      }
+    }
+    sampleData.push(headers);
+    
+    // Create sample body rows
+    const products = ["Phone", "Laptop", "Tablet", "Monitor", "Keyboard", "Mouse"];
+    const categories = ["Electronics", "Accessories", "Audio", "Gaming"];
+    
+    for (let i = 1; i < sampleRows; i++) {
+      const row = [];
+      for (let j = 0; j < sampleCols; j++) {
+        switch (j % 4) {
+          case 0: row.push(products[Math.floor(Math.random() * products.length)]); break;
+          case 1: row.push(categories[Math.floor(Math.random() * categories.length)]); break;
+          case 2: row.push("$" + (Math.random() * 1000).toFixed(2)); break;
+          case 3: row.push(Math.floor(Math.random() * 100).toString()); break;
+        }
+      }
+      sampleData.push(row);
+    }
+    
+    setTableData(sampleData);
+    toast.success("Sample data generated!");
+  };
+
   const faqs = [
     {
       question: "Can I customize the table styling?",
-      answer: "Yes! Choose from modern, classic, minimal, or dark themes. You can also customize the table name, border style, and include/exclude CSS styling."
+      answer: "Yes! Choose from modern, classic, minimal, dark, material, or bootstrap themes. You can also add custom CSS, customize the table name, border style, and more."
     },
     {
       question: "How do I add or remove rows and columns?",
@@ -214,11 +284,15 @@ ${tableStyle === 'minimal' ? `
     },
     {
       question: "Is the generated table responsive?",
-      answer: "The basic table structure is provided with modern styling. For full mobile responsiveness, you may need to add additional CSS media queries."
+      answer: "Yes, enable the responsive option to add media queries that make your tables scroll horizontally on mobile devices. This ensures your tables look great on all screen sizes."
     },
     {
       question: "Can I download the HTML file?",
-      answer: "Yes! Use the download button to save the complete HTML table with styling as a .html file that you can open in any browser."
+      answer: "Yes! Use the download button to save the complete HTML table with styling as a .html file that you can open in any browser or include in your website."
+    },
+    {
+      question: "How do I add a caption to my table?",
+      answer: "Enter your caption text in the 'Table Caption' field in the advanced options. The caption will appear above your table and is good for accessibility."
     }
   ];
 
@@ -245,168 +319,262 @@ ${tableStyle === 'minimal' ? `
             <Card>
               <CardHeader>
                 <CardTitle>Table Configuration</CardTitle>
+                <CardDescription>
+                  Configure your table dimensions and styling options
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="rows">Rows</Label>
-                    <Input
-                      id="rows"
-                      type="number"
-                      min="1"
-                      max="50"
-                      value={rows}
-                      onChange={(e) => setRows(parseInt(e.target.value) || 1)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cols">Columns</Label>
-                    <Input
-                      id="cols"
-                      type="number"
-                      min="1"
-                      max="20"
-                      value={cols}
-                      onChange={(e) => setCols(parseInt(e.target.value) || 1)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="tableName">Table CSS Class</Label>
-                    <Input
-                      id="tableName"
-                      value={tableName}
-                      onChange={(e) => setTableName(e.target.value)}
-                      placeholder="custom-table"
-                    />
-                  </div>
-                </div>
+                <Tabs value={activeTab} onValueChange={setActiveTab}>
+                  <TabsList className="mb-4 grid grid-cols-3">
+                    <TabsTrigger value="config">
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Configuration
+                    </TabsTrigger>
+                    <TabsTrigger value="editor">
+                      <TableIcon className="h-4 w-4 mr-2" />
+                      Editor
+                    </TabsTrigger>
+                    <TabsTrigger value="output">
+                      <Code className="h-4 w-4 mr-2" />
+                      Output
+                    </TabsTrigger>
+                  </TabsList>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label>Table Style</Label>
-                    <Select value={tableStyle} onValueChange={setTableStyle}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="modern">Modern</SelectItem>
-                        <SelectItem value="classic">Classic</SelectItem>
-                        <SelectItem value="minimal">Minimal</SelectItem>
-                        <SelectItem value="dark">Dark Theme</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Border Style</Label>
-                    <Select value={borderStyle} onValueChange={setBorderStyle}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="solid">Solid</SelectItem>
-                        <SelectItem value="dashed">Dashed</SelectItem>
-                        <SelectItem value="dotted">Dotted</SelectItem>
-                        <SelectItem value="double">Double</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="hasHeader"
-                        checked={hasHeader}
-                        onCheckedChange={(checked) => setHasHeader(checked as boolean)}
-                      />
-                      <Label htmlFor="hasHeader">Include Header Row</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="includeCSS"
-                        checked={includeCSS}
-                        onCheckedChange={(checked) => setIncludeCSS(checked as boolean)}
-                      />
-                      <Label htmlFor="includeCSS">Include CSS Styling</Label>
-                    </div>
-                  </div>
-                </div>
-
-                <Button onClick={initializeTable} className="w-full">
-                  Initialize Table
-                </Button>
-
-                {tableData.length > 0 && (
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-semibold">Edit Table Content</h3>
-                      <div className="flex gap-2">
-                        <Button onClick={addRow} variant="outline" size="sm">
-                          <Plus className="h-4 w-4 mr-1" /> Row
-                        </Button>
-                        <Button onClick={removeRow} variant="outline" size="sm" disabled={rows <= 1}>
-                          <Minus className="h-4 w-4 mr-1" /> Row
-                        </Button>
-                        <Button onClick={addColumn} variant="outline" size="sm">
-                          <Plus className="h-4 w-4 mr-1" /> Col
-                        </Button>
-                        <Button onClick={removeColumn} variant="outline" size="sm" disabled={cols <= 1}>
-                          <Minus className="h-4 w-4 mr-1" /> Col
-                        </Button>
+                  <TabsContent value="config" className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="rows">Rows</Label>
+                        <Input
+                          id="rows"
+                          type="number"
+                          min="1"
+                          max="50"
+                          value={rows}
+                          onChange={(e) => setRows(parseInt(e.target.value) || 1)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="cols">Columns</Label>
+                        <Input
+                          id="cols"
+                          type="number"
+                          min="1"
+                          max="20"
+                          value={cols}
+                          onChange={(e) => setCols(parseInt(e.target.value) || 1)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="tableName">Table CSS Class</Label>
+                        <Input
+                          id="tableName"
+                          value={tableName}
+                          onChange={(e) => setTableName(e.target.value)}
+                          placeholder="custom-table"
+                        />
                       </div>
                     </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse border border-gray-300">
-                        <tbody>
-                          {tableData.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                              {row.map((cell, colIndex) => (
-                                <td key={colIndex} className="border border-gray-300 p-2">
-                                  <Input
-                                    value={cell}
-                                    onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
-                                    className="border-0 p-1"
-                                  />
-                                </td>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Table Style</Label>
+                        <Select value={tableStyle} onValueChange={setTableStyle}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="modern">Modern</SelectItem>
+                            <SelectItem value="classic">Classic</SelectItem>
+                            <SelectItem value="minimal">Minimal</SelectItem>
+                            <SelectItem value="dark">Dark Theme</SelectItem>
+                            <SelectItem value="material">Material Design</SelectItem>
+                            <SelectItem value="bootstrap">Bootstrap</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Border Style</Label>
+                        <Select value={borderStyle} onValueChange={setBorderStyle}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="solid">Solid</SelectItem>
+                            <SelectItem value="dashed">Dashed</SelectItem>
+                            <SelectItem value="dotted">Dotted</SelectItem>
+                            <SelectItem value="double">Double</SelectItem>
+                            <SelectItem value="groove">Groove</SelectItem>
+                            <SelectItem value="ridge">Ridge</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="caption">Table Caption (Optional)</Label>
+                      <Input
+                        id="caption"
+                        value={tableCaption}
+                        onChange={(e) => setTableCaption(e.target.value)}
+                        placeholder="Enter a table caption..."
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasHeader"
+                            checked={hasHeader}
+                            onCheckedChange={(checked) => setHasHeader(checked === true)}
+                          />
+                          <Label htmlFor="hasHeader">Include Header Row</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="includeCSS"
+                            checked={includeCSS}
+                            onCheckedChange={(checked) => setIncludeCSS(checked === true)}
+                          />
+                          <Label htmlFor="includeCSS">Include CSS Styling</Label>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="responsiveTable"
+                            checked={responsiveTable}
+                            onCheckedChange={(checked) => setResponsiveTable(checked === true)}
+                          />
+                          <Label htmlFor="responsiveTable">Responsive Table</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hoverEffect"
+                            checked={hoverEffect}
+                            onCheckedChange={(checked) => setHoverEffect(checked === true)}
+                          />
+                          <Label htmlFor="hoverEffect">Row Hover Effect</Label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="customCss">Custom CSS (Optional)</Label>
+                      <Textarea
+                        id="customCss"
+                        value={customCssClasses}
+                        onChange={(e) => setCustomCssClasses(e.target.value)}
+                        placeholder=".custom-table th { text-transform: uppercase; }"
+                        className="font-mono text-sm"
+                        rows={3}
+                      />
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button onClick={initializeTable} className="flex-1">
+                        Initialize Table
+                      </Button>
+                      <Button onClick={generateSampleData} variant="outline">
+                        Generate Sample Data
+                      </Button>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="editor" className="space-y-4">
+                    {tableData.length > 0 ? (
+                      <>
+                        <div className="flex justify-between items-center">
+                          <h3 className="text-lg font-semibold">Edit Table Content</h3>
+                          <div className="flex gap-2">
+                            <Button onClick={addRow} variant="outline" size="sm">
+                              <Plus className="h-4 w-4 mr-1" /> Row
+                            </Button>
+                            <Button onClick={removeRow} variant="outline" size="sm" disabled={rows <= 1}>
+                              <Minus className="h-4 w-4 mr-1" /> Row
+                            </Button>
+                            <Button onClick={addColumn} variant="outline" size="sm">
+                              <Plus className="h-4 w-4 mr-1" /> Col
+                            </Button>
+                            <Button onClick={removeColumn} variant="outline" size="sm" disabled={cols <= 1}>
+                              <Minus className="h-4 w-4 mr-1" /> Col
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="overflow-x-auto border rounded-lg">
+                          <table className="w-full border-collapse">
+                            <tbody>
+                              {tableData.map((row, rowIndex) => (
+                                <tr key={rowIndex} className={rowIndex === 0 && hasHeader ? "bg-muted/50" : ""}>
+                                  {row.map((cell, colIndex) => (
+                                    <td key={colIndex} className="border border-muted p-2">
+                                      <Input
+                                        value={cell}
+                                        onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
+                                        className="border-0 p-1"
+                                      />
+                                    </td>
+                                  ))}
+                                </tr>
                               ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <Button onClick={generateHTML} className="w-full">
-                      <Eye className="h-4 w-4 mr-2" />
-                      Generate HTML Code
-                    </Button>
-                  </div>
-                )}
-
-                {output && (
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <Label>Generated HTML Code</Label>
-                      <div className="flex gap-2">
-                        <Button onClick={copyToClipboard} variant="outline" size="sm">
-                          <Copy className="h-4 w-4 mr-1" />
-                          Copy
+                            </tbody>
+                          </table>
+                        </div>
+                        <Button onClick={generateHTML} className="w-full">
+                          <Eye className="h-4 w-4 mr-2" />
+                          Generate HTML Code
                         </Button>
-                        <Button onClick={downloadHTML} variant="outline" size="sm">
-                          <Download className="h-4 w-4 mr-1" />
-                          Download
-                        </Button>
+                      </>
+                    ) : (
+                      <div className="text-center p-6 border-2 border-dashed rounded-lg">
+                        <TableIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-lg font-medium mb-2">No Table Initialized</h3>
+                        <p className="text-muted-foreground mb-4">Start by configuring and initializing your table.</p>
+                        <Button onClick={() => setActiveTab("config")}>Go to Configuration</Button>
                       </div>
-                    </div>
-                    <Textarea
-                      value={output}
-                      readOnly
-                      className="min-h-[300px] font-mono bg-muted text-sm"
-                    />
-                    
-                    <div className="border rounded-lg p-4 bg-background">
-                      <h3 className="text-lg font-semibold mb-2">Live Preview</h3>
-                      <div dangerouslySetInnerHTML={{ __html: output }} />
-                    </div>
-                  </div>
-                )}
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="output" className="space-y-4">
+                    {output ? (
+                      <>
+                        <div className="flex justify-between items-center">
+                          <Label>Generated HTML Code</Label>
+                          <div className="flex gap-2">
+                            <Button onClick={copyToClipboard} size="sm">
+                              <Copy className="h-4 w-4 mr-1" />
+                              Copy
+                            </Button>
+                            <Button onClick={downloadHTML} variant="outline" size="sm">
+                              <Download className="h-4 w-4 mr-1" />
+                              Download
+                            </Button>
+                          </div>
+                        </div>
+                        <Textarea
+                          value={output}
+                          readOnly
+                          className="min-h-[300px] font-mono bg-muted text-sm"
+                        />
+                        
+                        <div className="border rounded-lg p-4 bg-background">
+                          <h3 className="text-lg font-semibold mb-2">Live Preview</h3>
+                          <div className="overflow-x-auto">
+                            <div dangerouslySetInnerHTML={{ __html: output }} />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center p-6 border-2 border-dashed rounded-lg">
+                        <Code className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-lg font-medium mb-2">No HTML Generated Yet</h3>
+                        <p className="text-muted-foreground mb-4">Go to the Editor tab and click "Generate HTML Code".</p>
+                        <Button onClick={() => setActiveTab("editor")}>Go to Editor</Button>
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
 

@@ -49,12 +49,10 @@ import RandomColorGenerator from "@/pages/tools/color/RandomColorGenerator";
 import ShadesTintsGenerator from "@/pages/tools/color/ShadesTintsGenerator";
 
 // Image Tools
-import ImageCompressor from "@/pages/tools/image/ImageCompressor";
 import Base64Converter from "@/pages/tools/image/Base64Converter";
 import ImageToBase64 from "@/pages/tools/image/ImageToBase64";
 import Base64ToImage from "@/pages/tools/image/Base64ToImage";
 import ImageResizer from "@/pages/tools/image/ImageResizer";
-import ImageCropper from "@/pages/tools/image/ImageCropper";
 import ImageFormatConverter from "@/pages/tools/image/ImageFormatConverter";
 
 // SEO Tools
@@ -81,7 +79,6 @@ import MatrixCalculator from "@/pages/tools/math/MatrixCalculator";
 import PercentageCalculator from "@/pages/tools/math/PercentageCalculator";
 import PrimeChecker from "@/pages/tools/math/PrimeChecker";
 import QuadraticSolver from "@/pages/tools/math/QuadraticSolver";
-import ScientificCalculator from "@/pages/tools/math/ScientificCalculator";
 import UnitConverter from "@/pages/tools/math/UnitConverter";
 
 function App() {
@@ -135,13 +132,11 @@ function App() {
             <Route path="/color/random-color-generator" element={<RandomColorGenerator />} />
             <Route path="/color/shades-tints-generator" element={<ShadesTintsGenerator />} />
 
-            {/* Image Tools */}
-            <Route path="/image/image-compressor" element={<ImageCompressor />} />
+            {/* Image Tools - removed Image Cropper and Image Compressor */}
             <Route path="/image/base64-converter" element={<Base64Converter />} />
             <Route path="/image/image-to-base64" element={<ImageToBase64 />} />
             <Route path="/image/base64-to-image" element={<Base64ToImage />} />
             <Route path="/image/image-resizer" element={<ImageResizer />} />
-            <Route path="/image/image-cropper" element={<ImageCropper />} />
             <Route path="/image/format-converter" element={<ImageFormatConverter />} />
 
             {/* SEO Tools */}
@@ -157,7 +152,7 @@ function App() {
             <Route path="/seo/serp-preview" element={<SerpPreview />} />
             <Route path="/seo/sitemap-generator" element={<SitemapGenerator />} />
 
-            {/* Math Tools */}
+            {/* Math Tools - removed Scientific Calculator */}
             <Route path="/math/age-calculator" element={<AgeCalculator />} />
             <Route path="/math/base-converter" element={<BaseConverter />} />
             <Route path="/math/expression-simplifier" element={<ExpressionSimplifier />} />
@@ -168,7 +163,6 @@ function App() {
             <Route path="/math/percentage-calculator" element={<PercentageCalculator />} />
             <Route path="/math/prime-checker" element={<PrimeChecker />} />
             <Route path="/math/quadratic-solver" element={<QuadraticSolver />} />
-            <Route path="/math/scientific-calculator" element={<ScientificCalculator />} />
             <Route path="/math/unit-converter" element={<UnitConverter />} />
             
             <Route path="*" element={<NotFound />} />
