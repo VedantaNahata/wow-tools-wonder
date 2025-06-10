@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
+import ToolFAQ from "@/components/ToolFAQ";
 import { ImageDown, Download, Trash2, AlertCircle } from "lucide-react";
 
 const Base64ToImage = () => {
@@ -18,6 +18,29 @@ const Base64ToImage = () => {
   } | null>(null);
   const [isValid, setIsValid] = useState<boolean>(true);
   const { toast } = useToast();
+
+  const faqs = [
+    {
+      question: "What is Base64 encoding?",
+      answer: "Base64 is a method of encoding binary data (like images) into ASCII text format. It's commonly used to embed images directly in HTML, CSS, or JSON without requiring separate image files."
+    },
+    {
+      question: "What image formats are supported?",
+      answer: "Our tool supports all major image formats including PNG, JPG, GIF, WebP, SVG, BMP, and more. The format is automatically detected from the Base64 data."
+    },
+    {
+      question: "Is my data safe when using this tool?",
+      answer: "Yes, absolutely! All processing happens locally in your browser. Your Base64 data and images never leave your device or get uploaded to any server."
+    },
+    {
+      question: "Can I convert Base64 without the data URL prefix?",
+      answer: "Yes! You can paste either a complete data URL (data:image/png;base64,abc123...) or just the Base64 string (abc123...). Our tool will handle both formats automatically."
+    },
+    {
+      question: "Why is my Base64 string showing as invalid?",
+      answer: "Base64 strings must be properly formatted and contain valid image data. Make sure there are no line breaks or invalid characters in your string, and that it represents actual image data."
+    }
+  ];
 
   const validateAndConvert = (input: string) => {
     if (!input.trim()) {
@@ -259,6 +282,8 @@ const Base64ToImage = () => {
                   </div>
                 </CardContent>
               </Card>
+              
+              <ToolFAQ toolName="Base64 to Image Viewer" faqs={faqs} />
             </div>
           </div>
           <div>
