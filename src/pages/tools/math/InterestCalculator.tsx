@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -23,7 +22,8 @@ interface AmortizationRow {
 }
 
 const InterestCalculator = () => {
-  const [calculatorType, setCalculatorType] = useState("simple");
+  const [calculatorType, setCalculatorType] = useState("interest");
+  const [interestType, setInterestType] = useState("compound");
   const [principal, setPrincipal] = useState<number>(10000);
   const [rate, setRate] = useState<number>(5);
   const [time, setTime] = useState<number>(5);
@@ -92,8 +92,8 @@ const InterestCalculator = () => {
     const compoundInt = principal * Math.pow(1 + rateDecimal / n, n * timeInYears) - principal;
     setCompoundInterest(compoundInt);
     
-    // Calculate final amount
-    const finalAmt = principal + (calculatorType === "simple" ? simpleInt : compoundInt);
+    // Calculate final amount based on interest type
+    const finalAmt = principal + (interestType === "simple" ? simpleInt : compoundInt);
     setFinalAmount(finalAmt);
     
     // Generate chart data
@@ -103,7 +103,7 @@ const InterestCalculator = () => {
     for (let i = 0; i <= years; i++) {
       let amount = principal;
       
-      if (calculatorType === "simple") {
+      if (interestType === "simple") {
         amount += principal * (rate / 100) * i;
       } else {
         amount = principal * Math.pow(1 + rateDecimal / n, n * i);
@@ -243,6 +243,7 @@ Interest Calculator Results:
 Principal Amount: ${formatCurrency(principal)}
 Interest Rate: ${rate}%
 Time Period: ${time} ${timeUnit}
+Interest Type: ${interestType}
 Compounding: ${compoundingFrequency}
 
 Simple Interest: ${simpleInterest ? formatCurrency(simpleInterest) : 'N/A'}
@@ -375,7 +376,7 @@ Total Interest: ${totalInterest ? formatCurrency(totalInterest) : 'N/A'}
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="time">Time Period</Label>
                         <Input
@@ -404,10 +405,26 @@ Total Interest: ${totalInterest ? formatCurrency(totalInterest) : 'N/A'}
                         </Select>
                       </div>
                       <div className="space-y-2">
+                        <Label htmlFor="interestType">Interest Type</Label>
+                        <Select
+                          value={interestType}
+                          onValueChange={setInterestType}
+                        >
+                          <SelectTrigger id="interestType">
+                            <SelectValue placeholder="Select interest type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="simple">Simple Interest</SelectItem>
+                            <SelectItem value="compound">Compound Interest</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
                         <Label htmlFor="compoundingFrequency">Compounding Frequency</Label>
                         <Select
                           value={compoundingFrequency}
                           onValueChange={setCompoundingFrequency}
+                          disabled={interestType === "simple"}
                         >
                           <SelectTrigger id="compoundingFrequency">
                             <SelectValue placeholder="Select compounding" />
@@ -453,7 +470,7 @@ Total Interest: ${totalInterest ? formatCurrency(totalInterest) : 'N/A'}
                                 </CardHeader>
                                 <CardContent>
                                   <p className="text-2xl font-bold">
-                                    {calculatorType === "simple" 
+                                    {interestType === "simple" 
                                       ? formatCurrency(simpleInterest!) 
                                       : formatCurrency(compoundInterest!)}
                                   </p>
