@@ -175,7 +175,7 @@ const Base64ToImage = () => {
                         value={base64Input}
                         onChange={(e) => handleInputChange(e.target.value)}
                         rows={8}
-                        className={`w-full p-3 border rounded-md font-mono text-sm ${
+                        className={`w-full p-3 border rounded-md font-mono text-sm bg-background ${
                           !isValid && base64Input ? 'border-destructive' : ''
                         }`}
                         placeholder="Paste your Base64 string here... (with or without data: prefix)"

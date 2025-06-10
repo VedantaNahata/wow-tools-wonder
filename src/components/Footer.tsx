@@ -53,6 +53,9 @@ const Footer = () => {
               <Link to="/color/color-picker" className="block text-muted-foreground hover:text-foreground transition-colors">
                 Color Picker
               </Link>
+              <Link to="/image/image-compressor" className="block text-muted-foreground hover:text-foreground transition-colors">
+                Image Compressor
+              </Link>
             </div>
           </div>
           
@@ -64,6 +67,12 @@ const Footer = () => {
                 className="block text-muted-foreground hover:text-foreground transition-colors text-left cursor-pointer"
               >
                 Text Tools
+              </button>
+              <button 
+                onClick={() => handleSmoothScroll('image-tools')} 
+                className="block text-muted-foreground hover:text-foreground transition-colors text-left cursor-pointer"
+              >
+                Image Tools
               </button>
               <button 
                 onClick={() => handleSmoothScroll('seo-tools')} 

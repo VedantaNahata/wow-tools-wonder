@@ -1,50 +1,36 @@
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
-import { Upload, Download, RotateCw, Trash2, FileImage } from "lucide-react";
-
-type ImageFormat = 'jpeg' | 'png' | 'webp';
+import { Upload, Download, RotateCw, Trash2 } from "lucide-react";
 
 const ImageFormatConverter = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [convertedImageUrl, setConvertedImageUrl] = useState<string>("");
-  const [outputFormat, setOutputFormat] = useState<ImageFormat>('jpeg');
-  const [quality, setQuality] = useState<number>(90);
-  const [originalFormat, setOriginalFormat] = useState<string>("");
-  const [originalSize, setOriginalSize] = useState<number>(0);
-  const [convertedSize, setConvertedSize] = useState<number>(0);
+  const [outputFormat, setOutputFormat] = useState<string>("png");
+  const [quality, setQuality] = useState<number>(0.9);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
 
-  const formats = {
-    jpeg: {
-      label: "JPEG",
-      description: "Best for photos, smaller file size",
-      extension: "jpg",
-      supportsQuality: true
-    },
-    png: {
-      label: "PNG",
-      description: "Best for graphics with transparency",
-      extension: "png",
-      supportsQuality: false
-    },
-    webp: {
-      label: "WebP",
-      description: "Modern format, excellent compression",
-      extension: "webp",
-      supportsQuality: true
-    }
-  };
+  const formats = [
+    { value: "png", label: "PNG", mimeType: "image/png", hasQuality: false },
+    { value: "jpeg", label: "JPEG", mimeType: "image/jpeg", hasQuality: true },
+    { value: "jpg", label: "JPG", mimeType: "image/jpeg", hasQuality: true },
+    { value: "webp", label: "WebP", mimeType: "image/webp", hasQuality: true },
+    { value: "bmp", label: "BMP", mimeType: "image/bmp", hasQuality: false },
+    { value: "ico", label: "ICO", mimeType: "image/x-icon", hasQuality: false },
+    { value: "tiff", label: "TIFF", mimeType: "image/tiff", hasQuality: false }
+  ];
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -59,11 +45,14 @@ const ImageFormatConverter = () => {
       }
 
       setSelectedFile(file);
-      setOriginalFormat(file.type.split('/')[1].toUpperCase());
-      setOriginalSize(file.size);
-      setPreviewUrl(URL.createObjectURL(file));
-      setConvertedImageUrl("");
-      setConvertedSize(0);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      
+      const img = new Image();
+      img.onload = () => {
+        setOriginalImage(img);
+      };
+      img.src = url;
     }
   };
 
@@ -72,11 +61,14 @@ const ImageFormatConverter = () => {
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
       setSelectedFile(file);
-      setOriginalFormat(file.type.split('/')[1].toUpperCase());
-      setOriginalSize(file.size);
-      setPreviewUrl(URL.createObjectURL(file));
-      setConvertedImageUrl("");
-      setConvertedSize(0);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      
+      const img = new Image();
+      img.onload = () => {
+        setOriginalImage(img);
+      };
+      img.src = url;
     }
   };
 
@@ -85,70 +77,48 @@ const ImageFormatConverter = () => {
   };
 
   const convertImage = async () => {
-    if (!selectedFile) {
-      toast({
-        title: "No image selected",
-        description: "Please select an image to convert",
-        variant: "destructive"
-      });
-      return;
-    }
+    if (!originalImage || !canvasRef.current) return;
 
     setIsProcessing(true);
 
     try {
       const canvas = canvasRef.current;
-      if (!canvas) return;
-
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const img = new Image();
-      img.onload = () => {
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
+      canvas.width = originalImage.naturalWidth;
+      canvas.height = originalImage.naturalHeight;
 
-        // Clear canvas with white background for JPEG
-        if (outputFormat === 'jpeg') {
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // For formats that don't support transparency, fill with white background
+      const selectedFormat = formats.find(f => f.value === outputFormat);
+      if (selectedFormat && ['jpeg', 'jpg', 'bmp'].includes(outputFormat)) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      // Draw the image
+      ctx.drawImage(originalImage, 0, 0);
+
+      // Convert to blob
+      const mimeType = selectedFormat?.mimeType || 'image/png';
+      const useQuality = selectedFormat?.hasQuality && outputFormat !== 'png';
+      
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          setConvertedImageUrl(url);
+          setIsProcessing(false);
+          toast({
+            title: "Conversion successful",
+            description: `Image converted to ${outputFormat.toUpperCase()} format`
+          });
         }
-
-        ctx.drawImage(img, 0, 0);
-
-        const mimeType = `image/${outputFormat}`;
-        const qualityValue = formats[outputFormat].supportsQuality ? quality / 100 : 1.0;
-
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            setConvertedImageUrl(url);
-            setConvertedSize(blob.size);
-            setIsProcessing(false);
-
-            toast({
-              title: "Conversion complete",
-              description: `Successfully converted to ${outputFormat.toUpperCase()}`
-            });
-          }
-        }, mimeType, qualityValue);
-      };
-
-      img.onerror = () => {
-        setIsProcessing(false);
-        toast({
-          title: "Conversion failed",
-          description: "Failed to load the image",
-          variant: "destructive"
-        });
-      };
-
-      img.src = previewUrl;
+      }, mimeType, useQuality ? quality : undefined);
     } catch (error) {
       setIsProcessing(false);
       toast({
         title: "Conversion failed",
-        description: "An error occurred during conversion",
+        description: "An error occurred while converting the image",
         variant: "destructive"
       });
     }
@@ -161,8 +131,7 @@ const ImageFormatConverter = () => {
     link.href = convertedImageUrl;
     
     const nameWithoutExt = selectedFile.name.replace(/\.[^/.]+$/, "");
-    const extension = formats[outputFormat].extension;
-    link.download = `${nameWithoutExt}.${extension}`;
+    link.download = `${nameWithoutExt}.${outputFormat}`;
     
     document.body.appendChild(link);
     link.click();
@@ -170,42 +139,33 @@ const ImageFormatConverter = () => {
 
     toast({
       title: "Download started",
-      description: "Converted image has been downloaded"
+      description: `Converted ${outputFormat.toUpperCase()} image has been downloaded`
     });
   };
 
   const clearAll = () => {
     setSelectedFile(null);
+    setOriginalImage(null);
     setPreviewUrl("");
     setConvertedImageUrl("");
-    setOriginalFormat("");
-    setOriginalSize(0);
-    setConvertedSize(0);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  const getOriginalFormat = (): string => {
+    if (!selectedFile) return "";
+    const extension = selectedFile.name.split('.').pop()?.toLowerCase() || "";
+    return extension.toUpperCase();
   };
 
-  const sizeChange = originalSize > 0 && convertedSize > 0 
-    ? ((convertedSize - originalSize) / originalSize * 100).toFixed(1)
-    : '0';
-
-  const sizeChangeText = parseFloat(sizeChange) > 0 ? `+${sizeChange}%` : `${sizeChange}%`;
-  const sizeChangeColor = parseFloat(sizeChange) > 0 ? 'text-destructive' : 'text-green-600';
+  const selectedFormat = formats.find(f => f.value === outputFormat);
 
   return (
     <SEOWrapper
-      title="Image Format Converter - Convert JPG PNG WebP Online"
-      description="Convert images between JPG, PNG, and WebP formats online. High-quality conversion with customizable settings and instant download."
-      keywords="image converter, jpg to png, png to jpg, webp converter, image format, convert images"
+      title="Image Format Converter - Convert Images Between Formats"
+      description="Convert images between different formats: PNG, JPEG, WebP, BMP, TIFF, ICO. Free online image format converter with quality control."
+      keywords="image format converter, convert images, png to jpg, jpg to png, webp converter, image conversion"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -213,7 +173,7 @@ const ImageFormatConverter = () => {
             Image Format Converter
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Convert images between JPG, PNG, and WebP formats with customizable quality settings. All processing happens in your browser.
+            Convert images between popular formats including PNG, JPEG, WebP, BMP, TIFF, and ICO with quality control.
           </p>
         </div>
 
@@ -243,7 +203,7 @@ const ImageFormatConverter = () => {
                         Drop your image here or click to browse
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Supports JPG, PNG, GIF, WebP, BMP
+                        Supports PNG, JPEG, WebP, BMP, TIFF, ICO
                       </p>
                     </div>
                     <Input
@@ -259,7 +219,7 @@ const ImageFormatConverter = () => {
                         <div>
                           <p className="font-medium">{selectedFile.name}</p>
                           <p className="text-sm text-muted-foreground">
-                            {originalFormat} • {formatFileSize(originalSize)}
+                            Format: {getOriginalFormat()} • Size: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                           </p>
                         </div>
                         <Button variant="outline" size="sm" onClick={clearAll}>
@@ -273,7 +233,7 @@ const ImageFormatConverter = () => {
               </Card>
 
               {/* Conversion Settings */}
-              {selectedFile && (
+              {originalImage && (
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -282,46 +242,92 @@ const ImageFormatConverter = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
+                      {/* Format Selection */}
                       <div>
-                        <Label>Output Format</Label>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
-                          {Object.entries(formats).map(([key, format]) => (
-                            <Button
-                              key={key}
-                              variant={outputFormat === key ? "default" : "outline"}
-                              className="h-auto p-4 flex flex-col items-start"
-                              onClick={() => setOutputFormat(key as ImageFormat)}
-                            >
-                              <div className="flex items-center gap-2 mb-1">
-                                <FileImage className="h-4 w-4" />
-                                <span className="font-semibold">{format.label}</span>
-                              </div>
-                              <span className="text-xs text-left">{format.description}</span>
-                            </Button>
-                          ))}
-                        </div>
+                        <Label htmlFor="format">Output Format</Label>
+                        <Select value={outputFormat} onValueChange={setOutputFormat}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select output format" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {formats.map((format) => (
+                              <SelectItem key={format.value} value={format.value}>
+                                {format.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
 
-                      {formats[outputFormat].supportsQuality && (
+                      {/* Quality Slider (only for formats that support it) */}
+                      {selectedFormat?.hasQuality && (
                         <div>
-                          <Label htmlFor="quality">Quality: {quality}%</Label>
+                          <Label htmlFor="quality">Quality: {Math.round(quality * 100)}%</Label>
                           <Input
                             id="quality"
                             type="range"
-                            min="10"
-                            max="100"
-                            step="5"
+                            min="0.1"
+                            max="1"
+                            step="0.1"
                             value={quality}
-                            onChange={(e) => setQuality(parseInt(e.target.value))}
+                            onChange={(e) => setQuality(Number(e.target.value))}
                             className="mt-2"
                           />
-                          <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                            <span>Smaller size</span>
-                            <span>Better quality</span>
-                          </div>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Higher quality = larger file size
+                          </p>
                         </div>
                       )}
+
+                      {/* Format Information */}
+                      <div className="p-4 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium mb-2">Format Information</h4>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          {outputFormat === 'png' && (
+                            <>
+                              <p>• Lossless compression</p>
+                              <p>• Supports transparency</p>
+                              <p>• Best for graphics with few colors</p>
+                            </>
+                          )}
+                          {(outputFormat === 'jpeg' || outputFormat === 'jpg') && (
+                            <>
+                              <p>• Lossy compression</p>
+                              <p>• No transparency support</p>
+                              <p>• Best for photographs</p>
+                            </>
+                          )}
+                          {outputFormat === 'webp' && (
+                            <>
+                              <p>• Modern format with excellent compression</p>
+                              <p>• Supports transparency</p>
+                              <p>• Smaller file sizes than PNG/JPEG</p>
+                            </>
+                          )}
+                          {outputFormat === 'bmp' && (
+                            <>
+                              <p>• Uncompressed format</p>
+                              <p>• Large file sizes</p>
+                              <p>• Wide compatibility</p>
+                            </>
+                          )}
+                          {outputFormat === 'ico' && (
+                            <>
+                              <p>• Icon format for Windows</p>
+                              <p>• Multiple sizes in one file</p>
+                              <p>• Used for favicons and app icons</p>
+                            </>
+                          )}
+                          {outputFormat === 'tiff' && (
+                            <>
+                              <p>• High-quality format</p>
+                              <p>• Supports multiple layers</p>
+                              <p>• Used in professional photography</p>
+                            </>
+                          )}
+                        </div>
+                      </div>
 
                       <Button onClick={convertImage} disabled={isProcessing} className="w-full">
                         <RotateCw className="h-4 w-4 mr-2" />
@@ -332,50 +338,40 @@ const ImageFormatConverter = () => {
                 </Card>
               )}
 
-              {/* Results */}
+              {/* Original Image Preview */}
+              {previewUrl && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Original Image ({getOriginalFormat()})</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center">
+                      <img
+                        src={previewUrl}
+                        alt="Original"
+                        className="max-w-full max-h-96 mx-auto rounded-lg shadow-md"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Converted Result */}
               {convertedImageUrl && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Conversion Results</CardTitle>
+                    <CardTitle>Converted Image ({outputFormat.toUpperCase()})</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div className="p-4 bg-muted/50 rounded-lg">
-                          <p className="text-sm text-muted-foreground">Original</p>
-                          <p className="text-lg font-semibold">{originalFormat}</p>
-                          <p className="text-sm">{formatFileSize(originalSize)}</p>
-                        </div>
-                        <div className="p-4 bg-muted/50 rounded-lg">
-                          <p className="text-sm text-muted-foreground">Converted</p>
-                          <p className="text-lg font-semibold">{outputFormat.toUpperCase()}</p>
-                          <p className="text-sm">{formatFileSize(convertedSize)}</p>
-                        </div>
-                        <div className="p-4 bg-primary/10 rounded-lg">
-                          <p className="text-sm text-muted-foreground">Size Change</p>
-                          <p className={`text-lg font-semibold ${sizeChangeColor}`}>{sizeChangeText}</p>
-                        </div>
+                      <div className="text-center">
+                        <img
+                          src={convertedImageUrl}
+                          alt="Converted"
+                          className="max-w-full max-h-96 mx-auto rounded-lg shadow-md border"
+                        />
                       </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="text-center">
-                          <p className="font-medium mb-2">Original ({originalFormat})</p>
-                          <img
-                            src={previewUrl}
-                            alt="Original"
-                            className="max-w-full max-h-64 mx-auto rounded border"
-                          />
-                        </div>
-                        <div className="text-center">
-                          <p className="font-medium mb-2">Converted ({outputFormat.toUpperCase()})</p>
-                          <img
-                            src={convertedImageUrl}
-                            alt="Converted"
-                            className="max-w-full max-h-64 mx-auto rounded border"
-                          />
-                        </div>
-                      </div>
-
+                      
                       <Button onClick={downloadConvertedImage} className="w-full">
                         <Download className="h-4 w-4 mr-2" />
                         Download {outputFormat.toUpperCase()} Image
@@ -386,44 +382,6 @@ const ImageFormatConverter = () => {
               )}
 
               <canvas ref={canvasRef} className="hidden" />
-
-              {/* Format Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Format Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold text-primary mb-2">JPEG</h4>
-                      <ul className="space-y-1 text-muted-foreground">
-                        <li>• Best for photographs</li>
-                        <li>• Smaller file sizes</li>
-                        <li>• No transparency support</li>
-                        <li>• Lossy compression</li>
-                      </ul>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold text-primary mb-2">PNG</h4>
-                      <ul className="space-y-1 text-muted-foreground">
-                        <li>• Best for graphics/logos</li>
-                        <li>• Supports transparency</li>
-                        <li>• Larger file sizes</li>
-                        <li>• Lossless compression</li>
-                      </ul>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold text-primary mb-2">WebP</h4>
-                      <ul className="space-y-1 text-muted-foreground">
-                        <li>• Modern web format</li>
-                        <li>• Excellent compression</li>
-                        <li>• Supports transparency</li>
-                        <li>• Both lossy & lossless</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
           <div>

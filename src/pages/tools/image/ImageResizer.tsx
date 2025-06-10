@@ -1,22 +1,24 @@
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
-import { Upload, Download, Image as ImageIcon, Trash2, Link, Unlink } from "lucide-react";
+import { Upload, Download, Maximize, Trash2, Link, Unlink } from "lucide-react";
 
 const ImageResizer = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [resizedImageUrl, setResizedImageUrl] = useState<string>("");
-  const [width, setWidth] = useState<string>("");
-  const [height, setHeight] = useState<string>("");
+  const [width, setWidth] = useState<number>(0);
+  const [height, setHeight] = useState<number>(0);
   const [maintainAspectRatio, setMaintainAspectRatio] = useState<boolean>(true);
+  const [quality, setQuality] = useState<number>(0.9);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -41,8 +43,8 @@ const ImageResizer = () => {
       const img = new Image();
       img.onload = () => {
         setOriginalImage(img);
-        setWidth(img.naturalWidth.toString());
-        setHeight(img.naturalHeight.toString());
+        setWidth(img.naturalWidth);
+        setHeight(img.naturalHeight);
       };
       img.src = url;
     }
@@ -59,8 +61,8 @@ const ImageResizer = () => {
       const img = new Image();
       img.onload = () => {
         setOriginalImage(img);
-        setWidth(img.naturalWidth.toString());
-        setHeight(img.naturalHeight.toString());
+        setWidth(img.naturalWidth);
+        setHeight(img.naturalHeight);
       };
       img.src = url;
     }
@@ -70,66 +72,42 @@ const ImageResizer = () => {
     event.preventDefault();
   };
 
-  const handleWidthChange = (value: string) => {
-    setWidth(value);
-    if (maintainAspectRatio && originalImage && value) {
-      const newWidth = parseInt(value);
+  const handleWidthChange = (newWidth: number) => {
+    setWidth(newWidth);
+    if (maintainAspectRatio && originalImage) {
       const aspectRatio = originalImage.naturalWidth / originalImage.naturalHeight;
-      const newHeight = Math.round(newWidth / aspectRatio);
-      setHeight(newHeight.toString());
+      setHeight(Math.round(newWidth / aspectRatio));
     }
   };
 
-  const handleHeightChange = (value: string) => {
-    setHeight(value);
-    if (maintainAspectRatio && originalImage && value) {
-      const newHeight = parseInt(value);
+  const handleHeightChange = (newHeight: number) => {
+    setHeight(newHeight);
+    if (maintainAspectRatio && originalImage) {
       const aspectRatio = originalImage.naturalWidth / originalImage.naturalHeight;
-      const newWidth = Math.round(newHeight * aspectRatio);
-      setWidth(newWidth.toString());
+      setWidth(Math.round(newHeight * aspectRatio));
     }
   };
 
   const resizeImage = async () => {
-    if (!originalImage || !width || !height) {
-      toast({
-        title: "Missing information",
-        description: "Please select an image and enter dimensions",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const newWidth = parseInt(width);
-    const newHeight = parseInt(height);
-
-    if (newWidth <= 0 || newHeight <= 0 || newWidth > 10000 || newHeight > 10000) {
-      toast({
-        title: "Invalid dimensions",
-        description: "Please enter valid dimensions (1-10000 pixels)",
-        variant: "destructive"
-      });
-      return;
-    }
+    if (!originalImage || !canvasRef.current) return;
 
     setIsProcessing(true);
 
     try {
       const canvas = canvasRef.current;
-      if (!canvas) return;
-
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      canvas.width = newWidth;
-      canvas.height = newHeight;
+      canvas.width = width;
+      canvas.height = height;
 
-      // Use high-quality image rendering
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
 
-      ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
+      // Draw resized image
+      ctx.drawImage(originalImage, 0, 0, width, height);
 
+      // Convert to blob
       canvas.toBlob((blob) => {
         if (blob) {
           const url = URL.createObjectURL(blob);
@@ -137,10 +115,10 @@ const ImageResizer = () => {
           setIsProcessing(false);
           toast({
             title: "Image resized",
-            description: `Successfully resized to ${newWidth}×${newHeight}px`
+            description: `Successfully resized to ${width}×${height}px`
           });
         }
-      }, selectedFile?.type || 'image/png', 0.9);
+      }, selectedFile?.type || 'image/png', quality);
     } catch (error) {
       setIsProcessing(false);
       toast({
@@ -176,23 +154,34 @@ const ImageResizer = () => {
     setOriginalImage(null);
     setPreviewUrl("");
     setResizedImageUrl("");
-    setWidth("");
-    setHeight("");
+    setWidth(0);
+    setHeight(0);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  const setCommonSize = (w: number, h: number) => {
-    setWidth(w.toString());
-    setHeight(h.toString());
+  const setPresetSize = (presetWidth: number, presetHeight: number) => {
+    setWidth(presetWidth);
+    setHeight(presetHeight);
   };
+
+  const presetSizes = [
+    { name: "HD (1920×1080)", width: 1920, height: 1080 },
+    { name: "4K (3840×2160)", width: 3840, height: 2160 },
+    { name: "Instagram Square (1080×1080)", width: 1080, height: 1080 },
+    { name: "Instagram Story (1080×1920)", width: 1080, height: 1920 },
+    { name: "Facebook Cover (1200×630)", width: 1200, height: 630 },
+    { name: "YouTube Thumbnail (1280×720)", width: 1280, height: 720 },
+    { name: "Twitter Header (1500×500)", width: 1500, height: 500 },
+    { name: "LinkedIn Cover (1584×396)", width: 1584, height: 396 }
+  ];
 
   return (
     <SEOWrapper
       title="Image Resizer Tool - Resize Images Online"
-      description="Resize images to custom dimensions online. Maintain aspect ratio or stretch to fit. High-quality image resizing with instant preview."
-      keywords="image resizer, resize images, image dimensions, scale images, image tool"
+      description="Resize images to custom dimensions or preset sizes. Maintain aspect ratio or stretch to fit. Download resized images instantly. Free online image resizer."
+      keywords="image resizer, resize images, image dimensions, aspect ratio, photo resizer"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -200,7 +189,7 @@ const ImageResizer = () => {
             Image Resizer Tool
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Resize any image to custom dimensions with high quality. Maintain aspect ratio or stretch to fit your needs.
+            Resize images to custom dimensions or choose from popular preset sizes. Maintain aspect ratio or stretch to fit.
           </p>
         </div>
 
@@ -263,65 +252,88 @@ const ImageResizer = () => {
               {originalImage && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Resize Settings</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      <Maximize className="h-5 w-5" />
+                      Resize Settings
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
+                      {/* Custom Dimensions */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="width">Width (pixels)</Label>
+                          <Label htmlFor="width">Width (px)</Label>
                           <Input
                             id="width"
                             type="number"
                             value={width}
-                            onChange={(e) => handleWidthChange(e.target.value)}
+                            onChange={(e) => handleWidthChange(Number(e.target.value))}
                             min="1"
                             max="10000"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="height">Height (pixels)</Label>
+                          <Label htmlFor="height">Height (px)</Label>
                           <Input
                             id="height"
                             type="number"
                             value={height}
-                            onChange={(e) => handleHeightChange(e.target.value)}
+                            onChange={(e) => handleHeightChange(Number(e.target.value))}
                             min="1"
                             max="10000"
                           />
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant={maintainAspectRatio ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setMaintainAspectRatio(!maintainAspectRatio)}
-                        >
-                          {maintainAspectRatio ? <Link className="h-4 w-4 mr-2" /> : <Unlink className="h-4 w-4 mr-2" />}
-                          {maintainAspectRatio ? "Lock Aspect Ratio" : "Unlock Aspect Ratio"}
-                        </Button>
+                      {/* Aspect Ratio Toggle */}
+                      <div className="flex items-center space-x-2">
+                        {maintainAspectRatio ? (
+                          <Link className="h-4 w-4 text-primary" />
+                        ) : (
+                          <Unlink className="h-4 w-4 text-muted-foreground" />
+                        )}
+                        <Switch
+                          checked={maintainAspectRatio}
+                          onCheckedChange={setMaintainAspectRatio}
+                        />
+                        <Label>Maintain aspect ratio</Label>
                       </div>
 
+                      {/* Quality Slider */}
                       <div>
-                        <Label>Common Sizes</Label>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          <Button variant="outline" size="sm" onClick={() => setCommonSize(800, 600)}>
-                            800×600
-                          </Button>
-                          <Button variant="outline" size="sm" onClick={() => setCommonSize(1024, 768)}>
-                            1024×768
-                          </Button>
-                          <Button variant="outline" size="sm" onClick={() => setCommonSize(1920, 1080)}>
-                            1920×1080
-                          </Button>
-                          <Button variant="outline" size="sm" onClick={() => setCommonSize(400, 400)}>
-                            400×400 (Square)
-                          </Button>
+                        <Label htmlFor="quality">Quality: {Math.round(quality * 100)}%</Label>
+                        <Input
+                          id="quality"
+                          type="range"
+                          min="0.1"
+                          max="1"
+                          step="0.1"
+                          value={quality}
+                          onChange={(e) => setQuality(Number(e.target.value))}
+                          className="mt-2"
+                        />
+                      </div>
+
+                      {/* Preset Sizes */}
+                      <div>
+                        <Label className="text-base font-medium">Preset Sizes</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                          {presetSizes.map((preset) => (
+                            <Button
+                              key={preset.name}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setPresetSize(preset.width, preset.height)}
+                              className="justify-start text-sm"
+                            >
+                              {preset.name}
+                            </Button>
+                          ))}
                         </div>
                       </div>
 
                       <Button onClick={resizeImage} disabled={isProcessing} className="w-full">
+                        <Maximize className="h-4 w-4 mr-2" />
                         {isProcessing ? "Resizing..." : "Resize Image"}
                       </Button>
                     </div>
@@ -330,53 +342,49 @@ const ImageResizer = () => {
               )}
 
               {/* Preview Section */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {previewUrl && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Original Image</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-center">
-                        <img
-                          src={previewUrl}
-                          alt="Original"
-                          className="max-w-full max-h-64 mx-auto rounded border"
-                        />
-                        {originalImage && (
-                          <p className="text-sm text-muted-foreground mt-2">
-                            {originalImage.naturalWidth} × {originalImage.naturalHeight}px
-                          </p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+              {previewUrl && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Original Image</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center">
+                      <img
+                        src={previewUrl}
+                        alt="Original"
+                        className="max-w-full max-h-96 mx-auto rounded-lg shadow-md"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
-                {resizedImageUrl && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Resized Image</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-center space-y-4">
+              {/* Resized Result */}
+              {resizedImageUrl && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Resized Image</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="text-center">
                         <img
                           src={resizedImageUrl}
                           alt="Resized"
-                          className="max-w-full max-h-64 mx-auto rounded border"
+                          className="max-w-full max-h-96 mx-auto rounded-lg shadow-md border"
                         />
-                        <p className="text-sm text-muted-foreground">
-                          {width} × {height}px
-                        </p>
-                        <Button onClick={downloadResizedImage} className="w-full">
-                          <Download className="h-4 w-4 mr-2" />
-                          Download Resized Image
-                        </Button>
                       </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+                      <p className="text-center text-sm text-muted-foreground">
+                        {width} × {height}px
+                      </p>
+                      <Button onClick={downloadResizedImage} className="w-full">
+                        <Download className="h-4 w-4 mr-2" />
+                        Download Resized Image
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               <canvas ref={canvasRef} className="hidden" />
             </div>
