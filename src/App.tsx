@@ -132,7 +132,7 @@ function App() {
             <Route path="/color/random-color-generator" element={<RandomColorGenerator />} />
             <Route path="/color/shades-tints-generator" element={<ShadesTintsGenerator />} />
 
-            {/* Image Tools - removed Image Cropper and Image Compressor */}
+            {/* Image Tools */}
             <Route path="/image/base64-converter" element={<Base64Converter />} />
             <Route path="/image/image-to-base64" element={<ImageToBase64 />} />
             <Route path="/image/base64-to-image" element={<Base64ToImage />} />
@@ -152,7 +152,7 @@ function App() {
             <Route path="/seo/serp-preview" element={<SerpPreview />} />
             <Route path="/seo/sitemap-generator" element={<SitemapGenerator />} />
 
-            {/* Math Tools - removed Scientific Calculator */}
+            {/* Math Tools */}
             <Route path="/math/age-calculator" element={<AgeCalculator />} />
             <Route path="/math/base-converter" element={<BaseConverter />} />
             <Route path="/math/expression-simplifier" element={<ExpressionSimplifier />} />
