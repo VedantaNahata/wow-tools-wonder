@@ -21,7 +21,7 @@ import {
   ArrowUpDown, 
   BarChart3, 
   SearchIcon, 
-  Shield, 
+  Shield,
   Binary,
   Zap,
   Paintbrush,
@@ -199,20 +199,6 @@ const Index = () => {
           icon: Image,
           route: "/image/image-resizer",
           color: "from-green-500 to-emerald-500"
-        },
-        {
-          name: "Image Compressor",
-          description: "Compress images with quality control using lossy or lossless compression.",
-          icon: Archive,
-          route: "/image/image-compressor",
-          color: "from-orange-500 to-red-500"
-        },
-        {
-          name: "Image Cropper Tool",
-          description: "Crop images to specific ratios (1:1, 16:9, custom) with interactive preview.",
-          icon: Crop,
-          route: "/image/image-cropper",
-          color: "from-indigo-500 to-purple-500"
         },
         {
           name: "Image Format Converter",
@@ -538,21 +524,21 @@ const Index = () => {
           name: "Random Color Generator",
           description: "Click to get a completely random color with its code and preview.",
           icon: Shuffle,
-          route: "/color/random-generator",
+          route: "/color/random-color-generator",
           color: "from-indigo-500 to-purple-500"
         },
         {
           name: "Shades & Tints Generator",
           description: "Enter one color and get multiple lighter/darker versions.",
           icon: Layers,
-          route: "/color/shades-tints",
+          route: "/color/shades-tints-generator",
           color: "from-teal-500 to-cyan-500"
         },
         {
           name: "CSS Color Names Explorer",
           description: "View all 140+ named CSS colors with previews and HEX codes.",
           icon: Eye,
-          route: "/color/css-names",
+          route: "/color/css-color-names",
           color: "from-amber-500 to-orange-500"
         },
         {

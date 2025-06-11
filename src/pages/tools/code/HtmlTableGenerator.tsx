@@ -7,72 +7,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
-import { Plus, Minus, Copy, Eye, Settings } from "lucide-react";
-
-interface TableCell {
-  content: string;
-  isHeader: boolean;
-}
-
-interface StylingOptions {
-  borderStyle: string;
-  borderWidth: string;
-  borderColor: string;
-  headerBgColor: string;
-  headerTextColor: string;
-  evenRowBgColor: string;
-  oddRowBgColor: string;
-  textColor: string;
-  fontSize: string;
-  fontFamily: string;
-  padding: string;
-  hoverEffect: string;
-  hoverColor: string;
-  hoverDuration: string;
-  stripedRows: boolean;
-  responsive: boolean;
-}
+import { Plus, Minus, Copy } from "lucide-react";
 
 const HtmlTableGenerator = () => {
-  const [rows, setRows] = useState<TableCell[][]>([
-    [{ content: "Header 1", isHeader: true }, { content: "Header 2", isHeader: true }],
-    [{ content: "Row 1 Col 1", isHeader: false }, { content: "Row 1 Col 2", isHeader: false }]
+  const [rows, setRows] = useState<string[][]>([
+    ["Header 1", "Header 2"],
+    ["Row 1 Col 1", "Row 1 Col 2"]
   ]);
   const [htmlOutput, setHtmlOutput] = useState("");
   const [activeTab, setActiveTab] = useState("table");
-  const [styling, setStyling] = useState<StylingOptions>({
-    borderStyle: "solid",
-    borderWidth: "1px",
-    borderColor: "#ddd",
-    headerBgColor: "#f8f9fa",
-    headerTextColor: "#212529",
-    evenRowBgColor: "#ffffff",
-    oddRowBgColor: "#f8f9fa",
-    textColor: "#212529",
-    fontSize: "14px",
-    fontFamily: "Arial, sans-serif",
-    padding: "8px",
-    hoverEffect: "background",
-    hoverColor: "#e9ecef",
-    hoverDuration: "0.3s",
-    stripedRows: true,
-    responsive: true
-  });
-
   const { toast } = useToast();
 
   const addRow = () => {
-    const newRow = rows[0].map(() => ({ content: "", isHeader: false }));
+    const newRow = Array(rows[0].length).fill("");
     setRows([...rows, newRow]);
   };
 
   const addColumn = () => {
-    const newRows = rows.map(row => [...row, { content: "", isHeader: row[0]?.isHeader || false }]);
+    const newRows = rows.map(row => [...row, ""]);
     setRows(newRows);
   };
 
@@ -88,99 +43,52 @@ const HtmlTableGenerator = () => {
     }
   };
 
-  const updateCell = (rowIndex: number, colIndex: number, content: string) => {
+  const updateCell = (rowIndex: number, colIndex: number, value: string) => {
     const newRows = [...rows];
-    newRows[rowIndex][colIndex].content = content;
+    newRows[rowIndex][colIndex] = value;
     setRows(newRows);
-  };
-
-  const toggleHeader = (rowIndex: number, colIndex: number) => {
-    const newRows = [...rows];
-    newRows[rowIndex][colIndex].isHeader = !newRows[rowIndex][colIndex].isHeader;
-    setRows(newRows);
-  };
-
-  const generateCSS = () => {
-    const tableId = "generated-table";
-    return `
-<style>
-#${tableId} {
-  border-collapse: collapse;
-  width: 100%;
-  font-family: ${styling.fontFamily};
-  font-size: ${styling.fontSize};
-  color: ${styling.textColor};
-  ${styling.responsive ? 'overflow-x: auto; display: block; white-space: nowrap;' : ''}
-}
-
-#${tableId} th,
-#${tableId} td {
-  border: ${styling.borderWidth} ${styling.borderStyle} ${styling.borderColor};
-  padding: ${styling.padding};
-  text-align: left;
-}
-
-#${tableId} th {
-  background-color: ${styling.headerBgColor};
-  color: ${styling.headerTextColor};
-  font-weight: bold;
-}
-
-${styling.stripedRows ? `
-#${tableId} tr:nth-child(even) {
-  background-color: ${styling.evenRowBgColor};
-}
-
-#${tableId} tr:nth-child(odd) {
-  background-color: ${styling.oddRowBgColor};
-}
-` : ''}
-
-${styling.hoverEffect === 'background' ? `
-#${tableId} tr:hover {
-  background-color: ${styling.hoverColor} !important;
-  transition: background-color ${styling.hoverDuration};
-}
-` : styling.hoverEffect === 'scale' ? `
-#${tableId} tr:hover {
-  transform: scale(1.02);
-  transition: transform ${styling.hoverDuration};
-}
-` : styling.hoverEffect === 'shadow' ? `
-#${tableId} tr:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: box-shadow ${styling.hoverDuration};
-}
-` : ''}
-
-${styling.responsive ? `
-@media (max-width: 768px) {
-  #${tableId} {
-    font-size: 12px;
-  }
-  #${tableId} th,
-  #${tableId} td {
-    padding: 6px;
-  }
-}
-` : ''}
-</style>`;
   };
 
   const generateHTML = () => {
-    const css = generateCSS();
     const tableRows = rows.map((row, rowIndex) => {
       const cells = row.map((cell, colIndex) => {
-        const tag = cell.isHeader ? 'th' : 'td';
-        return `    <${tag}>${cell.content}</${tag}>`;
+        const tag = rowIndex === 0 ? 'th' : 'td';
+        return `    <${tag}>${cell}</${tag}>`;
       }).join('\n');
       return `  <tr>\n${cells}\n  </tr>`;
     }).join('\n');
 
-    const html = `${css}
-<table id="generated-table">
+    const html = `<table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
 ${tableRows}
-</table>`;
+</table>
+
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+</style>`;
 
     setHtmlOutput(html);
     setActiveTab("html");
@@ -201,24 +109,24 @@ ${tableRows}
 
   const faqs = [
     {
-      question: "How do I make my table responsive?",
-      answer: "Enable the 'Responsive' option in styling. This adds CSS that makes the table scroll horizontally on smaller screens and adjusts font sizes."
+      question: "How do I add more rows or columns?",
+      answer: "Use the 'Add Row' and 'Add Column' buttons above the table. You can also remove rows and columns using the minus buttons."
     },
     {
-      question: "Can I customize hover effects?",
-      answer: "Yes! You can choose from background color change, scale effect, or shadow effect. You can also customize the hover color and animation duration."
+      question: "Can I customize the table styling?",
+      answer: "Yes! The generated HTML includes CSS for borders, colors, and hover effects. You can modify the CSS in the HTML output to customize the appearance."
     },
     {
-      question: "How do I add more styling options?",
-      answer: "Use the Styling tab to customize colors, fonts, borders, spacing, and hover effects. All changes are reflected in the generated CSS."
+      question: "Is the first row automatically a header?",
+      answer: "Yes, the first row is automatically treated as table headers (th elements) with bold styling and background color."
     }
   ];
 
   return (
     <SEOWrapper
-      title="HTML Table Generator - Create Tables with Advanced Styling"
-      description="Generate HTML tables with advanced styling options. Customize colors, hover effects, fonts, borders and make responsive tables easily."
-      keywords="html table generator, table creator, responsive tables, css table styling"
+      title="HTML Table Generator - Create Tables Easily"
+      description="Generate HTML tables quickly with clean code. Simple interface to create rows, columns, and export professional HTML table code."
+      keywords="html table generator, table creator, html table code, web table maker"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -226,7 +134,7 @@ ${tableRows}
             HTML Table Generator
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Create professional HTML tables with advanced styling options, hover effects, and responsive design.
+            Create professional HTML tables with clean code. Simple interface to add rows, columns, and generate ready-to-use HTML.
           </p>
         </div>
 
@@ -240,16 +148,9 @@ ${tableRows}
               </CardHeader>
               <CardContent>
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                  <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="table">
-                      <Eye className="h-4 w-4 mr-2" />
-                      Table
-                    </TabsTrigger>
-                    <TabsTrigger value="styling">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Styling
-                    </TabsTrigger>
-                    <TabsTrigger value="html">HTML</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="table">Edit Table</TabsTrigger>
+                    <TabsTrigger value="html">HTML Code</TabsTrigger>
                     <TabsTrigger value="preview">Preview</TabsTrigger>
                   </TabsList>
 
@@ -265,184 +166,55 @@ ${tableRows}
                       </Button>
                     </div>
 
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse border border-border">
+                    <div className="overflow-x-auto border rounded-lg">
+                      <table className="w-full">
                         {rows.map((row, rowIndex) => (
-                          <tr key={rowIndex} className="border-b border-border">
+                          <tr key={rowIndex}>
+                            <td className="p-2 border-r bg-muted/50 text-center min-w-[40px]">
+                              <Button
+                                onClick={() => removeRow(rowIndex)}
+                                size="sm"
+                                variant="ghost"
+                                disabled={rows.length <= 1}
+                                className="h-6 w-6 p-0"
+                              >
+                                <Minus className="h-3 w-3" />
+                              </Button>
+                            </td>
                             {row.map((cell, colIndex) => (
-                              <td key={colIndex} className="border border-border p-2 relative">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <label className="flex items-center gap-1 text-xs">
-                                    <Checkbox
-                                      checked={cell.isHeader}
-                                      onCheckedChange={() => toggleHeader(rowIndex, colIndex)}
-                                    />
-                                    Header
-                                  </label>
-                                  {colIndex === 0 && (
-                                    <Button
-                                      onClick={() => removeRow(rowIndex)}
-                                      size="sm"
-                                      variant="outline"
-                                      disabled={rows.length <= 1}
-                                    >
-                                      <Minus className="h-3 w-3" />
-                                    </Button>
-                                  )}
-                                  {rowIndex === 0 && (
-                                    <Button
-                                      onClick={() => removeColumn(colIndex)}
-                                      size="sm"
-                                      variant="outline"
-                                      disabled={row.length <= 1}
-                                    >
-                                      <Minus className="h-3 w-3" />
-                                    </Button>
-                                  )}
-                                </div>
+                              <td key={colIndex} className="p-2 border-r border-b min-w-[150px]">
                                 <Input
-                                  value={cell.content}
+                                  value={cell}
                                   onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
-                                  placeholder={cell.isHeader ? "Header text" : "Cell content"}
+                                  placeholder={rowIndex === 0 ? "Header text" : "Cell content"}
+                                  className="border-0 focus-visible:ring-0"
                                 />
                               </td>
                             ))}
                           </tr>
                         ))}
+                        <tr>
+                          <td className="p-2 border-r bg-muted/50"></td>
+                          {rows[0]?.map((_, colIndex) => (
+                            <td key={colIndex} className="p-2 border-r text-center">
+                              <Button
+                                onClick={() => removeColumn(colIndex)}
+                                size="sm"
+                                variant="ghost"
+                                disabled={rows[0]?.length <= 1}
+                                className="h-6 w-6 p-0"
+                              >
+                                <Minus className="h-3 w-3" />
+                              </Button>
+                            </td>
+                          ))}
+                        </tr>
                       </table>
                     </div>
 
-                    <Button onClick={generateHTML} className="w-full">
+                    <Button onClick={generateHTML} className="w-full" size="lg">
                       Generate HTML Table
                     </Button>
-                  </TabsContent>
-
-                  <TabsContent value="styling" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Colors */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Colors</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label htmlFor="headerBg">Header Background</Label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={styling.headerBgColor}
-                                onChange={(e) => setStyling({...styling, headerBgColor: e.target.value})}
-                                className="w-12 h-10 rounded border"
-                              />
-                              <Input
-                                value={styling.headerBgColor}
-                                onChange={(e) => setStyling({...styling, headerBgColor: e.target.value})}
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <Label htmlFor="headerText">Header Text</Label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={styling.headerTextColor}
-                                onChange={(e) => setStyling({...styling, headerTextColor: e.target.value})}
-                                className="w-12 h-10 rounded border"
-                              />
-                              <Input
-                                value={styling.headerTextColor}
-                                onChange={(e) => setStyling({...styling, headerTextColor: e.target.value})}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Typography */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Typography</h3>
-                        <div className="grid grid-cols-1 gap-4">
-                          <div>
-                            <Label htmlFor="fontFamily">Font Family</Label>
-                            <Select
-                              value={styling.fontFamily}
-                              onValueChange={(value) => setStyling({...styling, fontFamily: value})}
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Arial, sans-serif">Arial</SelectItem>
-                                <SelectItem value="Georgia, serif">Georgia</SelectItem>
-                                <SelectItem value="'Times New Roman', serif">Times New Roman</SelectItem>
-                                <SelectItem value="'Courier New', monospace">Courier New</SelectItem>
-                                <SelectItem value="Helvetica, sans-serif">Helvetica</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Hover Effects */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Hover Effects</h3>
-                        <div className="grid grid-cols-1 gap-4">
-                          <div>
-                            <Label htmlFor="hoverEffect">Hover Effect</Label>
-                            <Select
-                              value={styling.hoverEffect}
-                              onValueChange={(value) => setStyling({...styling, hoverEffect: value})}
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="none">None</SelectItem>
-                                <SelectItem value="background">Background Color</SelectItem>
-                                <SelectItem value="scale">Scale Effect</SelectItem>
-                                <SelectItem value="shadow">Shadow Effect</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label htmlFor="hoverDuration">Animation Duration</Label>
-                            <Select
-                              value={styling.hoverDuration}
-                              onValueChange={(value) => setStyling({...styling, hoverDuration: value})}
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="0.1s">Fast (0.1s)</SelectItem>
-                                <SelectItem value="0.3s">Normal (0.3s)</SelectItem>
-                                <SelectItem value="0.5s">Slow (0.5s)</SelectItem>
-                                <SelectItem value="1s">Very Slow (1s)</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Options */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Options</h3>
-                        <div className="space-y-2">
-                          <label className="flex items-center space-x-2">
-                            <Checkbox
-                              checked={styling.stripedRows}
-                              onCheckedChange={(checked) => setStyling({...styling, stripedRows: checked as boolean})}
-                            />
-                            <span>Striped Rows</span>
-                          </label>
-                          <label className="flex items-center space-x-2">
-                            <Checkbox
-                              checked={styling.responsive}
-                              onCheckedChange={(checked) => setStyling({...styling, responsive: checked as boolean})}
-                            />
-                            <span>Responsive Design</span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
                   </TabsContent>
 
                   <TabsContent value="html" className="space-y-4">
