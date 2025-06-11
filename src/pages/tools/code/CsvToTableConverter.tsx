@@ -1,342 +1,337 @@
 
 import { useState } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
-import { FileUp, Code, Copy, Download, Table as TableIcon, FileCode, Upload } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
+import { Upload, Copy, Eye, Settings, Download } from "lucide-react";
+
+interface StylingOptions {
+  tableStyle: string;
+  headerBgColor: string;
+  headerTextColor: string;
+  rowBgColor: string;
+  altRowBgColor: string;
+  textColor: string;
+  borderColor: string;
+  borderWidth: string;
+  borderStyle: string;
+  fontSize: string;
+  fontFamily: string;
+  padding: string;
+  hoverEffect: string;
+  hoverColor: string;
+  hoverDuration: string;
+  stripedRows: boolean;
+  tableBorders: boolean;
+  responsive: boolean;
+}
 
 const CsvToTableConverter = () => {
-  const [input, setInput] = useState("");
-  const [parsedData, setParsedData] = useState<string[][]>([]);
-  const [outputFormat, setOutputFormat] = useState("html");
-  const [delimiter, setDelimiter] = useState(",");
-  const [hasHeaders, setHasHeaders] = useState(true);
+  const [csvData, setCsvData] = useState("");
   const [htmlOutput, setHtmlOutput] = useState("");
-  const [markdownOutput, setMarkdownOutput] = useState("");
   const [activeTab, setActiveTab] = useState("input");
-  const [tableStyle, setTableStyle] = useState("modern");
+  const [delimiter, setDelimiter] = useState(",");
+  const [hasHeader, setHasHeader] = useState(true);
   const [tableId, setTableId] = useState("csv-table");
-  const [responsiveTable, setResponsiveTable] = useState(true);
-  const [stripedRows, setStripedRows] = useState(false);
-  const [hoveredRows, setHoveredRows] = useState(true);
-  const [tableBorders, setTableBorders] = useState(true);
-  const [cellPadding, setCellPadding] = useState("medium");
-  const [alignNumbers, setAlignNumbers] = useState(true);
   const [tableCaption, setTableCaption] = useState("");
+  const [styling, setStyling] = useState<StylingOptions>({
+    tableStyle: "modern",
+    headerBgColor: "#f8f9fa",
+    headerTextColor: "#212529",
+    rowBgColor: "#ffffff",
+    altRowBgColor: "#f8f9fa",
+    textColor: "#212529",
+    borderColor: "#dee2e6",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    fontSize: "14px",
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    padding: "8px 12px",
+    hoverEffect: "background",
+    hoverColor: "#e9ecef",
+    hoverDuration: "0.2s",
+    stripedRows: true,
+    tableBorders: true,
+    responsive: true
+  });
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && (file.type === "text/csv" || file.name.endsWith('.csv'))) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const csv = e.target?.result as string;
-        setInput(csv);
-        toast.success(`File "${file.name}" loaded successfully`);
-      };
-      reader.readAsText(file);
-    } else {
-      toast.error("Please upload a valid CSV file");
-    }
+  const { toast } = useToast();
+
+  const generateCSS = () => {
+    const baseStyles = {
+      modern: {
+        borderRadius: "8px",
+        overflow: "hidden",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+      },
+      classic: {
+        border: `2px ${styling.borderStyle} ${styling.borderColor}`
+      },
+      minimal: {
+        border: "none"
+      },
+      dark: {
+        backgroundColor: "#1f2937",
+        color: "#f9fafb",
+        border: `1px ${styling.borderStyle} #374151`
+      }
+    };
+
+    const selectedStyle = baseStyles[styling.tableStyle as keyof typeof baseStyles] || baseStyles.modern;
+
+    return `
+<style>
+#${tableId} {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: ${styling.fontFamily};
+  font-size: ${styling.fontSize};
+  color: ${styling.textColor};
+  ${Object.entries(selectedStyle).map(([key, value]) => 
+    `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`
+  ).join('\n  ')}
+  ${styling.responsive ? 'margin: 0 auto; max-width: 100%;' : ''}
+}
+
+${styling.responsive ? `
+#${tableId}-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+` : ''}
+
+#${tableId} th,
+#${tableId} td {
+  padding: ${styling.padding};
+  text-align: left;
+  ${styling.tableBorders ? `border: ${styling.borderWidth} ${styling.borderStyle} ${styling.borderColor};` : ''}
+}
+
+#${tableId} th {
+  background-color: ${styling.headerBgColor};
+  color: ${styling.headerTextColor};
+  font-weight: bold;
+  ${!styling.tableBorders ? `border-bottom: 2px ${styling.borderStyle} ${styling.borderColor};` : ''}
+}
+
+${styling.stripedRows ? `
+#${tableId} tbody tr:nth-child(even) {
+  background-color: ${styling.altRowBgColor};
+}
+
+#${tableId} tbody tr:nth-child(odd) {
+  background-color: ${styling.rowBgColor};
+}
+` : `
+#${tableId} tbody tr {
+  background-color: ${styling.rowBgColor};
+}
+`}
+
+${styling.hoverEffect === 'background' ? `
+#${tableId} tbody tr:hover {
+  background-color: ${styling.hoverColor} !important;
+  transition: background-color ${styling.hoverDuration};
+}
+` : styling.hoverEffect === 'scale' ? `
+#${tableId} tbody tr:hover {
+  transform: scale(1.01);
+  transition: transform ${styling.hoverDuration};
+}
+` : styling.hoverEffect === 'shadow' ? `
+#${tableId} tbody tr:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: box-shadow ${styling.hoverDuration};
+}
+` : ''}
+
+${styling.responsive ? `
+@media (max-width: 768px) {
+  #${tableId} {
+    font-size: 12px;
+  }
+  #${tableId} th,
+  #${tableId} td {
+    padding: 6px 8px;
+  }
+}
+` : ''}
+
+caption {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: ${styling.textColor};
+}
+</style>`;
   };
 
-  const parseCSV = (csvText: string = input) => {
-    if (!csvText.trim()) {
-      toast.error("Please provide CSV data");
+  const convertToHtml = () => {
+    if (!csvData.trim()) {
+      toast({
+        title: "No data",
+        description: "Please paste some CSV data first",
+        variant: "destructive"
+      });
       return;
     }
 
     try {
-      const lines = csvText.trim().split('\n');
-      const data = lines.map(line => {
-        const cells = [];
+      const lines = csvData.trim().split('\n');
+      if (lines.length === 0) {
+        throw new Error("No data found");
+      }
+
+      const parseCSVLine = (line: string) => {
+        const result = [];
         let current = '';
         let inQuotes = false;
         
         for (let i = 0; i < line.length; i++) {
           const char = line[i];
+          const nextChar = line[i + 1];
+          
           if (char === '"') {
-            inQuotes = !inQuotes;
+            if (inQuotes && nextChar === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
           } else if (char === delimiter && !inQuotes) {
-            cells.push(current.trim().replace(/^"|"$/g, ''));
+            result.push(current.trim());
             current = '';
           } else {
             current += char;
           }
         }
-        cells.push(current.trim().replace(/^"|"$/g, ''));
-        return cells;
-      });
+        
+        result.push(current.trim());
+        return result;
+      };
 
-      setParsedData(data);
-      generateOutputs(data);
-      setActiveTab("preview");
-      toast.success("CSV parsed successfully!");
-    } catch (error) {
-      toast.error("Error parsing CSV data");
-    }
-  };
-
-  const getPaddingValue = () => {
-    switch (cellPadding) {
-      case "small": return "6px";
-      case "medium": return "12px";
-      case "large": return "16px";
-      default: return "12px";
-    }
-  };
-
-  const getTableStyles = () => {
-    const styles: { [key: string]: any } = {
-      modern: {
-        fontFamily: "system-ui, -apple-system, sans-serif",
-        borderRadius: "8px",
-        overflow: "hidden",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
-      },
-      classic: {
-        fontFamily: "Georgia, serif",
-        border: tableBorders ? "2px solid #374151" : "none",
-      },
-      minimal: {
-        fontFamily: "Arial, sans-serif",
-        border: "none",
-      },
-      dark: {
-        backgroundColor: "#1f2937",
-        color: "#f9fafb",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-        border: tableBorders ? "1px solid #374151" : "none",
-      },
-      material: {
-        fontFamily: "Roboto, sans-serif",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-        borderRadius: "4px",
-        overflow: "hidden",
-      }
-    };
-    return styles[tableStyle] || styles.modern;
-  };
-
-  const isNumeric = (value: string): boolean => {
-    return !isNaN(parseFloat(value)) && isFinite(Number(value));
-  };
-
-  const generateOutputs = (data: string[][]) => {
-    if (data.length === 0) return;
-
-    // Generate HTML
-    const tableStyles = getTableStyles();
-    const padding = getPaddingValue();
-
-    let html = `<style>
-#${tableId} {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 20px 0;
-  ${Object.entries(tableStyles).map(([key, value]) => 
-    `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`
-  ).join('\n  ')}
-}
-
-${responsiveTable ? `
-.table-responsive {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}` : ''}
-
-#${tableId} th,
-#${tableId} td {
-  padding: ${padding};
-  text-align: left;
-  ${tableBorders ? `border: 1px solid ${tableStyle === 'dark' ? '#374151' : '#dee2e6'};` : ''}
-}
-
-#${tableId} th {
-  background-color: ${tableStyle === 'dark' ? '#374151' : '#f8f9fa'};
-  font-weight: bold;
-  ${!tableBorders ? 'border-bottom: 2px solid #dee2e6;' : ''}
-}
-
-${stripedRows ? `
-#${tableId} tbody tr:nth-child(odd) {
-  background-color: ${tableStyle === 'dark' ? '#1a1f2b' : '#f2f2f2'};
-}` : ''}
-
-${hoveredRows ? `
-#${tableId} tbody tr:hover {
-  background-color: ${tableStyle === 'dark' ? '#2d3748' : '#e9ecef'};
-}` : ''}
-
-${alignNumbers ? `
-#${tableId} .number-cell {
-  text-align: right;
-}` : ''}
-</style>
-
-${responsiveTable ? '<div class="table-responsive">\n' : ''}
-<table id="${tableId}">
-`;
-    
-    if (tableCaption) {
-      html += `  <caption>${tableCaption}</caption>\n`;
-    }
-    
-    if (hasHeaders && data.length > 0) {
-      html += '  <thead>\n    <tr>\n';
-      data[0].forEach(cell => {
-        html += `      <th>${cell}</th>\n`;
-      });
-      html += '    </tr>\n  </thead>\n  <tbody>\n';
+      const rows = lines.map(line => parseCSVLine(line));
+      const css = generateCSS();
       
-      for (let i = 1; i < data.length; i++) {
-        html += '    <tr>\n';
-        data[i].forEach(cell => {
-          const isNumber = isNumeric(cell);
-          html += `      <td${isNumber && alignNumbers ? ' class="number-cell"' : ''}>${cell}</td>\n`;
-        });
-        html += '    </tr>\n';
-      }
-    } else {
-      html += '  <tbody>\n';
-      data.forEach(row => {
-        html += '    <tr>\n';
-        row.forEach(cell => {
-          const isNumber = isNumeric(cell);
-          html += `      <td${isNumber && alignNumbers ? ' class="number-cell"' : ''}>${cell}</td>\n`;
-        });
-        html += '    </tr>\n';
-      });
-    }
-    
-    html += '  </tbody>\n</table>';
-    
-    if (responsiveTable) {
-      html += '\n</div>';
-    }
-    
-    setHtmlOutput(html);
-
-    // Generate Markdown
-    let markdown = "";
-    if (data.length > 0) {
-      if (hasHeaders) {
-        markdown += "| " + data[0].join(" | ") + " |\n";
-        markdown += "|" + data[0].map(col => {
-          // For numeric columns, align right with ---:
-          const isNumberCol = data.slice(1).some(row => {
-            const cellIndex = data[0].indexOf(col);
-            return row[cellIndex] && isNumeric(row[cellIndex]);
-          });
-          return isNumberCol && alignNumbers ? " ---: " : " --- ";
-        }).join("|") + "|\n";
-        
-        for (let i = 1; i < data.length; i++) {
-          markdown += "| " + data[i].join(" | ") + " |\n";
-        }
-      } else {
-        // Determine column alignments by checking if columns are numeric
-        const alignments = data[0].map((_, colIndex) => {
-          const isNumberCol = data.some(row => row[colIndex] && isNumeric(row[colIndex]));
-          return isNumberCol && alignNumbers ? " ---: " : " --- ";
-        });
-        
-        // Add header row for markdown which needs one
-        markdown += "| " + data[0].map((_, i) => `Column ${i+1}`).join(" | ") + " |\n";
-        markdown += "|" + alignments.join("|") + "|\n";
-        
-        data.forEach(row => {
-          markdown += "| " + row.join(" | ") + " |\n";
-        });
-      }
+      let html = css + '\n';
+      html += styling.responsive ? `<div id="${tableId}-container">\n` : '';
+      html += `<table id="${tableId}">`;
       
       if (tableCaption) {
-        markdown = `**${tableCaption}**\n\n` + markdown;
+        html += `\n  <caption>${tableCaption}</caption>`;
       }
+
+      if (hasHeader && rows.length > 0) {
+        html += '\n  <thead>\n    <tr>';
+        rows[0].forEach(cell => {
+          html += `\n      <th>${cell || ''}</th>`;
+        });
+        html += '\n    </tr>\n  </thead>';
+      }
+
+      html += '\n  <tbody>';
+      const dataRows = hasHeader ? rows.slice(1) : rows;
+      
+      dataRows.forEach(row => {
+        html += '\n    <tr>';
+        row.forEach(cell => {
+          html += `\n      <td>${cell || ''}</td>`;
+        });
+        html += '\n    </tr>';
+      });
+
+      html += '\n  </tbody>\n</table>';
+      html += styling.responsive ? '\n</div>' : '';
+
+      setHtmlOutput(html);
+      setActiveTab("output");
+      
+      toast({
+        title: "Converted successfully!",
+        description: "CSV data has been converted to HTML table"
+      });
+    } catch (error) {
+      toast({
+        title: "Conversion failed",
+        description: "Please check your CSV data format",
+        variant: "destructive"
+      });
     }
-    setMarkdownOutput(markdown);
   };
 
-  const copyToClipboard = (content: string, format: string) => {
-    navigator.clipboard.writeText(content);
-    toast.success(`${format} table copied to clipboard!`);
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(htmlOutput);
+    toast({
+      title: "Copied!",
+      description: "HTML code copied to clipboard"
+    });
   };
 
-  const downloadTable = (format: string) => {
-    const content = format === 'html' ? htmlOutput : markdownOutput;
-    const extension = format === 'html' ? 'html' : 'md';
-    const blob = new Blob([content], { type: format === 'html' ? 'text/html' : 'text/markdown' });
+  const downloadHTML = () => {
+    const blob = new Blob([htmlOutput], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `converted_table.${extension}`;
-    document.body.appendChild(a);
+    a.download = `${tableId}.html`;
     a.click();
-    document.body.removeChild(a);
     URL.revokeObjectURL(url);
-
-    toast.success(`${format.toUpperCase()} file downloaded!`);
+    toast({
+      title: "Downloaded!",
+      description: "HTML file downloaded successfully"
+    });
   };
 
-  const clearAll = () => {
-    setInput("");
-    setParsedData([]);
+  const clearData = () => {
+    setCsvData("");
     setHtmlOutput("");
-    setMarkdownOutput("");
     setActiveTab("input");
-    
-    // Clear file input
-    const fileInput = document.getElementById('file') as HTMLInputElement;
-    if (fileInput) fileInput.value = '';
-    
-    toast.info("All data cleared");
+  };
+
+  const loadSampleData = () => {
+    const sampleData = `Name,Age,City,Country
+John Doe,30,New York,USA
+Jane Smith,25,London,UK
+Bob Johnson,35,Toronto,Canada`;
+    setCsvData(sampleData);
   };
 
   const faqs = [
     {
       question: "What CSV formats are supported?",
-      answer: "The tool supports standard CSV with various delimiters (comma, semicolon, or tab). It properly handles quoted fields and escaped quotes for more complex CSV data."
+      answer: "The converter supports standard CSV with customizable delimiters (comma, semicolon, tab, pipe). It handles quoted fields and escaped quotes properly."
     },
     {
-      question: "How do I customize the table output?",
-      answer: "You can choose between HTML and Markdown output formats, customize the table styling, add borders, striped rows, and hover effects, and even align numeric values automatically."
+      question: "Can I customize the table appearance?",
+      answer: "Yes! You can customize colors, fonts, borders, hover effects, padding, and choose from multiple pre-built themes. All styling is embedded in the HTML output."
     },
     {
-      question: "Can I use the generated tables in my website?",
-      answer: "Yes! The HTML output includes responsive design and styling that you can directly copy into your web page. The Markdown output works great with GitHub, GitLab, or any platform that supports Markdown."
-    },
-    {
-      question: "How do I handle large CSV files?",
-      answer: "For very large CSV files, we recommend splitting them into smaller chunks before processing. The tool works best with files up to a few MB in size."
-    },
-    {
-      question: "Why are my numbers right-aligned?",
-      answer: "By default, the converter automatically detects numeric values and right-aligns them, which is a common convention for displaying numbers in tables. You can disable this feature in the styling options."
+      question: "How do I handle CSV files with special characters?",
+      answer: "The converter properly handles quoted fields, escaped quotes, and special characters. Make sure your CSV follows standard formatting rules."
     }
   ];
 
   return (
     <SEOWrapper
-      title="CSV to Table Converter - Convert CSV to HTML & Markdown"
-      description="Convert CSV data to formatted HTML and Markdown tables. Upload files or paste CSV data with custom delimiter support."
-      keywords="csv to html, csv to markdown, table converter, csv parser, data converter"
+      title="CSV to HTML Table Converter - Convert CSV to Styled Tables"
+      description="Convert CSV data to beautiful HTML tables with advanced styling options, custom delimiters, and responsive design."
+      keywords="csv to html, csv converter, html table generator, csv parser, data visualization"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            CSV to Table Converter
+            CSV to HTML Table Converter
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Convert CSV data to formatted HTML and Markdown tables with live preview.
+            Convert CSV data to beautiful, responsive HTML tables with advanced styling options.
           </p>
         </div>
 
@@ -346,60 +341,49 @@ ${responsiveTable ? '<div class="table-responsive">\n' : ''}
           <div className="lg:col-span-3">
             <Card>
               <CardHeader>
-                <CardTitle>CSV to Table Converter</CardTitle>
-                <CardDescription>
-                  Transform CSV data into beautifully formatted HTML or Markdown tables
-                </CardDescription>
+                <CardTitle>CSV to HTML Table Converter</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="mb-4 grid grid-cols-4">
+              <CardContent>
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                  <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="input">
                       <Upload className="h-4 w-4 mr-2" />
                       Input
                     </TabsTrigger>
+                    <TabsTrigger value="settings">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Settings
+                    </TabsTrigger>
                     <TabsTrigger value="preview">
-                      <TableIcon className="h-4 w-4 mr-2" />
+                      <Eye className="h-4 w-4 mr-2" />
                       Preview
                     </TabsTrigger>
-                    <TabsTrigger value="styling">
-                      <Code className="h-4 w-4 mr-2" />
-                      Styling
-                    </TabsTrigger>
-                    <TabsTrigger value="export">
-                      <Download className="h-4 w-4 mr-2" />
-                      Export
-                    </TabsTrigger>
+                    <TabsTrigger value="output">Output</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="input" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="file">Upload CSV File</Label>
-                      <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer"
-                        onClick={() => document.getElementById('file')?.click()}>
-                        <FileUp className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
-                        <p className="text-lg font-medium text-foreground mb-1">Click to upload a CSV file</p>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          or paste CSV content directly below
-                        </p>
-                        <Input
-                          id="file"
-                          type="file"
-                          accept=".csv,text/csv"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                        />
-                        <Button size="sm" variant="outline" onClick={(e) => {
-                          e.stopPropagation();
-                          document.getElementById('file')?.click();
-                        }}>
-                          Browse Files
-                        </Button>
-                      </div>
+                    <div className="flex gap-2 mb-4">
+                      <Button onClick={loadSampleData} variant="outline" size="sm">
+                        Load Sample
+                      </Button>
+                      <Button onClick={clearData} variant="outline" size="sm">
+                        Clear
+                      </Button>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="csvData">CSV Data</Label>
+                      <Textarea
+                        id="csvData"
+                        value={csvData}
+                        onChange={(e) => setCsvData(e.target.value)}
+                        placeholder="Paste your CSV data here..."
+                        className="min-h-[300px] font-mono text-sm"
+                      />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-2 md:col-span-2">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
                         <Label htmlFor="delimiter">Delimiter</Label>
                         <Select value={delimiter} onValueChange={setDelimiter}>
                           <SelectTrigger>
@@ -413,122 +397,49 @@ ${responsiveTable ? '<div class="table-responsive">\n' : ''}
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 pt-6">
                         <Checkbox
-                          id="headers"
-                          checked={hasHeaders}
-                          onCheckedChange={(checked) => setHasHeaders(checked === true)}
+                          id="hasHeader"
+                          checked={hasHeader}
+                          onCheckedChange={(checked) => setHasHeader(checked === true)}
                         />
-                        <Label htmlFor="headers">First row is headers</Label>
+                        <Label htmlFor="hasHeader">First row is header</Label>
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="input">CSV Data</Label>
-                      <Textarea
-                        id="input"
-                        placeholder="Paste your CSV data here or upload a file above..."
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        className="min-h-[200px] font-mono"
-                      />
-                    </div>
-
-                    <div className="flex justify-end gap-2">
-                      <Button onClick={clearAll} variant="outline">
-                        Clear
-                      </Button>
-                      <Button onClick={() => parseCSV()}>
-                        Parse CSV
-                      </Button>
-                    </div>
+                    <Button onClick={convertToHtml} disabled={!csvData.trim()} className="w-full">
+                      Convert to HTML Table
+                    </Button>
                   </TabsContent>
 
-                  <TabsContent value="preview" className="space-y-4">
-                    {parsedData.length > 0 ? (
-                      <div>
-                        <Label>Table Preview</Label>
-                        <div className="border rounded-md p-4 mt-2 max-h-[400px] overflow-auto">
-                          <Table>
-                            {hasHeaders && (
-                              <TableHeader>
-                                <TableRow>
-                                  {parsedData[0]?.map((cell, index) => (
-                                    <TableHead key={index}>{cell}</TableHead>
-                                  ))}
-                                </TableRow>
-                              </TableHeader>
-                            )}
-                            <TableBody>
-                              {(hasHeaders ? parsedData.slice(1) : parsedData).map((row, rowIndex) => (
-                                <TableRow key={rowIndex}>
-                                  {row.map((cell, cellIndex) => {
-                                    const isNumber = isNumeric(cell);
-                                    return (
-                                      <TableCell 
-                                        key={cellIndex}
-                                        className={isNumber && alignNumbers ? "text-right" : ""}
-                                      >
-                                        {cell}
-                                      </TableCell>
-                                    );
-                                  })}
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
-                        <div className="flex justify-end mt-4 gap-2">
-                          <Button onClick={() => setActiveTab("input")} variant="outline">
-                            Back to Input
-                          </Button>
-                          <Button onClick={() => setActiveTab("styling")}>
-                            Continue to Styling
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-center p-12 border-2 border-dashed rounded-lg">
-                        <TableIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-medium mb-2">No Data Parsed Yet</h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Upload your CSV file or paste CSV data and click "Parse CSV"
-                        </p>
-                        <Button onClick={() => setActiveTab("input")}>
-                          Go to Input
-                        </Button>
-                      </div>
-                    )}
-                  </TabsContent>
-
-                  <TabsContent value="styling" className="space-y-6">
-                    {parsedData.length > 0 ? (
-                      <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
+                  <TabsContent value="settings" className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Basic Settings</h3>
+                        <div className="space-y-4">
+                          <div>
                             <Label htmlFor="tableId">Table ID</Label>
                             <Input
                               id="tableId"
                               value={tableId}
                               onChange={(e) => setTableId(e.target.value)}
-                              placeholder="csv-table"
                             />
                           </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="tableCaption">Table Caption (Optional)</Label>
+                          <div>
+                            <Label htmlFor="tableCaption">Table Caption</Label>
                             <Input
                               id="tableCaption"
                               value={tableCaption}
                               onChange={(e) => setTableCaption(e.target.value)}
-                              placeholder="My CSV Data"
+                              placeholder="Optional table caption"
                             />
                           </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label>Table Style</Label>
-                            <Select value={tableStyle} onValueChange={setTableStyle}>
+                          <div>
+                            <Label htmlFor="tableStyle">Table Style</Label>
+                            <Select
+                              value={styling.tableStyle}
+                              onValueChange={(value) => setStyling({...styling, tableStyle: value})}
+                            >
                               <SelectTrigger>
                                 <SelectValue />
                               </SelectTrigger>
@@ -536,202 +447,119 @@ ${responsiveTable ? '<div class="table-responsive">\n' : ''}
                                 <SelectItem value="modern">Modern</SelectItem>
                                 <SelectItem value="classic">Classic</SelectItem>
                                 <SelectItem value="minimal">Minimal</SelectItem>
-                                <SelectItem value="dark">Dark Theme</SelectItem>
-                                <SelectItem value="material">Material Design</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="space-y-2">
-                            <Label>Cell Padding</Label>
-                            <Select value={cellPadding} onValueChange={setCellPadding}>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="small">Small</SelectItem>
-                                <SelectItem value="medium">Medium</SelectItem>
-                                <SelectItem value="large">Large</SelectItem>
+                                <SelectItem value="dark">Dark</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
                         </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="responsiveTable"
-                              checked={responsiveTable}
-                              onCheckedChange={(checked) => setResponsiveTable(checked === true)}
-                            />
-                            <Label htmlFor="responsiveTable">Responsive Table</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="tableBorders"
-                              checked={tableBorders}
-                              onCheckedChange={(checked) => setTableBorders(checked === true)}
-                            />
-                            <Label htmlFor="tableBorders">Table Borders</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="stripedRows"
-                              checked={stripedRows}
-                              onCheckedChange={(checked) => setStripedRows(checked === true)}
-                            />
-                            <Label htmlFor="stripedRows">Striped Rows</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="hoveredRows"
-                              checked={hoveredRows}
-                              onCheckedChange={(checked) => setHoveredRows(checked === true)}
-                            />
-                            <Label htmlFor="hoveredRows">Hover Effect</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="alignNumbers"
-                              checked={alignNumbers}
-                              onCheckedChange={(checked) => setAlignNumbers(checked === true)}
-                            />
-                            <Label htmlFor="alignNumbers">Right-align Numbers</Label>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label>Output Format</Label>
-                          <Select value={outputFormat} onValueChange={setOutputFormat}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="html">HTML Table</SelectItem>
-                              <SelectItem value="markdown">Markdown Table</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="flex justify-end gap-2">
-                          <Button onClick={() => setActiveTab("preview")} variant="outline">
-                            Back to Preview
-                          </Button>
-                          <Button onClick={() => {
-                            generateOutputs(parsedData);
-                            setActiveTab("export");
-                          }}>
-                            Generate Output
-                          </Button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="text-center p-12">
-                        <p>Please parse CSV data first</p>
-                        <Button onClick={() => setActiveTab("input")} className="mt-2">
-                          Go to Input
-                        </Button>
                       </div>
+
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Colors</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label>Header Background</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.headerBgColor}
+                                onChange={(e) => setStyling({...styling, headerBgColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.headerBgColor}
+                                onChange={(e) => setStyling({...styling, headerBgColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Header Text</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.headerTextColor}
+                                onChange={(e) => setStyling({...styling, headerTextColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.headerTextColor}
+                                onChange={(e) => setStyling({...styling, headerTextColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="stripedRows"
+                          checked={styling.stripedRows}
+                          onCheckedChange={(checked) => setStyling({...styling, stripedRows: checked === true})}
+                        />
+                        <Label htmlFor="stripedRows">Striped Rows</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="tableBorders"
+                          checked={styling.tableBorders}
+                          onCheckedChange={(checked) => setStyling({...styling, tableBorders: checked === true})}
+                        />
+                        <Label htmlFor="tableBorders">Table Borders</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="responsive"
+                          checked={styling.responsive}
+                          onCheckedChange={(checked) => setStyling({...styling, responsive: checked === true})}
+                        />
+                        <Label htmlFor="responsive">Responsive</Label>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="preview" className="space-y-4">
+                    <h3 className="text-lg font-semibold">Live Preview</h3>
+                    {htmlOutput ? (
+                      <div
+                        className="border border-border rounded-lg p-4 bg-background overflow-auto"
+                        dangerouslySetInnerHTML={{ __html: htmlOutput }}
+                      />
+                    ) : (
+                      <p className="text-muted-foreground">Convert CSV data to see preview</p>
                     )}
                   </TabsContent>
 
-                  <TabsContent value="export" className="space-y-4">
-                    {outputFormat === "html" && htmlOutput ? (
-                      <>
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <Label>HTML Output</Label>
-                            <div className="flex gap-2">
-                              <Button 
-                                onClick={() => copyToClipboard(htmlOutput, "HTML")} 
-                                variant="outline" 
-                                size="sm"
-                              >
-                                <Copy className="h-4 w-4 mr-1" />
-                                Copy HTML
-                              </Button>
-                              <Button 
-                                onClick={() => downloadTable('html')} 
-                                variant="outline" 
-                                size="sm"
-                              >
-                                <Download className="h-4 w-4 mr-1" />
-                                Download
-                              </Button>
-                            </div>
-                          </div>
-                          <Textarea
-                            value={htmlOutput}
-                            readOnly
-                            className="min-h-[200px] font-mono bg-muted"
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label>Preview</Label>
-                          <div className="border rounded-lg p-4 overflow-x-auto">
-                            <div dangerouslySetInnerHTML={{ __html: htmlOutput }} />
-                          </div>
-                        </div>
-                      </>
-                    ) : outputFormat === "markdown" && markdownOutput ? (
-                      <>
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <Label>Markdown Output</Label>
-                            <div className="flex gap-2">
-                              <Button 
-                                onClick={() => copyToClipboard(markdownOutput, "Markdown")} 
-                                variant="outline" 
-                                size="sm"
-                              >
-                                <Copy className="h-4 w-4 mr-1" />
-                                Copy Markdown
-                              </Button>
-                              <Button 
-                                onClick={() => downloadTable('markdown')} 
-                                variant="outline" 
-                                size="sm"
-                              >
-                                <Download className="h-4 w-4 mr-1" />
-                                Download
-                              </Button>
-                            </div>
-                          </div>
-                          <Textarea
-                            value={markdownOutput}
-                            readOnly
-                            className="min-h-[200px] font-mono bg-muted"
-                          />
-                        </div>
-                        
-                        <div className="flex justify-between mt-4">
-                          <Button onClick={() => setActiveTab("styling")} variant="outline">
-                            Back to Styling
-                          </Button>
-                          <Button onClick={clearAll}>
-                            Convert New CSV
-                          </Button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="text-center p-12 border-2 border-dashed rounded-lg">
-                        <FileCode className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-medium mb-2">No Output Generated Yet</h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Style your table and generate the output
-                        </p>
-                        <Button onClick={() => setActiveTab("styling")}>
-                          Go to Styling
+                  <TabsContent value="output" className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-semibold">Generated HTML</h3>
+                      <div className="flex gap-2">
+                        <Button onClick={copyToClipboard} disabled={!htmlOutput}>
+                          <Copy className="h-4 w-4 mr-2" />
+                          Copy
+                        </Button>
+                        <Button onClick={downloadHTML} variant="outline" disabled={!htmlOutput}>
+                          <Download className="h-4 w-4 mr-2" />
+                          Download
                         </Button>
                       </div>
-                    )}
+                    </div>
+                    <Textarea
+                      value={htmlOutput}
+                      readOnly
+                      className="font-mono text-sm min-h-[400px]"
+                      placeholder="Convert CSV data to see HTML code here..."
+                    />
                   </TabsContent>
                 </Tabs>
               </CardContent>
             </Card>
 
             <div className="mt-8">
-              <ToolFAQ toolName="CSV to Table Converter" faqs={faqs} />
+              <ToolFAQ toolName="CSV to HTML Table Converter" faqs={faqs} />
             </div>
           </div>
           <div>

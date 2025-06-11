@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
@@ -12,6 +12,7 @@ const ShadesTintsGenerator = () => {
   const [baseColor, setBaseColor] = useState("#3B82F6");
   const [shades, setShades] = useState<string[]>([]);
   const [tints, setTints] = useState<string[]>([]);
+  const { toast } = useToast();
 
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -66,6 +67,10 @@ const ShadesTintsGenerator = () => {
 
   const copyColor = (color: string) => {
     navigator.clipboard.writeText(color);
+    toast({
+      title: "Copied!",
+      description: `Color ${color} copied to clipboard`
+    });
   };
 
   const faqs = [

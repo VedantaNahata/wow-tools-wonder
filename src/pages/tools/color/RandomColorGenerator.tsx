@@ -1,14 +1,15 @@
-
 import { useState } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
 const RandomColorGenerator = () => {
   const [currentColor, setCurrentColor] = useState("#3B82F6");
   const [colorHistory, setColorHistory] = useState<string[]>([]);
+  const { toast } = useToast();
 
   const generateRandomColor = () => {
     const color = "#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
@@ -18,6 +19,10 @@ const RandomColorGenerator = () => {
 
   const copyColor = (color: string) => {
     navigator.clipboard.writeText(color);
+    toast({
+      title: "Copied!",
+      description: `Color ${color} copied to clipboard`
+    });
   };
 
   const faqs = [

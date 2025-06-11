@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
-import { Copy, Download, Code, Eye, RefreshCw, Braces, Table } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Copy, Download, Code, Eye, Settings2, Braces } from "lucide-react";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
@@ -25,19 +25,33 @@ const exampleJson = `[
   },
   {
     "id": 2,
-    "name": "Jane Doe",
+    "name": "Jane Doe", 
     "email": "jane@example.com",
     "age": 28,
     "active": false
-  },
-  {
-    "id": 3,
-    "name": "Bob Johnson",
-    "email": "bob@example.com",
-    "age": 45,
-    "active": true
   }
 ]`;
+
+interface StylingOptions {
+  tableStyle: string;
+  headerBgColor: string;
+  headerTextColor: string;
+  rowBgColor: string;
+  altRowBgColor: string;
+  textColor: string;
+  borderColor: string;
+  borderWidth: string;
+  borderStyle: string;
+  fontSize: string;
+  fontFamily: string;
+  padding: string;
+  hoverEffect: string;
+  hoverColor: string;
+  hoverDuration: string;
+  stripedRows: boolean;
+  tableBorders: boolean;
+  responsive: boolean;
+}
 
 const JsonToHtmlTable = () => {
   const [input, setInput] = useState(exampleJson);
@@ -45,19 +59,33 @@ const JsonToHtmlTable = () => {
   const [jsonError, setJsonError] = useState("");
   const [parsedData, setParsedData] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("input");
-  const [tableStyle, setTableStyle] = useState("modern");
   const [tableId, setTableId] = useState("json-table");
-  const [responsiveTable, setResponsiveTable] = useState(true);
-  const [stripedRows, setStripedRows] = useState(false);
-  const [hoveredRows, setHoveredRows] = useState(true);
-  const [tableBorders, setTableBorders] = useState(true);
-  const [showNull, setShowNull] = useState(true);
-  const [showBooleanAs, setShowBooleanAs] = useState("text"); // text, icons, colored
-  const [expandNestedObjects, setExpandNestedObjects] = useState(false);
-  const [nestingLevel, setNestingLevel] = useState(1);
-  const [nestedDisplay, setNestedDisplay] = useState("stringify"); // stringify, expand, link
-  const [includeArrayIndices, setIncludeArrayIndices] = useState(false);
   const [tableCaption, setTableCaption] = useState("");
+  const [showNull, setShowNull] = useState(true);
+  const [showBooleanAs, setShowBooleanAs] = useState("text");
+  const [includeArrayIndices, setIncludeArrayIndices] = useState(false);
+  const [styling, setStyling] = useState<StylingOptions>({
+    tableStyle: "modern",
+    headerBgColor: "#f8f9fa",
+    headerTextColor: "#212529",
+    rowBgColor: "#ffffff",
+    altRowBgColor: "#f8f9fa",
+    textColor: "#212529",
+    borderColor: "#dee2e6",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    fontSize: "14px",
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    padding: "8px 12px",
+    hoverEffect: "background",
+    hoverColor: "#e9ecef",
+    hoverDuration: "0.2s",
+    stripedRows: true,
+    tableBorders: true,
+    responsive: true
+  });
+
+  const { toast } = useToast();
   
   const formatJsonValue = (value: any): string => {
     if (value === null) {
@@ -76,109 +104,128 @@ const JsonToHtmlTable = () => {
     }
     
     if (typeof value === "object") {
-      if (Array.isArray(value)) {
-        if (nestedDisplay === "expand" && expandNestedObjects) {
-          return ""; // Will be expanded in a nested table
-        }
-        return JSON.stringify(value);
-      } else if (value !== null) {
-        if (nestedDisplay === "expand" && expandNestedObjects) {
-          return ""; // Will be expanded in a nested table
-        }
-        return JSON.stringify(value);
-      }
+      return JSON.stringify(value);
     }
     
     return String(value);
   };
-  
-  const createNestedTable = (data: any, level: number = 1): string => {
-    if (level > nestingLevel) {
-      return JSON.stringify(data);
-    }
-    
-    if (Array.isArray(data)) {
-      let tableHtml = `<table class="nested-table level-${level}">`;
-      
-      if (includeArrayIndices) {
-        tableHtml += `<thead><tr><th>Index</th><th>Value</th></tr></thead>`;
-      }
-      
-      tableHtml += `<tbody>`;
-      
-      data.forEach((item, index) => {
-        tableHtml += `<tr>`;
-        
-        if (includeArrayIndices) {
-          tableHtml += `<td>${index}</td>`;
-        }
-        
-        if (typeof item === "object" && item !== null && expandNestedObjects) {
-          tableHtml += `<td>${createNestedTable(item, level + 1)}</td>`;
-        } else {
-          tableHtml += `<td>${formatJsonValue(item)}</td>`;
-        }
-        
-        tableHtml += `</tr>`;
-      });
-      
-      tableHtml += `</tbody></table>`;
-      return tableHtml;
-    } else if (typeof data === "object" && data !== null) {
-      let tableHtml = `<table class="nested-table level-${level}">`;
-      tableHtml += `<thead><tr><th>Key</th><th>Value</th></tr></thead>`;
-      tableHtml += `<tbody>`;
-      
-      Object.keys(data).forEach(key => {
-        tableHtml += `<tr>`;
-        tableHtml += `<td>${key}</td>`;
-        
-        if (typeof data[key] === "object" && data[key] !== null && expandNestedObjects) {
-          tableHtml += `<td>${createNestedTable(data[key], level + 1)}</td>`;
-        } else {
-          tableHtml += `<td>${formatJsonValue(data[key])}</td>`;
-        }
-        
-        tableHtml += `</tr>`;
-      });
-      
-      tableHtml += `</tbody></table>`;
-      return tableHtml;
-    }
-    
-    return formatJsonValue(data);
-  };
 
-  const getTableStyles = () => {
-    const styles: { [key: string]: any } = {
+  const generateCSS = () => {
+    const baseStyles = {
       modern: {
-        fontFamily: "system-ui, -apple-system, sans-serif",
         borderRadius: "8px",
         overflow: "hidden",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
       },
       classic: {
-        fontFamily: "Georgia, serif",
-        border: tableBorders ? "2px solid #374151" : "none",
+        border: `2px ${styling.borderStyle} ${styling.borderColor}`
       },
       minimal: {
-        fontFamily: "Arial, sans-serif",
-        border: "none",
+        border: "none"
       },
       dark: {
         backgroundColor: "#1f2937",
         color: "#f9fafb",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-        border: tableBorders ? "1px solid #374151" : "none",
-      },
-      material: {
-        fontFamily: "Roboto, sans-serif",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-        borderRadius: "4px",
-        overflow: "hidden",
+        border: `1px ${styling.borderStyle} #374151`
       }
     };
-    return styles[tableStyle] || styles.modern;
+
+    const selectedStyle = baseStyles[styling.tableStyle as keyof typeof baseStyles] || baseStyles.modern;
+
+    return `<style>
+#${tableId} {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: ${styling.fontFamily};
+  font-size: ${styling.fontSize};
+  color: ${styling.textColor};
+  ${Object.entries(selectedStyle).map(([key, value]) => 
+    `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`
+  ).join('\n  ')}
+  ${styling.responsive ? 'margin: 0 auto; max-width: 100%;' : ''}
+}
+
+${styling.responsive ? `
+#${tableId}-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+` : ''}
+
+#${tableId} th,
+#${tableId} td {
+  padding: ${styling.padding};
+  text-align: left;
+  ${styling.tableBorders ? `border: ${styling.borderWidth} ${styling.borderStyle} ${styling.borderColor};` : ''}
+}
+
+#${tableId} th {
+  background-color: ${styling.headerBgColor};
+  color: ${styling.headerTextColor};
+  font-weight: bold;
+  ${!styling.tableBorders ? `border-bottom: 2px ${styling.borderStyle} ${styling.borderColor};` : ''}
+}
+
+${styling.stripedRows ? `
+#${tableId} tbody tr:nth-child(even) {
+  background-color: ${styling.altRowBgColor};
+}
+
+#${tableId} tbody tr:nth-child(odd) {
+  background-color: ${styling.rowBgColor};
+}
+` : `
+#${tableId} tbody tr {
+  background-color: ${styling.rowBgColor};
+}
+`}
+
+${styling.hoverEffect === 'background' ? `
+#${tableId} tbody tr:hover {
+  background-color: ${styling.hoverColor} !important;
+  transition: background-color ${styling.hoverDuration};
+}
+` : styling.hoverEffect === 'scale' ? `
+#${tableId} tbody tr:hover {
+  transform: scale(1.01);
+  transition: transform ${styling.hoverDuration};
+}
+` : styling.hoverEffect === 'shadow' ? `
+#${tableId} tbody tr:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: box-shadow ${styling.hoverDuration};
+}
+` : ''}
+
+${showBooleanAs === 'colored' ? `
+.json-boolean.json-true {
+  color: #10b981;
+  font-weight: bold;
+}
+.json-boolean.json-false {
+  color: #ef4444;
+  font-weight: bold;
+}` : ''}
+
+${styling.responsive ? `
+@media (max-width: 768px) {
+  #${tableId} {
+    font-size: 12px;
+  }
+  #${tableId} th,
+  #${tableId} td {
+    padding: 6px 8px;
+  }
+}
+` : ''}
+
+caption {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: ${styling.textColor};
+}
+</style>`;
   };
 
   const parseJson = () => {
@@ -186,13 +233,20 @@ const JsonToHtmlTable = () => {
       setJsonError("");
       const parsed = JSON.parse(input);
       setParsedData(parsed);
-      setActiveTab("preview");
-      toast.success("JSON parsed successfully!");
+      setActiveTab("settings");
+      toast({
+        title: "JSON parsed successfully!",
+        description: "Ready to configure table settings"
+      });
       return parsed;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Invalid JSON";
       setJsonError(message);
-      toast.error(`JSON Parse Error: ${message}`);
+      toast({
+        title: "JSON Parse Error",
+        description: message,
+        variant: "destructive"
+      });
       return null;
     }
   };
@@ -206,96 +260,14 @@ const JsonToHtmlTable = () => {
 
       const data = parsedData;
       const isArray = Array.isArray(data);
-      const tableStyles = getTableStyles();
+      const css = generateCSS();
       
-      // Generate CSS
-      let html = `<style>
-#${tableId} {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 20px 0;
-  ${Object.entries(tableStyles).map(([key, value]) => 
-    `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`
-  ).join('\n  ')}
-}
-
-#${tableId} th,
-#${tableId} td {
-  padding: 10px;
-  text-align: left;
-  ${tableBorders ? `border: 1px solid ${tableStyle === 'dark' ? '#374151' : '#dee2e6'};` : ''}
-}
-
-#${tableId} th {
-  background-color: ${tableStyle === 'dark' ? '#374151' : '#f8f9fa'};
-  font-weight: bold;
-  ${!tableBorders ? 'border-bottom: 2px solid #dee2e6;' : ''}
-}
-
-${stripedRows ? `
-#${tableId} tbody tr:nth-child(odd) {
-  background-color: ${tableStyle === 'dark' ? '#1a1f2b' : '#f2f2f2'};
-}` : ''}
-
-${hoveredRows ? `
-#${tableId} tbody tr:hover {
-  background-color: ${tableStyle === 'dark' ? '#2d3748' : '#e9ecef'};
-}` : ''}
-
-${showBooleanAs === 'colored' ? `
-.json-boolean.json-true {
-  color: #10b981;
-  font-weight: bold;
-}
-.json-boolean.json-false {
-  color: #ef4444;
-  font-weight: bold;
-}` : ''}
-
-${nestedDisplay === 'expand' ? `
-.nested-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0;
-}
-
-.nested-table th,
-.nested-table td {
-  padding: 4px 8px;
-  border: 1px solid #e5e7eb;
-  font-size: 0.9em;
-}
-
-.nested-table th {
-  background-color: ${tableStyle === 'dark' ? '#313e52' : '#f1f5f9'};
-}
-
-.level-2 {
-  font-size: 0.95em;
-}
-
-.level-3 {
-  font-size: 0.9em;
-}` : ''}
-
-${responsiveTable ? `
-@media screen and (max-width: 768px) {
-  #${tableId}-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}` : ''}
-</style>
-
-`;
+      let html = css + '\n';
+      html += styling.responsive ? `<div id="${tableId}-container">\n` : '';
+      html += `<table id="${tableId}">`;
       
-      // Start of table
-      html += `${responsiveTable ? `<div id="${tableId}-container">` : ''}
-<table id="${tableId}">
-`;
-
       if (tableCaption) {
-        html += `  <caption>${tableCaption}</caption>\n`;
+        html += `\n  <caption>${tableCaption}</caption>`;
       }
       
       // For array of objects, create a table with columns for each property
@@ -310,108 +282,99 @@ ${responsiveTable ? `
         const keyArray = Array.from(keys);
         
         // Table header
-        html += '<thead>\n<tr>\n';
+        html += '\n  <thead>\n    <tr>';
         if (includeArrayIndices) {
-          html += '  <th>Index</th>\n';
+          html += '\n      <th>Index</th>';
         }
         keyArray.forEach(key => {
-          html += `  <th>${key}</th>\n`;
+          html += `\n      <th>${key}</th>`;
         });
-        html += '</tr>\n</thead>\n<tbody>\n';
+        html += '\n    </tr>\n  </thead>\n  <tbody>';
         
         // Table rows
         data.forEach((item: any, index: number) => {
-          html += '<tr>\n';
+          html += '\n    <tr>';
           
           if (includeArrayIndices) {
-            html += `  <td>${index}</td>\n`;
+            html += `\n      <td>${index}</td>`;
           }
           
           keyArray.forEach(key => {
             const value = item && typeof item === 'object' ? item[key] : undefined;
-            
-            if (typeof value === 'object' && value !== null && nestedDisplay === 'expand' && expandNestedObjects) {
-              html += `  <td>${createNestedTable(value)}</td>\n`;
-            } else {
-              html += `  <td>${formatJsonValue(value)}</td>\n`;
-            }
+            html += `\n      <td>${formatJsonValue(value)}</td>`;
           });
           
-          html += '</tr>\n';
+          html += '\n    </tr>';
         });
-        html += '</tbody>\n';
+        html += '\n  </tbody>';
       } 
       // For a single object, create a key-value table
       else if (!isArray && data !== null && typeof data === 'object') {
-        html += '<thead>\n<tr>\n<th>Key</th>\n<th>Value</th>\n</tr>\n</thead>\n<tbody>\n';
+        html += '\n  <thead>\n    <tr>\n      <th>Key</th>\n      <th>Value</th>\n    </tr>\n  </thead>\n  <tbody>';
         
         Object.keys(data).forEach(key => {
           const value = data[key];
-          html += '<tr>\n';
-          html += `  <td>${key}</td>\n`;
-          
-          if (typeof value === 'object' && value !== null && nestedDisplay === 'expand' && expandNestedObjects) {
-            html += `  <td>${createNestedTable(value)}</td>\n`;
-          } else {
-            html += `  <td>${formatJsonValue(value)}</td>\n`;
-          }
-          
-          html += '</tr>\n';
+          html += '\n    <tr>';
+          html += `\n      <td>${key}</td>`;
+          html += `\n      <td>${formatJsonValue(value)}</td>`;
+          html += '\n    </tr>';
         });
-        html += '</tbody>\n';
+        html += '\n  </tbody>';
       }
       // For array of primitives
       else if (isArray) {
-        html += '<thead>\n<tr>\n';
+        html += '\n  <thead>\n    <tr>';
         
         if (includeArrayIndices) {
-          html += '<th>Index</th>\n';
+          html += '\n      <th>Index</th>';
         }
         
-        html += '<th>Value</th>\n</tr>\n</thead>\n<tbody>\n';
+        html += '\n      <th>Value</th>\n    </tr>\n  </thead>\n  <tbody>';
         
         data.forEach((item: any, index: number) => {
-          html += '<tr>\n';
+          html += '\n    <tr>';
           
           if (includeArrayIndices) {
-            html += `  <td>${index}</td>\n`;
+            html += `\n      <td>${index}</td>`;
           }
           
-          if (typeof item === 'object' && item !== null && nestedDisplay === 'expand' && expandNestedObjects) {
-            html += `  <td>${createNestedTable(item)}</td>\n`;
-          } else {
-            html += `  <td>${formatJsonValue(item)}</td>\n`;
-          }
-          
-          html += '</tr>\n';
+          html += `\n      <td>${formatJsonValue(item)}</td>`;
+          html += '\n    </tr>';
         });
-        html += '</tbody>\n';
+        html += '\n  </tbody>';
       }
       // For primitive value (number, string, boolean)
       else {
-        html += '<tbody>\n<tr>\n<td>';
+        html += '\n  <tbody>\n    <tr>\n      <td>';
         html += formatJsonValue(data);
-        html += '</td>\n</tr>\n</tbody>\n';
+        html += '</td>\n    </tr>\n  </tbody>';
       }
       
-      html += '</table>\n';
-      
-      if (responsiveTable) {
-        html += '</div>';
-      }
+      html += '\n</table>';
+      html += styling.responsive ? '\n</div>' : '';
       
       setOutput(html);
       setActiveTab("output");
-      toast.success("HTML table generated successfully!");
+      toast({
+        title: "HTML table generated successfully!",
+        description: "Your JSON data has been converted to HTML"
+      });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error generating table";
-      toast.error(`Error: ${message}`);
+      toast({
+        title: "Generation Error",
+        description: message,
+        variant: "destructive"
+      });
     }
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(output);
-    toast.success("HTML table copied to clipboard!");
+    toast({
+      title: "Copied!",
+      description: "HTML table copied to clipboard"
+    });
   };
 
   const downloadHTML = () => {
@@ -422,18 +385,28 @@ ${responsiveTable ? `
     a.download = `${tableId}.html`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("HTML file downloaded!");
+    toast({
+      title: "Downloaded!",
+      description: "HTML file downloaded successfully"
+    });
   };
 
   const formatJson = () => {
     try {
       const parsed = JSON.parse(input);
       setInput(JSON.stringify(parsed, null, 2));
-      toast.success("JSON formatted!");
+      toast({
+        title: "JSON formatted!",
+        description: "Your JSON has been properly formatted"
+      });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Invalid JSON";
       setJsonError(message);
-      toast.error(`JSON Parse Error: ${message}`);
+      toast({
+        title: "Format Error",
+        description: message,
+        variant: "destructive"
+      });
     }
   };
 
@@ -443,23 +416,25 @@ ${responsiveTable ? `
     setParsedData(null);
     setJsonError("");
     setActiveTab("input");
-    toast.info("All data cleared");
+    toast({
+      title: "Cleared",
+      description: "All data has been cleared"
+    });
   };
 
   const loadExample = () => {
     setInput(exampleJson);
     setJsonError("");
-    toast.info("Example JSON loaded");
+    toast({
+      title: "Example loaded",
+      description: "Sample JSON data has been loaded"
+    });
   };
 
   const faqs = [
     {
       question: "What JSON structure works best with this converter?",
-      answer: "The converter works well with arrays of objects (which become tables with columns), single objects (which become key-value tables), and arrays of primitive values. Complex nested structures can be managed with the nesting options."
-    },
-    {
-      question: "How can I handle nested objects and arrays in my JSON?",
-      answer: "You can choose to display nested data as stringified JSON, expand them into nested tables, or even control the nesting level. This gives you flexibility in handling complex JSON structures."
+      answer: "The converter works well with arrays of objects (which become tables with columns), single objects (which become key-value tables), and arrays of primitive values. Complex nested structures are displayed as JSON strings."
     },
     {
       question: "Can I customize how specific data types are displayed?",
@@ -467,19 +442,15 @@ ${responsiveTable ? `
     },
     {
       question: "Is the generated HTML table responsive?",
-      answer: "Yes, with the responsive option enabled, the table will adapt to different screen sizes with horizontal scrolling on smaller screens. This ensures your data remains usable across all devices."
-    },
-    {
-      question: "What if my JSON contains a lot of data?",
-      answer: "For very large JSON datasets, consider limiting what you convert at once or adjusting the nesting level to prevent overly complex tables. You can also disable some features like nested object expansion for better performance."
+      answer: "Yes, with the responsive option enabled, the table will adapt to different screen sizes with horizontal scrolling on smaller screens."
     }
   ];
 
   return (
     <SEOWrapper
       title="JSON to HTML Table Converter - Transform JSON Data to Tables"
-      description="Convert JSON data to beautifully formatted HTML tables with advanced options for nested objects, styling, and data formatting."
-      keywords="json to html table, json converter, html table generator, json formatter, nested json, json visualization"
+      description="Convert JSON data to beautifully formatted HTML tables with advanced options for styling and data formatting."
+      keywords="json to html table, json converter, html table generator, json formatter, json visualization"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -487,7 +458,7 @@ ${responsiveTable ? `
             JSON to HTML Table Converter
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Transform complex JSON data into beautiful HTML tables with customizable styling and nested object support.
+            Transform complex JSON data into beautiful HTML tables with customizable styling options.
           </p>
         </div>
 
@@ -499,7 +470,7 @@ ${responsiveTable ? `
               <CardHeader>
                 <CardTitle>JSON to HTML Table Converter</CardTitle>
                 <CardDescription>
-                  Convert JSON data to customized HTML tables with advanced options
+                  Convert JSON data to customized HTML tables with advanced styling
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -509,13 +480,13 @@ ${responsiveTable ? `
                       <Braces className="h-4 w-4 mr-2" />
                       JSON Input
                     </TabsTrigger>
-                    <TabsTrigger value="preview" disabled={!parsedData}>
+                    <TabsTrigger value="settings" disabled={!parsedData}>
+                      <Settings2 className="h-4 w-4 mr-2" />
+                      Settings
+                    </TabsTrigger>
+                    <TabsTrigger value="preview" disabled={!output}>
                       <Eye className="h-4 w-4 mr-2" />
                       Preview
-                    </TabsTrigger>
-                    <TabsTrigger value="options" disabled={!parsedData}>
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Options
                     </TabsTrigger>
                     <TabsTrigger value="output" disabled={!output}>
                       <Code className="h-4 w-4 mr-2" />
@@ -543,10 +514,10 @@ ${responsiveTable ? `
                         setInput(e.target.value);
                         setJsonError("");
                       }}
-                      className={`min-h-[300px] font-mono ${jsonError ? 'border-red-500' : ''}`}
+                      className={`min-h-[300px] font-mono ${jsonError ? 'border-destructive' : ''}`}
                     />
                     {jsonError && (
-                      <p className="text-red-500 text-sm">{jsonError}</p>
+                      <p className="text-destructive text-sm">{jsonError}</p>
                     )}
 
                     <div className="flex justify-end gap-2">
@@ -554,154 +525,129 @@ ${responsiveTable ? `
                         Clear
                       </Button>
                       <Button onClick={parseJson}>
-                        Parse JSON
+                        Parse & Continue
                       </Button>
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="preview" className="space-y-4">
-                    {parsedData && (
-                      <div>
-                        <Label>JSON Structure Preview</Label>
-                        <Card className="mt-2 overflow-auto max-h-[400px]">
-                          <CardContent className="p-4">
-                            <pre className="text-sm font-mono whitespace-pre-wrap">
-                              {JSON.stringify(parsedData, null, 2)}
-                            </pre>
-                          </CardContent>
-                        </Card>
-                        <div className="flex justify-end mt-4 gap-2">
-                          <Button onClick={() => setActiveTab("input")} variant="outline">
-                            Back to Input
-                          </Button>
-                          <Button onClick={() => setActiveTab("options")}>
-                            Continue to Options
-                          </Button>
+                  <TabsContent value="settings" className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Basic Settings</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="tableId">Table ID</Label>
+                            <Input
+                              id="tableId"
+                              value={tableId}
+                              onChange={(e) => setTableId(e.target.value)}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="tableCaption">Table Caption</Label>
+                            <Input
+                              id="tableCaption"
+                              value={tableCaption}
+                              onChange={(e) => setTableCaption(e.target.value)}
+                              placeholder="Optional table caption"
+                            />
+                          </div>
+                          <div>
+                            <Label>Table Style</Label>
+                            <Select
+                              value={styling.tableStyle}
+                              onValueChange={(value) => setStyling({...styling, tableStyle: value})}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="modern">Modern</SelectItem>
+                                <SelectItem value="classic">Classic</SelectItem>
+                                <SelectItem value="minimal">Minimal</SelectItem>
+                                <SelectItem value="dark">Dark</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Boolean Display</Label>
+                            <Select value={showBooleanAs} onValueChange={setShowBooleanAs}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="text">Text (true/false)</SelectItem>
+                                <SelectItem value="icons">Icons (✓/✗)</SelectItem>
+                                <SelectItem value="colored">Colored Text</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
                       </div>
-                    )}
-                  </TabsContent>
 
-                  <TabsContent value="options" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="tableId">Table ID</Label>
-                        <Input
-                          id="tableId"
-                          value={tableId}
-                          onChange={(e) => setTableId(e.target.value)}
-                          placeholder="json-table"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="tableCaption">Table Caption (Optional)</Label>
-                        <Input
-                          id="tableCaption"
-                          value={tableCaption}
-                          onChange={(e) => setTableCaption(e.target.value)}
-                          placeholder="My JSON Data"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>Table Style</Label>
-                        <Select value={tableStyle} onValueChange={setTableStyle}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="modern">Modern</SelectItem>
-                            <SelectItem value="classic">Classic</SelectItem>
-                            <SelectItem value="minimal">Minimal</SelectItem>
-                            <SelectItem value="dark">Dark Theme</SelectItem>
-                            <SelectItem value="material">Material Design</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Boolean Display</Label>
-                        <Select value={showBooleanAs} onValueChange={setShowBooleanAs}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="text">Text (true/false)</SelectItem>
-                            <SelectItem value="icons">Icons (✓/✗)</SelectItem>
-                            <SelectItem value="colored">Colored Text</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>Nested Object Display</Label>
-                        <Select value={nestedDisplay} onValueChange={setNestedDisplay}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="stringify">JSON String</SelectItem>
-                            <SelectItem value="expand">Expand as Tables</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      {nestedDisplay === "expand" && (
-                        <div className="space-y-2">
-                          <Label>Nesting Level</Label>
-                          <Select 
-                            value={nestingLevel.toString()} 
-                            onValueChange={(val) => setNestingLevel(parseInt(val))}
-                            disabled={!expandNestedObjects}
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="1">1 Level</SelectItem>
-                              <SelectItem value="2">2 Levels</SelectItem>
-                              <SelectItem value="3">3 Levels</SelectItem>
-                            </SelectContent>
-                          </Select>
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Colors</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label>Header Background</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.headerBgColor}
+                                onChange={(e) => setStyling({...styling, headerBgColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.headerBgColor}
+                                onChange={(e) => setStyling({...styling, headerBgColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Header Text</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.headerTextColor}
+                                onChange={(e) => setStyling({...styling, headerTextColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.headerTextColor}
+                                onChange={(e) => setStyling({...styling, headerTextColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
                         </div>
-                      )}
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="responsiveTable"
-                          checked={responsiveTable}
-                          onCheckedChange={(checked) => setResponsiveTable(checked === true)}
-                        />
-                        <Label htmlFor="responsiveTable">Responsive Table</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="tableBorders"
-                          checked={tableBorders}
-                          onCheckedChange={(checked) => setTableBorders(checked === true)}
-                        />
-                        <Label htmlFor="tableBorders">Table Borders</Label>
-                      </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="stripedRows"
-                          checked={stripedRows}
-                          onCheckedChange={(checked) => setStripedRows(checked === true)}
+                          checked={styling.stripedRows}
+                          onCheckedChange={(checked) => setStyling({...styling, stripedRows: checked === true})}
                         />
                         <Label htmlFor="stripedRows">Striped Rows</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
-                          id="hoveredRows"
-                          checked={hoveredRows}
-                          onCheckedChange={(checked) => setHoveredRows(checked === true)}
+                          id="tableBorders"
+                          checked={styling.tableBorders}
+                          onCheckedChange={(checked) => setStyling({...styling, tableBorders: checked === true})}
                         />
-                        <Label htmlFor="hoveredRows">Hover Effect</Label>
+                        <Label htmlFor="tableBorders">Table Borders</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="responsive"
+                          checked={styling.responsive}
+                          onCheckedChange={(checked) => setStyling({...styling, responsive: checked === true})}
+                        />
+                        <Label htmlFor="responsive">Responsive</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -719,24 +665,28 @@ ${responsiveTable ? `
                         />
                         <Label htmlFor="includeArrayIndices">Include Array Indices</Label>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="expandNestedObjects"
-                          checked={expandNestedObjects}
-                          onCheckedChange={(checked) => setExpandNestedObjects(checked === true)}
-                        />
-                        <Label htmlFor="expandNestedObjects">Expand Nested Objects</Label>
-                      </div>
                     </div>
 
                     <div className="flex justify-end gap-2">
-                      <Button onClick={() => setActiveTab("preview")} variant="outline">
-                        Back to Preview
+                      <Button onClick={() => setActiveTab("input")} variant="outline">
+                        Back to Input
                       </Button>
                       <Button onClick={generateTable}>
                         Generate HTML Table
                       </Button>
                     </div>
+                  </TabsContent>
+
+                  <TabsContent value="preview" className="space-y-4">
+                    <h3 className="text-lg font-semibold">Live Preview</h3>
+                    {output ? (
+                      <div
+                        className="border border-border rounded-lg p-4 bg-background overflow-auto"
+                        dangerouslySetInnerHTML={{ __html: output }}
+                      />
+                    ) : (
+                      <p className="text-muted-foreground">Generate table to see preview</p>
+                    )}
                   </TabsContent>
 
                   <TabsContent value="output" className="space-y-6">
@@ -759,20 +709,13 @@ ${responsiveTable ? `
                           <Textarea
                             value={output}
                             readOnly
-                            className="min-h-[200px] font-mono bg-muted text-sm"
+                            className="min-h-[300px] font-mono bg-muted text-sm"
                           />
                         </div>
 
-                        <div className="space-y-2">
-                          <Label>Preview</Label>
-                          <div className="border rounded-lg p-4 bg-card">
-                            <div dangerouslySetInnerHTML={{ __html: output }} />
-                          </div>
-                        </div>
-
                         <div className="flex justify-between gap-2">
-                          <Button onClick={() => setActiveTab("options")} variant="outline">
-                            Back to Options
+                          <Button onClick={() => setActiveTab("settings")} variant="outline">
+                            Back to Settings
                           </Button>
                           <Button onClick={clearAll}>
                             Convert New JSON

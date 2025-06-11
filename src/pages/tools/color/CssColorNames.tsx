@@ -1,15 +1,16 @@
-
 import { useState } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
 const CssColorNames = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { toast } = useToast();
 
   const cssColors = [
     { name: "aliceblue", hex: "#F0F8FF" },
@@ -161,6 +162,10 @@ const CssColorNames = () => {
 
   const copyColor = (value: string) => {
     navigator.clipboard.writeText(value);
+    toast({
+      title: "Copied!",
+      description: `${value} copied to clipboard`
+    });
   };
 
   const faqs = [
