@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
-import { Upload, Copy, Eye, Settings, Download } from "lucide-react";
+import { Upload, Copy, Eye, Settings, Download, FileText } from "lucide-react";
 
 interface StylingOptions {
   tableStyle: string;
@@ -43,6 +43,7 @@ const CsvToTableConverter = () => {
   const [hasHeader, setHasHeader] = useState(true);
   const [tableId, setTableId] = useState("csv-table");
   const [tableCaption, setTableCaption] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [styling, setStyling] = useState<StylingOptions>({
     tableStyle: "modern",
     headerBgColor: "#f8f9fa",
@@ -253,7 +254,7 @@ caption {
       html += styling.responsive ? '\n</div>' : '';
 
       setHtmlOutput(html);
-      setActiveTab("output");
+      setActiveTab("preview");
       
       toast({
         title: "Converted successfully!",
@@ -263,6 +264,22 @@ caption {
       toast({
         title: "Conversion failed",
         description: "Please check your CSV data format",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const applyStyling = () => {
+    if (csvData.trim()) {
+      convertToHtml();
+      toast({
+        title: "Styling Applied!",
+        description: "Table styling has been updated"
+      });
+    } else {
+      toast({
+        title: "No data",
+        description: "Please add CSV data first",
         variant: "destructive"
       });
     }
@@ -302,6 +319,30 @@ John Doe,30,New York,USA
 Jane Smith,25,London,UK
 Bob Johnson,35,Toronto,Canada`;
     setCsvData(sampleData);
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target?.result as string;
+          setCsvData(content);
+          toast({
+            title: "File uploaded!",
+            description: "CSV file has been loaded successfully"
+          });
+        };
+        reader.readAsText(file);
+      } else {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload a CSV file",
+          variant: "destructive"
+        });
+      }
+    }
   };
 
   const faqs = [
@@ -366,9 +407,24 @@ Bob Johnson,35,Toronto,Canada`;
                       <Button onClick={loadSampleData} variant="outline" size="sm">
                         Load Sample
                       </Button>
+                      <Button 
+                        onClick={() => fileInputRef.current?.click()} 
+                        variant="outline" 
+                        size="sm"
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        Upload CSV
+                      </Button>
                       <Button onClick={clearData} variant="outline" size="sm">
                         Clear
                       </Button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".csv"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
                     </div>
                     
                     <div>
@@ -377,7 +433,7 @@ Bob Johnson,35,Toronto,Canada`;
                         id="csvData"
                         value={csvData}
                         onChange={(e) => setCsvData(e.target.value)}
-                        placeholder="Paste your CSV data here..."
+                        placeholder="Paste your CSV data here or upload a CSV file..."
                         className="min-h-[300px] font-mono text-sm"
                       />
                     </div>
@@ -455,7 +511,7 @@ Bob Johnson,35,Toronto,Canada`;
                       </div>
 
                       <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Colors</h3>
+                        <h3 className="text-lg font-semibold">Colors & Typography</h3>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <Label>Header Background</Label>
@@ -489,6 +545,66 @@ Bob Johnson,35,Toronto,Canada`;
                               />
                             </div>
                           </div>
+                          <div>
+                            <Label>Text Color</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.textColor}
+                                onChange={(e) => setStyling({...styling, textColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.textColor}
+                                onChange={(e) => setStyling({...styling, textColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Hover Color</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.hoverColor}
+                                onChange={(e) => setStyling({...styling, hoverColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.hoverColor}
+                                onChange={(e) => setStyling({...styling, hoverColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label>Font Size</Label>
+                            <Input
+                              value={styling.fontSize}
+                              onChange={(e) => setStyling({...styling, fontSize: e.target.value})}
+                              placeholder="14px"
+                            />
+                          </div>
+                          <div>
+                            <Label>Hover Effect</Label>
+                            <Select
+                              value={styling.hoverEffect}
+                              onValueChange={(value) => setStyling({...styling, hoverEffect: value})}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">None</SelectItem>
+                                <SelectItem value="background">Background</SelectItem>
+                                <SelectItem value="scale">Scale</SelectItem>
+                                <SelectItem value="shadow">Shadow</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -519,6 +635,10 @@ Bob Johnson,35,Toronto,Canada`;
                         <Label htmlFor="responsive">Responsive</Label>
                       </div>
                     </div>
+
+                    <Button onClick={applyStyling} className="w-full" size="lg">
+                      Apply Styling Changes
+                    </Button>
                   </TabsContent>
 
                   <TabsContent value="preview" className="space-y-4">

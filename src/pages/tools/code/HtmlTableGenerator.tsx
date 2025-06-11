@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,10 +6,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
-import { Plus, Minus, Copy } from "lucide-react";
+import { Plus, Minus, Copy, Settings, Eye } from "lucide-react";
+
+interface StylingOptions {
+  tableStyle: string;
+  headerBgColor: string;
+  headerTextColor: string;
+  rowBgColor: string;
+  altRowBgColor: string;
+  textColor: string;
+  borderColor: string;
+  borderWidth: string;
+  borderStyle: string;
+  fontSize: string;
+  fontFamily: string;
+  padding: string;
+  hoverEffect: string;
+  hoverColor: string;
+  hoverDuration: string;
+  stripedRows: boolean;
+  tableBorders: boolean;
+  responsive: boolean;
+}
 
 const HtmlTableGenerator = () => {
   const [rows, setRows] = useState<string[][]>([
@@ -19,6 +41,28 @@ const HtmlTableGenerator = () => {
   ]);
   const [htmlOutput, setHtmlOutput] = useState("");
   const [activeTab, setActiveTab] = useState("table");
+  const [tableId, setTableId] = useState("data-table");
+  const [tableCaption, setTableCaption] = useState("");
+  const [styling, setStyling] = useState<StylingOptions>({
+    tableStyle: "modern",
+    headerBgColor: "#f8f9fa",
+    headerTextColor: "#212529",
+    rowBgColor: "#ffffff",
+    altRowBgColor: "#f8f9fa",
+    textColor: "#212529",
+    borderColor: "#dee2e6",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    fontSize: "14px",
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    padding: "8px 12px",
+    hoverEffect: "background",
+    hoverColor: "#e9ecef",
+    hoverDuration: "0.2s",
+    stripedRows: true,
+    tableBorders: true,
+    responsive: true
+  });
   const { toast } = useToast();
 
   const addRow = () => {
@@ -49,7 +93,116 @@ const HtmlTableGenerator = () => {
     setRows(newRows);
   };
 
+  const generateCSS = () => {
+    const baseStyles = {
+      modern: {
+        borderRadius: "8px",
+        overflow: "hidden",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+      },
+      classic: {
+        border: `2px ${styling.borderStyle} ${styling.borderColor}`
+      },
+      minimal: {
+        border: "none"
+      },
+      dark: {
+        backgroundColor: "#1f2937",
+        color: "#f9fafb",
+        border: `1px ${styling.borderStyle} #374151`
+      }
+    };
+
+    const selectedStyle = baseStyles[styling.tableStyle as keyof typeof baseStyles] || baseStyles.modern;
+
+    return `<style>
+#${tableId} {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: ${styling.fontFamily};
+  font-size: ${styling.fontSize};
+  color: ${styling.textColor};
+  ${Object.entries(selectedStyle).map(([key, value]) => 
+    `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`
+  ).join('\n  ')}
+  ${styling.responsive ? 'margin: 0 auto; max-width: 100%;' : ''}
+}
+
+${styling.responsive ? `
+#${tableId}-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+` : ''}
+
+#${tableId} th,
+#${tableId} td {
+  padding: ${styling.padding};
+  text-align: left;
+  ${styling.tableBorders ? `border: ${styling.borderWidth} ${styling.borderStyle} ${styling.borderColor};` : ''}
+}
+
+#${tableId} th {
+  background-color: ${styling.headerBgColor};
+  color: ${styling.headerTextColor};
+  font-weight: bold;
+  ${!styling.tableBorders ? `border-bottom: 2px ${styling.borderStyle} ${styling.borderColor};` : ''}
+}
+
+${styling.stripedRows ? `
+#${tableId} tbody tr:nth-child(even) {
+  background-color: ${styling.altRowBgColor};
+}
+
+#${tableId} tbody tr:nth-child(odd) {
+  background-color: ${styling.rowBgColor};
+}
+` : `
+#${tableId} tbody tr {
+  background-color: ${styling.rowBgColor};
+}
+`}
+
+${styling.hoverEffect === 'background' ? `
+#${tableId} tbody tr:hover {
+  background-color: ${styling.hoverColor} !important;
+  transition: background-color ${styling.hoverDuration};
+}
+` : styling.hoverEffect === 'scale' ? `
+#${tableId} tbody tr:hover {
+  transform: scale(1.01);
+  transition: transform ${styling.hoverDuration};
+}
+` : styling.hoverEffect === 'shadow' ? `
+#${tableId} tbody tr:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: box-shadow ${styling.hoverDuration};
+}
+` : ''}
+
+${styling.responsive ? `
+@media (max-width: 768px) {
+  #${tableId} {
+    font-size: 12px;
+  }
+  #${tableId} th,
+  #${tableId} td {
+    padding: 6px 8px;
+  }
+}
+` : ''}
+
+caption {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: ${styling.textColor};
+}
+</style>`;
+  };
+
   const generateHTML = () => {
+    const css = generateCSS();
     const tableRows = rows.map((row, rowIndex) => {
       const cells = row.map((cell, colIndex) => {
         const tag = rowIndex === 0 ? 'th' : 'td';
@@ -58,37 +211,31 @@ const HtmlTableGenerator = () => {
       return `  <tr>\n${cells}\n  </tr>`;
     }).join('\n');
 
-    const html = `<table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
-${tableRows}
-</table>
+    let html = css + '\n';
+    html += styling.responsive ? `<div id="${tableId}-container">\n` : '';
+    html += `<table id="${tableId}">`;
+    
+    if (tableCaption) {
+      html += `\n  <caption>${tableCaption}</caption>`;
+    }
 
-<style>
-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-family: Arial, sans-serif;
-}
+    html += '\n  <thead>\n';
+    html += `    <tr>\n`;
+    rows[0].forEach(cell => {
+      html += `      <th>${cell || ''}</th>\n`;
+    });
+    html += `    </tr>\n  </thead>`;
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-  color: #333;
-  font-weight: bold;
-}
-
-tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-tr:hover {
-  background-color: #f5f5f5;
-}
-</style>`;
+    html += '\n  <tbody>\n';
+    rows.slice(1).forEach(row => {
+      html += `    <tr>\n`;
+      row.forEach(cell => {
+        html += `      <td>${cell || ''}</td>\n`;
+      });
+      html += `    </tr>\n`;
+    });
+    html += '  </tbody>\n</table>';
+    html += styling.responsive ? '\n</div>' : '';
 
     setHtmlOutput(html);
     setActiveTab("html");
@@ -107,6 +254,14 @@ tr:hover {
     });
   };
 
+  const applyStyling = () => {
+    generateHTML();
+    toast({
+      title: "Styling Applied",
+      description: "Table styling has been updated!"
+    });
+  };
+
   const faqs = [
     {
       question: "How do I add more rows or columns?",
@@ -114,7 +269,7 @@ tr:hover {
     },
     {
       question: "Can I customize the table styling?",
-      answer: "Yes! The generated HTML includes CSS for borders, colors, and hover effects. You can modify the CSS in the HTML output to customize the appearance."
+      answer: "Yes! Use the 'Styling' tab to customize colors, fonts, borders, hover effects, and much more. Click 'Apply Styling' to see changes."
     },
     {
       question: "Is the first row automatically a header?",
@@ -134,7 +289,7 @@ tr:hover {
             HTML Table Generator
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Create professional HTML tables with clean code. Simple interface to add rows, columns, and generate ready-to-use HTML.
+            Create professional HTML tables with advanced styling options. Generate clean, responsive code.
           </p>
         </div>
 
@@ -148,10 +303,17 @@ tr:hover {
               </CardHeader>
               <CardContent>
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                  <TabsList className="grid w-full grid-cols-3">
+                  <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="table">Edit Table</TabsTrigger>
+                    <TabsTrigger value="styling">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Styling
+                    </TabsTrigger>
+                    <TabsTrigger value="preview">
+                      <Eye className="h-4 w-4 mr-2" />
+                      Preview
+                    </TabsTrigger>
                     <TabsTrigger value="html">HTML Code</TabsTrigger>
-                    <TabsTrigger value="preview">Preview</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="table" className="space-y-4">
@@ -217,6 +379,163 @@ tr:hover {
                     </Button>
                   </TabsContent>
 
+                  <TabsContent value="styling" className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Basic Settings</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="tableId">Table ID</Label>
+                            <Input
+                              id="tableId"
+                              value={tableId}
+                              onChange={(e) => setTableId(e.target.value)}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="tableCaption">Table Caption</Label>
+                            <Input
+                              id="tableCaption"
+                              value={tableCaption}
+                              onChange={(e) => setTableCaption(e.target.value)}
+                              placeholder="Optional table caption"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="tableStyle">Table Style</Label>
+                            <Select
+                              value={styling.tableStyle}
+                              onValueChange={(value) => setStyling({...styling, tableStyle: value})}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="modern">Modern</SelectItem>
+                                <SelectItem value="classic">Classic</SelectItem>
+                                <SelectItem value="minimal">Minimal</SelectItem>
+                                <SelectItem value="dark">Dark</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Colors</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label>Header Background</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.headerBgColor}
+                                onChange={(e) => setStyling({...styling, headerBgColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.headerBgColor}
+                                onChange={(e) => setStyling({...styling, headerBgColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Header Text</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.headerTextColor}
+                                onChange={(e) => setStyling({...styling, headerTextColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.headerTextColor}
+                                onChange={(e) => setStyling({...styling, headerTextColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Text Color</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.textColor}
+                                onChange={(e) => setStyling({...styling, textColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.textColor}
+                                onChange={(e) => setStyling({...styling, textColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Border Color</Label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={styling.borderColor}
+                                onChange={(e) => setStyling({...styling, borderColor: e.target.value})}
+                                className="w-12 h-10 rounded border cursor-pointer"
+                              />
+                              <Input
+                                value={styling.borderColor}
+                                onChange={(e) => setStyling({...styling, borderColor: e.target.value})}
+                                className="font-mono text-sm"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="stripedRows"
+                          checked={styling.stripedRows}
+                          onCheckedChange={(checked) => setStyling({...styling, stripedRows: checked === true})}
+                        />
+                        <Label htmlFor="stripedRows">Striped Rows</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="tableBorders"
+                          checked={styling.tableBorders}
+                          onCheckedChange={(checked) => setStyling({...styling, tableBorders: checked === true})}
+                        />
+                        <Label htmlFor="tableBorders">Table Borders</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="responsive"
+                          checked={styling.responsive}
+                          onCheckedChange={(checked) => setStyling({...styling, responsive: checked === true})}
+                        />
+                        <Label htmlFor="responsive">Responsive</Label>
+                      </div>
+                    </div>
+
+                    <Button onClick={applyStyling} className="w-full" size="lg">
+                      Apply Styling
+                    </Button>
+                  </TabsContent>
+
+                  <TabsContent value="preview" className="space-y-4">
+                    <h3 className="text-lg font-semibold">Live Preview</h3>
+                    {htmlOutput ? (
+                      <div
+                        className="border border-border rounded-lg p-4 bg-background overflow-auto"
+                        dangerouslySetInnerHTML={{ __html: htmlOutput }}
+                      />
+                    ) : (
+                      <p className="text-muted-foreground">Generate HTML to see preview</p>
+                    )}
+                  </TabsContent>
+
                   <TabsContent value="html" className="space-y-4">
                     <div className="flex justify-between items-center">
                       <h3 className="text-lg font-semibold">Generated HTML</h3>
@@ -231,18 +550,6 @@ tr:hover {
                       className="font-mono text-sm min-h-[400px]"
                       placeholder="Click 'Generate HTML Table' to see the code here..."
                     />
-                  </TabsContent>
-
-                  <TabsContent value="preview" className="space-y-4">
-                    <h3 className="text-lg font-semibold">Live Preview</h3>
-                    {htmlOutput ? (
-                      <div
-                        className="border border-border rounded-lg p-4 bg-background"
-                        dangerouslySetInnerHTML={{ __html: htmlOutput }}
-                      />
-                    ) : (
-                      <p className="text-muted-foreground">Generate HTML to see preview</p>
-                    )}
                   </TabsContent>
                 </Tabs>
               </CardContent>
