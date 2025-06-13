@@ -1,8 +1,7 @@
-
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Calculator, Percent, Hash, Binary, TrendingUp, Grid3X3, CheckSquare, SquareRoot, Target, CircleDot, Ruler } from "lucide-react";
+import { Calculator, Percent, Hash, Binary, TrendingUp, Grid3X3, CheckSquare, Target, CircleDot, Ruler } from "lucide-react";
 
 const MathTools = () => {
   const tools = [
@@ -41,12 +40,6 @@ const MathTools = () => {
       description: "Check if a number is prime",
       path: "/math/prime-checker",
       icon: CheckSquare
-    },
-    {
-      name: "Quadratic Solver",
-      description: "Solve quadratic equations",
-      path: "/math/quadratic-solver",
-      icon: SquareRoot
     },
     {
       name: "Factorial Calculator",
