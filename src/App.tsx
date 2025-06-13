@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import Navigation from "@/components/Navigation";
@@ -7,6 +6,8 @@ import Index from "@/pages/Index";
 import Features from "@/pages/Features";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
+import Privacy from "@/pages/Privacy";
+import Terms from "@/pages/Terms";
 import NotFound from "@/pages/NotFound";
 
 // Text Tools
@@ -92,6 +93,8 @@ function App() {
             <Route path="/features" element={<Features />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             
             {/* Text Tools */}
             <Route path="/text/case-converter" element={<CaseConverter />} />
