@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useRef } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -10,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Download, Code, Eye, Settings2, Braces } from "lucide-react";
+import { Copy, Download, Code, Eye, Settings2, Braces, Upload } from "lucide-react";
 import AdSenseBox from "@/components/AdSenseBox";
 import ToolFAQ from "@/components/ToolFAQ";
 
@@ -59,6 +58,7 @@ const JsonToHtmlTable = () => {
   const [jsonError, setJsonError] = useState("");
   const [parsedData, setParsedData] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("input");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [tableId, setTableId] = useState("json-table");
   const [tableCaption, setTableCaption] = useState("");
   const [showNull, setShowNull] = useState(true);
@@ -431,6 +431,31 @@ caption {
     });
   };
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target?.result as string;
+        setInput(text);
+        setJsonError("");
+        toast({
+          title: "File uploaded!",
+          description: "JSON file has been loaded successfully"
+        });
+      } catch (error) {
+        toast({
+          title: "Upload failed",
+          description: "Could not read the file",
+          variant: "destructive"
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const faqs = [
     {
       question: "What JSON structure works best with this converter?",
@@ -470,7 +495,7 @@ caption {
               <CardHeader>
                 <CardTitle>JSON to HTML Table Converter</CardTitle>
                 <CardDescription>
-                  Convert JSON data to customized HTML tables with advanced styling
+                  Transform complex JSON data into beautiful HTML tables with customizable styling
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -498,6 +523,10 @@ caption {
                     <div className="flex justify-between">
                       <Label htmlFor="input">JSON Data</Label>
                       <div className="space-x-2">
+                        <Button onClick={() => fileInputRef.current?.click()} variant="outline" size="sm">
+                          <Upload className="h-4 w-4 mr-2" />
+                          Upload JSON
+                        </Button>
                         <Button onClick={formatJson} variant="outline" size="sm">
                           Format JSON
                         </Button>
@@ -506,6 +535,13 @@ caption {
                         </Button>
                       </div>
                     </div>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      accept=".json,.txt"
+                      className="hidden"
+                    />
                     <Textarea
                       id="input"
                       placeholder="Paste your JSON data here..."

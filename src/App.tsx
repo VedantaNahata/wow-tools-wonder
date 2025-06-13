@@ -53,8 +53,8 @@ import ShadesTintsGenerator from "@/pages/tools/color/ShadesTintsGenerator";
 import Base64Converter from "@/pages/tools/image/Base64Converter";
 import ImageToBase64 from "@/pages/tools/image/ImageToBase64";
 import Base64ToImage from "@/pages/tools/image/Base64ToImage";
-import ImageResizer from "@/pages/tools/image/ImageResizer";
-import ImageFormatConverter from "@/pages/tools/image/ImageFormatConverter";
+import ImageResizer from "@/pages/tools/image/ImageFormatConverter";
+import ImageFormatConverter from "@/pages/tools/image/ImageResizer";
 
 // SEO Tools
 import RobotsTester from "@/pages/tools/seo/RobotsTester";

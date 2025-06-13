@@ -1,4 +1,3 @@
-
 import SEOWrapper from "@/components/SEOWrapper";
 
 const Terms = () => {
@@ -8,19 +7,19 @@ const Terms = () => {
       description="Terms of Service for WowsomeTools - Learn about the terms and conditions for using our free online tools."
       keywords="terms of service, terms and conditions, legal, user agreement"
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
             📄 Terms of Service for Wowsometools
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-lg text-muted-foreground">
             Welcome to Wowsometools. By accessing or using our website and tools, you agree to the following Terms of Service.
           </p>
         </div>
 
-        <div className="space-y-12">
+        <div className="space-y-10">
           <section>
-            <h2 className="text-2xl font-bold text-foreground mb-6">1. Acceptance of Terms</h2>
+            <h2 className="text-xl font-bold text-foreground mb-4">1. Acceptance of Terms</h2>
             <p className="text-muted-foreground leading-relaxed">
               By using Wowsometools, you confirm that you have read, understood, and agreed to these Terms of Service. If you do not agree, please discontinue using the site.
             </p>
@@ -110,14 +109,14 @@ const Terms = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-foreground mb-6">10. Contact Information</h2>
+            <h2 className="text-xl font-bold text-foreground mb-4">10. Contact Information</h2>
             <p className="text-muted-foreground mb-4 leading-relaxed">
               If you have any questions or legal concerns regarding these Terms, please contact us at:
             </p>
             <div className="text-center">
               <a 
                 href="mailto:wowsometools@gmail.com" 
-                className="text-2xl text-primary hover:underline inline-flex items-center gap-2"
+                className="text-xl text-primary hover:underline inline-flex items-center gap-2"
               >
                 📧 wowsometools@gmail.com
               </a>
