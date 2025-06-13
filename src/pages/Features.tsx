@@ -41,20 +41,20 @@ const Features = () => {
       description="Discover the features that make Wowsometools the best online toolkit - blazing fast, privacy-first, and completely free tools for everyone."
       keywords="online tools features, browser tools, privacy tools, free web utilities, responsive tools"
     >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
         <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
             🚀 Features That Make Wowsometools Stand Out
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
           {features.map((feature, index) => (
-            <div key={index} className="text-center space-y-4">
-              <div className="text-5xl mb-4">
+            <div key={index} className="text-center space-y-6 p-6">
+              <div className="text-5xl mb-6">
                 {feature.emoji}
               </div>
-              <h2 className="text-xl font-bold text-foreground leading-tight">
+              <h2 className="text-xl font-bold text-foreground leading-tight mb-4">
                 {feature.title}
               </h2>
               <p className="text-base text-muted-foreground leading-relaxed max-w-md mx-auto">

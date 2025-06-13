@@ -62,6 +62,46 @@ const ExcelToHtmlConverter = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
+  const parseExcelData = (data: string) => {
+    const lines = data.trim().split('\n').filter(line => line.trim());
+    const rows = lines.map(line => {
+      // Handle tab-separated data (Excel default) and CSV
+      const cells = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const nextChar = line[i + 1];
+        
+        if (char === '"') {
+          if (inQuotes && nextChar === '"') {
+            current += '"';
+            i++; // Skip next quote
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if ((char === '\t' || char === ',') && !inQuotes) {
+          cells.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      cells.push(current.trim());
+      return cells;
+    });
+
+    // Normalize rows to have the same number of columns
+    const maxColumns = Math.max(...rows.map(row => row.length));
+    return rows.map(row => {
+      while (row.length < maxColumns) {
+        row.push('');
+      }
+      return row;
+    });
+  };
+
   const generateCSS = () => {
     const baseStyles = {
       modern: {
@@ -181,28 +221,7 @@ caption {
     }
 
     try {
-      // Fix CSV parsing to handle headers properly
-      const lines = excelData.trim().split('\n').filter(line => line.trim());
-      const rows = lines.map(line => {
-        // Handle CSV parsing - split by tab or comma, handle quoted values
-        const cells = [];
-        let current = '';
-        let inQuotes = false;
-        
-        for (let i = 0; i < line.length; i++) {
-          const char = line[i];
-          if (char === '"') {
-            inQuotes = !inQuotes;
-          } else if ((char === '\t' || char === ',') && !inQuotes) {
-            cells.push(current.trim());
-            current = '';
-          } else {
-            current += char;
-          }
-        }
-        cells.push(current.trim());
-        return cells;
-      });
+      const rows = parseExcelData(excelData);
 
       if (rows.length === 0) {
         throw new Error("No data found");
@@ -314,6 +333,18 @@ Alice Brown	28	Sydney	Australia`;
     {
       question: "Does it work with Google Sheets?",
       answer: "Absolutely! Copy data from Google Sheets the same way as Excel. The converter works with any tab-separated data."
+    },
+    {
+      question: "What file formats can I upload?",
+      answer: "You can upload CSV, TSV, and TXT files. The converter will automatically detect the format and parse the data correctly."
+    },
+    {
+      question: "Why are my table headers not showing correctly?",
+      answer: "Make sure your Excel data has headers in the first row and that you're copying the data correctly. Tab-separated values work best."
+    },
+    {
+      question: "Can I use this for large datasets?",
+      answer: "Yes, but for optimal performance, keep your data under 1000 rows. Very large datasets may slow down the browser."
     }
   ];
 

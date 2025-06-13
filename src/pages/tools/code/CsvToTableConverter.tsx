@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -176,6 +175,34 @@ caption {
 </style>`;
   };
 
+  const parseCSVLine = (line: string, delimiter: string) => {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const nextChar = line[i + 1];
+      
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          current += '"';
+          i++; // Skip next quote
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === delimiter && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    
+    result.push(current.trim());
+    return result;
+  };
+
   const convertToHtml = () => {
     if (!csvData.trim()) {
       toast({
@@ -187,40 +214,23 @@ caption {
     }
 
     try {
-      const lines = csvData.trim().split('\n');
+      const lines = csvData.trim().split('\n').filter(line => line.trim());
       if (lines.length === 0) {
         throw new Error("No data found");
       }
 
-      const parseCSVLine = (line: string) => {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        
-        for (let i = 0; i < line.length; i++) {
-          const char = line[i];
-          const nextChar = line[i + 1];
-          
-          if (char === '"') {
-            if (inQuotes && nextChar === '"') {
-              current += '"';
-              i++;
-            } else {
-              inQuotes = !inQuotes;
-            }
-          } else if (char === delimiter && !inQuotes) {
-            result.push(current.trim());
-            current = '';
-          } else {
-            current += char;
-          }
+      // Parse each line properly with the selected delimiter
+      const rows = lines.map(line => parseCSVLine(line, delimiter));
+      
+      // Ensure all rows have the same number of columns as the first row
+      const maxColumns = Math.max(...rows.map(row => row.length));
+      const normalizedRows = rows.map(row => {
+        while (row.length < maxColumns) {
+          row.push('');
         }
-        
-        result.push(current.trim());
-        return result;
-      };
+        return row;
+      });
 
-      const rows = lines.map(line => parseCSVLine(line));
       const css = generateCSS();
       
       let html = css + '\n';
@@ -231,16 +241,16 @@ caption {
         html += `\n  <caption>${tableCaption}</caption>`;
       }
 
-      if (hasHeader && rows.length > 0) {
+      if (hasHeader && normalizedRows.length > 0) {
         html += '\n  <thead>\n    <tr>';
-        rows[0].forEach(cell => {
+        normalizedRows[0].forEach(cell => {
           html += `\n      <th>${cell || ''}</th>`;
         });
         html += '\n    </tr>\n  </thead>';
       }
 
       html += '\n  <tbody>';
-      const dataRows = hasHeader ? rows.slice(1) : rows;
+      const dataRows = hasHeader ? normalizedRows.slice(1) : normalizedRows;
       
       dataRows.forEach(row => {
         html += '\n    <tr>';
@@ -286,6 +296,15 @@ caption {
   };
 
   const copyToClipboard = () => {
+    if (!htmlOutput) {
+      toast({
+        title: "Nothing to copy",
+        description: "Please generate HTML first",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     navigator.clipboard.writeText(htmlOutput);
     toast({
       title: "Copied!",
@@ -357,6 +376,18 @@ Bob Johnson,35,Toronto,Canada`;
     {
       question: "How do I handle CSV files with special characters?",
       answer: "The converter properly handles quoted fields, escaped quotes, and special characters. Make sure your CSV follows standard formatting rules."
+    },
+    {
+      question: "Why are my headers not displaying correctly?",
+      answer: "Make sure to check the 'First row is header' option and select the correct delimiter (comma, semicolon, tab, or pipe) that matches your CSV format."
+    },
+    {
+      question: "Can I use this for large CSV files?",
+      answer: "Yes, but keep in mind that very large files may affect browser performance. For optimal results, use files under 10MB."
+    },
+    {
+      question: "How do I save the generated HTML?",
+      answer: "Click the 'Download' button in the Output tab to save the HTML file, or copy the code and paste it into your favorite text editor."
     }
   ];
 
