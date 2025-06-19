@@ -1,11 +1,16 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import AdSenseBox from "@/components/AdSenseBox";
 import SEOWrapper from "@/components/SEOWrapper";
 import { Copy, RotateCcw } from "lucide-react";
@@ -18,14 +23,68 @@ const LoremGenerator = () => {
   const { toast } = useToast();
 
   const loremWords = [
-    "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit",
-    "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore",
-    "magna", "aliqua", "enim", "ad", "minim", "veniam", "quis", "nostrud",
-    "exercitation", "ullamco", "laboris", "nisi", "aliquip", "ex", "ea", "commodo",
-    "consequat", "duis", "aute", "irure", "in", "reprehenderit", "voluptate",
-    "velit", "esse", "cillum", "fugiat", "nulla", "pariatur", "excepteur", "sint",
-    "occaecat", "cupidatat", "non", "proident", "sunt", "culpa", "qui", "officia",
-    "deserunt", "mollit", "anim", "id", "est", "laborum"
+    "lorem",
+    "ipsum",
+    "dolor",
+    "sit",
+    "amet",
+    "consectetur",
+    "adipiscing",
+    "elit",
+    "sed",
+    "do",
+    "eiusmod",
+    "tempor",
+    "incididunt",
+    "ut",
+    "labore",
+    "et",
+    "dolore",
+    "magna",
+    "aliqua",
+    "enim",
+    "ad",
+    "minim",
+    "veniam",
+    "quis",
+    "nostrud",
+    "exercitation",
+    "ullamco",
+    "laboris",
+    "nisi",
+    "aliquip",
+    "ex",
+    "ea",
+    "commodo",
+    "consequat",
+    "duis",
+    "aute",
+    "irure",
+    "in",
+    "reprehenderit",
+    "voluptate",
+    "velit",
+    "esse",
+    "cillum",
+    "fugiat",
+    "nulla",
+    "pariatur",
+    "excepteur",
+    "sint",
+    "occaecat",
+    "cupidatat",
+    "non",
+    "proident",
+    "sunt",
+    "culpa",
+    "qui",
+    "officia",
+    "deserunt",
+    "mollit",
+    "anim",
+    "id",
+    "est",
+    "laborum",
   ];
 
   const generateSentence = () => {
@@ -48,7 +107,7 @@ const LoremGenerator = () => {
 
   const generateLorem = () => {
     let result = "";
-    
+
     switch (type) {
       case "words":
         const words = [];
@@ -57,7 +116,7 @@ const LoremGenerator = () => {
         }
         result = words.join(" ");
         break;
-        
+
       case "sentences":
         const sentences = [];
         for (let i = 0; i < count; i++) {
@@ -65,7 +124,7 @@ const LoremGenerator = () => {
         }
         result = sentences.join(" ");
         break;
-        
+
       case "paragraphs":
         const paragraphs = [];
         for (let i = 0; i < count; i++) {
@@ -74,7 +133,7 @@ const LoremGenerator = () => {
         result = paragraphs.join("\n\n");
         break;
     }
-    
+
     setGenerated(result);
   };
 
@@ -90,11 +149,39 @@ const LoremGenerator = () => {
     setGenerated("");
   };
 
+  const faqs = [
+    {
+      question: "What is a Lorem Ipsum generator?",
+      answer:
+        "A Lorem Ipsum generator creates placeholder text that mimics natural language structure. It's commonly used by designers, developers, and marketers to fill layouts or templates during the design and development process.",
+    },
+    {
+      question: "How do I use this free online Lorem Ipsum generator?",
+      answer:
+        "Simply select the number of paragraphs, words, or characters you need, and the tool will instantly generate the Lorem Ipsum text for you to copy and paste into your project.",
+    },
+    {
+      question: "Why do designers use Lorem Ipsum text?",
+      answer:
+        "Designers use Lorem Ipsum to focus on layout and visual elements without the distraction of real content. It helps maintain visual consistency before final content is available.",
+    },
+    {
+      question: "Can I customize the amount of Lorem Ipsum text generated?",
+      answer:
+        "Yes, most Lorem Ipsum generators let you specify how many words, sentences, or paragraphs you want to generate, giving you full control over the length and structure of the placeholder text.",
+    },
+    {
+      question: "Is this Lorem Ipsum generator tool free and safe to use?",
+      answer:
+        "Absolutely. This tool is 100% free, online, and safe to use. No downloads, logins, or personal data are required.",
+    },
+  ];
+
   return (
     <SEOWrapper
-      title="Lorem Ipsum Generator - Generate Placeholder Text"
-      description="Free lorem ipsum generator. Create dummy text for your designs, websites, and layouts. Generate words, sentences, or paragraphs instantly."
-      keywords="lorem ipsum, placeholder text, dummy text, text generator, design tools, mockup text"
+      title="Free Online Lorem Ipsum Generator - Create Placeholder Text Instantly"
+      description="Use this free online Lorem Ipsum generator to instantly create paragraphs, sentences, or words of dummy placeholder text for design, coding, and content mockups."
+      keywords="free online lorem ipsum generator, lorem ipsum generator, dummy text generator, dummy text, placeholder text generator, generate lorem ipsum online, filler text generator, create lorem paragraphs, design text filler"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -102,8 +189,8 @@ const LoremGenerator = () => {
             Lorem Ipsum Generator
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Generate placeholder text for your designs and layouts. Create lorem ipsum 
-            text in words, sentences, or paragraphs.
+            Generate placeholder text for your designs and layouts. Create lorem
+            ipsum text in words, sentences, or paragraphs.
           </p>
         </div>
 
@@ -129,7 +216,7 @@ const LoremGenerator = () => {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="type">Type</Label>
                     <Select value={type} onValueChange={setType}>
@@ -143,7 +230,7 @@ const LoremGenerator = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div className="flex items-end">
                     <Button onClick={generateLorem} className="w-full">
                       Generate
@@ -164,21 +251,13 @@ const LoremGenerator = () => {
                           <Copy className="h-4 w-4 mr-1" />
                           Copy
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={clearText}
-                        >
+                        <Button variant="outline" size="sm" onClick={clearText}>
                           <RotateCcw className="h-4 w-4 mr-1" />
                           Clear
                         </Button>
                       </div>
                     </div>
-                    <Textarea
-                      value={generated}
-                      readOnly
-                      className="min-h-48"
-                    />
+                    <Textarea value={generated} readOnly className="min-h-48" />
                   </div>
                 )}
               </CardContent>
@@ -190,11 +269,13 @@ const LoremGenerator = () => {
               </CardHeader>
               <CardContent className="prose prose-sm max-w-none dark:prose-invert">
                 <p>
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                  It has been the industry's standard dummy text ever since the 1500s, when an 
-                  unknown printer took a galley of type and scrambled it to make a type specimen book.
+                  Lorem Ipsum is simply dummy text of the printing and
+                  typesetting industry. It has been the industry's standard
+                  dummy text ever since the 1500s, when an unknown printer took
+                  a galley of type and scrambled it to make a type specimen
+                  book.
                 </p>
-                
+
                 <h3>Why Use Lorem Ipsum?</h3>
                 <ul>
                   <li>Focus on design without content distraction</li>
@@ -216,7 +297,7 @@ const LoremGenerator = () => {
 
           <div className="space-y-6">
             <AdSenseBox format="rectangle" slot="tool-sidebar" />
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Quick Generate</CardTitle>
@@ -263,6 +344,23 @@ const LoremGenerator = () => {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
+          }),
+        }}
+      />
     </SEOWrapper>
   );
 };

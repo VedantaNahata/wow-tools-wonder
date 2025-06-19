@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,12 +16,12 @@ const DuplicateLineRemover = () => {
   const { toast } = useToast();
 
   const removeDuplicates = () => {
-    const lines = inputText.split('\n');
+    const lines = inputText.split("\n");
     const originalCount = lines.length;
     const uniqueLines = [...new Set(lines)];
     const duplicates = originalCount - uniqueLines.length;
-    
-    setOutputText(uniqueLines.join('\n'));
+
+    setOutputText(uniqueLines.join("\n"));
     setDuplicatesCount(duplicates);
   };
 
@@ -42,28 +41,37 @@ const DuplicateLineRemover = () => {
 
   const faqs = [
     {
-      question: "How does the duplicate line remover work?",
-      answer: "The tool compares each line in your text and removes any duplicate lines, keeping only unique lines. It preserves the order of first occurrence."
+      question: "What is a duplicate line remover tool?",
+      answer:
+        "A duplicate line remover tool scans your input text and automatically deletes repeated lines, keeping only unique entries. It's ideal for cleaning up lists, code, and large text blocks.",
     },
     {
-      question: "Does it remove empty lines?",
-      answer: "Empty lines are treated as regular lines. If you have multiple empty lines, only one will be kept unless you remove them manually first."
+      question: "How do I use the duplicate line remover online?",
+      answer:
+        "Paste your text into the input box, click the remove duplicates button, and instantly get a cleaned-up version with all duplicate lines eliminated.",
     },
     {
-      question: "Is the comparison case-sensitive?",
-      answer: "Yes, the comparison is case-sensitive. 'Hello' and 'hello' would be treated as different lines."
+      question: "Is this duplicate line remover free to use?",
+      answer:
+        "Yes, this tool is completely free and online. You don't need to register or download anything to remove duplicate lines from your text.",
     },
     {
-      question: "What file formats does it support?",
-      answer: "You can paste any text content. It works with code files, lists, CSV data, or any text with line breaks."
-    }
+      question: "Can I remove duplicate lines from large text files?",
+      answer:
+        "Absolutely. The tool is optimized to handle large volumes of text, making it suitable for developers, writers, and data analysts who work with big datasets or logs.",
+    },
+    {
+      question: "Why should I remove duplicate lines from my text?",
+      answer:
+        "Removing duplicate lines ensures clean formatting, reduces errors in code or data processing, and improves readability and performance in scripts or documents.",
+    },
   ];
 
   return (
     <SEOWrapper
-      title="Duplicate Line Remover - Remove Duplicate Lines from Text"
-      description="Free online duplicate line remover tool. Remove duplicate lines from text, code, lists, and data instantly. Perfect for cleaning up content and code."
-      keywords="duplicate line remover, remove duplicates, text cleaner, unique lines, code cleaner"
+      title="Free Online Duplicate Line Remover - Clean Up Text Instantly"
+      description="Use this free online duplicate line remover to instantly delete repeated lines from your text. Perfect for cleaning lists, code, logs, or documents. Fast, easy, and no sign-up needed."
+      keywords="free online duplicate line remover, duplicate line remover, remove duplicate lines from text, delete repeated lines tool, text deduplication online, clean up text tool, remove duplicate entries online"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -71,8 +79,8 @@ const DuplicateLineRemover = () => {
             Duplicate Line Remover
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Remove duplicate lines from your text, code, or data. Keep only unique lines 
-            and clean up your content instantly.
+            Remove duplicate lines from your text, code, or data. Keep only
+            unique lines and clean up your content instantly.
           </p>
         </div>
 
@@ -89,9 +97,9 @@ const DuplicateLineRemover = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   className="min-h-32"
                 />
-                
-                <Button 
-                  onClick={removeDuplicates} 
+
+                <Button
+                  onClick={removeDuplicates}
                   disabled={!inputText.trim()}
                   className="w-full"
                 >
@@ -109,7 +117,11 @@ const DuplicateLineRemover = () => {
                         </Badge>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={copyToClipboard}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={copyToClipboard}
+                        >
                           <Copy className="h-4 w-4 mr-1" />
                           Copy
                         </Button>
@@ -134,7 +146,7 @@ const DuplicateLineRemover = () => {
 
           <div className="space-y-6">
             <AdSenseBox format="rectangle" slot="tool-sidebar" />
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Example</CardTitle>
@@ -142,22 +154,34 @@ const DuplicateLineRemover = () => {
               <CardContent>
                 <div className="space-y-4 text-sm">
                   <div>
-                    <div className="font-medium text-muted-foreground mb-1">Before:</div>
+                    <div className="font-medium text-muted-foreground mb-1">
+                      Before:
+                    </div>
                     <div className="bg-muted p-2 rounded text-xs font-mono">
-                      apple<br/>
-                      banana<br/>
-                      apple<br/>
-                      orange<br/>
-                      banana<br/>
+                      apple
+                      <br />
+                      banana
+                      <br />
+                      apple
+                      <br />
+                      orange
+                      <br />
+                      banana
+                      <br />
                       grape
                     </div>
                   </div>
                   <div>
-                    <div className="font-medium text-muted-foreground mb-1">After:</div>
+                    <div className="font-medium text-muted-foreground mb-1">
+                      After:
+                    </div>
                     <div className="bg-muted p-2 rounded text-xs font-mono">
-                      apple<br/>
-                      banana<br/>
-                      orange<br/>
+                      apple
+                      <br />
+                      banana
+                      <br />
+                      orange
+                      <br />
                       grape
                     </div>
                   </div>
@@ -167,6 +191,23 @@ const DuplicateLineRemover = () => {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
+          }),
+        }}
+      />
     </SEOWrapper>
   );
 };

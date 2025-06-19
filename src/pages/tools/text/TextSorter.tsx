@@ -1,9 +1,14 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import AdSenseBox from "@/components/AdSenseBox";
 import SEOWrapper from "@/components/SEOWrapper";
 import ToolFAQ from "@/components/ToolFAQ";
@@ -17,7 +22,7 @@ const TextSorter = () => {
   const { toast } = useToast();
 
   const sortText = () => {
-    const lines = inputText.split('\n').filter(line => line.trim() !== '');
+    const lines = inputText.split("\n").filter((line) => line.trim() !== "");
     let sortedLines: string[] = [];
 
     switch (sortType) {
@@ -54,7 +59,7 @@ const TextSorter = () => {
         sortedLines = lines;
     }
 
-    setOutputText(sortedLines.join('\n'));
+    setOutputText(sortedLines.join("\n"));
   };
 
   const copyToClipboard = () => {
@@ -82,28 +87,37 @@ const TextSorter = () => {
 
   const faqs = [
     {
-      question: "How does alphabetical sorting work?",
-      answer: "Alphabetical sorting arranges lines in dictionary order, comparing characters from left to right. It's case-sensitive by default."
+      question: "What is a text sorter tool?",
+      answer:
+        "A text sorter tool arranges lines, words, or phrases in alphabetical or reverse order. It's useful for organizing lists, data entries, CSV values, and more.",
     },
     {
-      question: "What happens with numerical sorting on non-numbers?",
-      answer: "Non-numerical lines are treated as 0 for numerical sorting. For best results with numbers, ensure each line contains only numerical values."
+      question: "How do I use the free online text sorter?",
+      answer:
+        "Paste your list or text into the input field, choose sorting options like A-Z or Z-A, and click sort. Your text will be instantly organized in the selected order.",
     },
     {
-      question: "Does length sorting count all characters?",
-      answer: "Yes, length sorting counts all characters including spaces and special characters in each line."
+      question: "Can I sort comma-separated or numbered lists?",
+      answer:
+        "Yes, this tool supports sorting comma-separated values, bulleted lists, numbered lines, and plain text. It works for both vertical and horizontal sorting needs.",
     },
     {
-      question: "Are empty lines removed?",
-      answer: "Yes, empty lines are automatically filtered out before sorting to provide cleaner results."
-    }
+      question: "Is this text sorter free to use?",
+      answer:
+        "Yes, the text sorter is 100% free, browser-based, and requires no login. It processes everything locally in your browser, ensuring speed and privacy.",
+    },
+    {
+      question: "Who can benefit from using a text sorting tool?",
+      answer:
+        "Writers, developers, students, data analysts, and anyone working with disorganized text can benefit from using a text sorter to structure content efficiently.",
+    },
   ];
 
   return (
     <SEOWrapper
-      title="Text Sorter - Sort Lines Alphabetically and Numerically"
-      description="Free online text sorter tool. Sort lines alphabetically, numerically, by length, or randomly. Perfect for organizing lists and data."
-      keywords="text sorter, sort lines, alphabetical sort, numerical sort, organize text, list sorter"
+      title="Free Online Text Sorter - Sort Lists, Words & Lines Alphabetically"
+      description="Use this free online text sorter to sort words, lines, or lists alphabetically or in reverse order. Ideal for organizing data, lists, or text blocks. No login, browser-based."
+      keywords="free online text sorter, sort text alphabetically, sort lines online, text sorting tool, alphabetize words tool, organize list online, sort CSV values, arrange text online"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -111,7 +125,7 @@ const TextSorter = () => {
             Text Sorter
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Sort your text lines in various ways: alphabetically, numerically, 
+            Sort your text lines in various ways: alphabetically, numerically,
             by length, or randomly. Perfect for organizing lists and data.
           </p>
         </div>
@@ -129,7 +143,7 @@ const TextSorter = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   className="min-h-32"
                 />
-                
+
                 <div className="flex gap-4">
                   <Select value={sortType} onValueChange={setSortType}>
                     <SelectTrigger className="flex-1">
@@ -143,11 +157,8 @@ const TextSorter = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                  
-                  <Button 
-                    onClick={sortText} 
-                    disabled={!inputText.trim()}
-                  >
+
+                  <Button onClick={sortText} disabled={!inputText.trim()}>
                     <ArrowUpDown className="h-4 w-4 mr-2" />
                     Sort
                   </Button>
@@ -158,7 +169,11 @@ const TextSorter = () => {
                     <div className="flex items-center justify-between">
                       <span className="font-medium">Sorted Text:</span>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={copyToClipboard}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={copyToClipboard}
+                        >
                           <Copy className="h-4 w-4 mr-1" />
                           Copy
                         </Button>
@@ -183,7 +198,7 @@ const TextSorter = () => {
 
           <div className="space-y-6">
             <AdSenseBox format="rectangle" slot="tool-sidebar" />
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Sort Types</CardTitle>
@@ -191,7 +206,10 @@ const TextSorter = () => {
               <CardContent>
                 <div className="space-y-3 text-sm">
                   {sortOptions.map((option) => (
-                    <div key={option.value} className="flex items-center justify-between">
+                    <div
+                      key={option.value}
+                      className="flex items-center justify-between"
+                    >
                       <span className="font-medium">{option.label}</span>
                       <span className="text-xs text-muted-foreground">
                         {option.value === sortType ? "Active" : ""}
@@ -204,6 +222,23 @@ const TextSorter = () => {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
+          }),
+        }}
+      />
     </SEOWrapper>
   );
 };

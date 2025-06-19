@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,14 +36,14 @@ const FindAndReplace = () => {
 
     if (caseSensitive) {
       // Case-sensitive replacement
-      const regex = new RegExp(escapeRegExp(findText), 'g');
+      const regex = new RegExp(escapeRegExp(findText), "g");
       result = inputText.replace(regex, (match) => {
         count++;
         return replaceText;
       });
     } else {
       // Case-insensitive replacement
-      const regex = new RegExp(escapeRegExp(findText), 'gi');
+      const regex = new RegExp(escapeRegExp(findText), "gi");
       result = inputText.replace(regex, (match) => {
         count++;
         return replaceText;
@@ -53,7 +52,7 @@ const FindAndReplace = () => {
 
     setOutputText(result);
     setReplaceCount(count);
-    
+
     toast({
       title: "Replacement Complete!",
       description: `${count} instances replaced.`,
@@ -61,7 +60,7 @@ const FindAndReplace = () => {
   };
 
   const escapeRegExp = (string: string) => {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   };
 
   const copyToClipboard = () => {
@@ -82,28 +81,37 @@ const FindAndReplace = () => {
 
   const faqs = [
     {
-      question: "How does find and replace work?",
-      answer: "The tool searches for all instances of your 'find' text and replaces them with your 'replace' text. You can choose case-sensitive or case-insensitive matching."
+      question: "What is a find and replace tool?",
+      answer:
+        "A find and replace tool allows you to search for specific words, phrases, or characters in your text and replace them with new content instantly. It’s widely used for editing large blocks of text, code, or data.",
     },
     {
-      question: "Can I use special characters in find and replace?",
-      answer: "Yes, you can use any characters including symbols, numbers, and punctuation. The tool handles special regex characters automatically."
+      question: "How do I use the free online find and replace tool?",
+      answer:
+        "Just paste your text into the input field, enter the word or phrase to find, specify the replacement, and click the replace button. Your updated text will appear instantly.",
     },
     {
-      question: "What's the difference between case-sensitive and case-insensitive?",
-      answer: "Case-sensitive matches exact letter cases (A ≠ a), while case-insensitive treats upper and lowercase letters as the same (A = a)."
+      question: "Can I find and replace multiple words at once?",
+      answer:
+        "Yes, advanced find and replace tools allow you to handle multiple replacements in a single operation, improving speed and productivity for bulk text editing.",
     },
     {
-      question: "Can I replace text with nothing to delete it?",
-      answer: "Yes, leave the 'replace with' field empty to effectively delete all instances of the found text."
-    }
+      question: "Is this find and replace tool safe and free to use?",
+      answer:
+        "Absolutely. This is a 100% free online tool with no login or download required. Your data is processed instantly in the browser and is never stored.",
+    },
+    {
+      question: "Why should I use an online find and replace tool?",
+      answer:
+        "Online find and replace tools are ideal for quick, bulk edits without the need for complex software. They're useful for writers, coders, marketers, and students handling repetitive text changes.",
+    },
   ];
 
   return (
     <SEOWrapper
-      title="Find and Replace Text Tool - Search and Replace Online"
-      description="Free online find and replace tool. Search for text and replace it with new text. Supports case-sensitive and case-insensitive replacements."
-      keywords="find and replace, text replace, search replace, text editor, find text, replace text"
+      title="Free Online Find and Replace Tool - Quickly Edit Text"
+      description="Use this free online find and replace tool to search and replace words, phrases, or characters in your text instantly. Perfect for editing documents, code, and lists with ease."
+      keywords="free online find and replace tool, find and replace tool, free online bulk find and replace, replace text online, bulk find and replace, search and replace words, edit text instantly online, text replacement tool"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -111,7 +119,7 @@ const FindAndReplace = () => {
             Find and Replace Tool
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Search for specific text and replace it with new text. Perfect for 
+            Search for specific text and replace it with new text. Perfect for
             editing documents, code, and making bulk text changes.
           </p>
         </div>
@@ -129,7 +137,7 @@ const FindAndReplace = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   className="min-h-32"
                 />
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="findText">Find:</Label>
@@ -155,15 +163,17 @@ const FindAndReplace = () => {
                   <Checkbox
                     id="caseSensitive"
                     checked={caseSensitive}
-                    onCheckedChange={(checked) => setCaseSensitive(checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      setCaseSensitive(checked as boolean)
+                    }
                   />
                   <Label htmlFor="caseSensitive" className="text-sm">
                     Case sensitive
                   </Label>
                 </div>
 
-                <Button 
-                  onClick={performReplace} 
+                <Button
+                  onClick={performReplace}
                   disabled={!inputText.trim() || !findText}
                   className="w-full"
                 >
@@ -181,7 +191,11 @@ const FindAndReplace = () => {
                         </Badge>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={copyToClipboard}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={copyToClipboard}
+                        >
                           <Copy className="h-4 w-4 mr-1" />
                           Copy
                         </Button>
@@ -206,7 +220,7 @@ const FindAndReplace = () => {
 
           <div className="space-y-6">
             <AdSenseBox format="rectangle" slot="tool-sidebar" />
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Quick Tips</CardTitle>
@@ -217,14 +231,18 @@ const FindAndReplace = () => {
                     <Search className="h-4 w-4 mt-0.5 text-primary" />
                     <div>
                       <div className="font-medium">Case Matching</div>
-                      <div className="text-muted-foreground">Use case-sensitive for exact matches</div>
+                      <div className="text-muted-foreground">
+                        Use case-sensitive for exact matches
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
                     <Replace className="h-4 w-4 mt-0.5 text-primary" />
                     <div>
                       <div className="font-medium">Delete Text</div>
-                      <div className="text-muted-foreground">Leave replace field empty to delete</div>
+                      <div className="text-muted-foreground">
+                        Leave replace field empty to delete
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -233,6 +251,23 @@ const FindAndReplace = () => {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
+          }),
+        }}
+      />
     </SEOWrapper>
   );
 };

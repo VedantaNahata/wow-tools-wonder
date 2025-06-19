@@ -123,7 +123,7 @@ const CaseConverter = () => {
     <SEOWrapper
       title="Case Converter - Convert Text to Any Case Format"
       description="Free online case converter tool. Convert text to uppercase, lowercase, title case, sentence case, alternating case, and inverse case instantly. Ideal for writing, coding, and editing."
-      keywords="free online case converter, convert text case online, convert text case, case converter, text converter, uppercase converter, lowercase tool, title case, sentence case, alternating case, inverse case, online text formatter, free text transformation tool"
+      keywords="free online case converter, case converter, convert text case online, convert text case, case converter, text converter, uppercase converter, lowercase tool, title case, sentence case, alternating case, inverse case, online text formatter, free text transformation tool"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">

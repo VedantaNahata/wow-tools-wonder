@@ -1,9 +1,14 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AdSenseBox from "@/components/AdSenseBox";
@@ -38,8 +43,10 @@ const TextEncryptor = () => {
 
   const caesarEncode = (text: string, shift: number) => {
     return text.replace(/[a-zA-Z]/g, (char) => {
-      const start = char <= 'Z' ? 65 : 97;
-      return String.fromCharCode(((char.charCodeAt(0) - start + shift) % 26) + start);
+      const start = char <= "Z" ? 65 : 97;
+      return String.fromCharCode(
+        ((char.charCodeAt(0) - start + shift) % 26) + start
+      );
     });
   };
 
@@ -50,22 +57,29 @@ const TextEncryptor = () => {
   const processText = () => {
     try {
       let result = "";
-      
+
       if (method === "base64") {
-        result = isEncrypting ? base64Encode(inputText) : base64Decode(inputText);
+        result = isEncrypting
+          ? base64Encode(inputText)
+          : base64Decode(inputText);
       } else if (method === "caesar") {
-        result = isEncrypting ? caesarEncode(inputText, caesarShift) : caesarDecode(inputText, caesarShift);
+        result = isEncrypting
+          ? caesarEncode(inputText, caesarShift)
+          : caesarDecode(inputText, caesarShift);
       }
-      
+
       setOutputText(result);
       toast({
-        title: `${isEncrypting ? 'Encryption' : 'Decryption'} Complete!`,
-        description: `Text has been ${isEncrypting ? 'encrypted' : 'decrypted'} successfully.`,
+        title: `${isEncrypting ? "Encryption" : "Decryption"} Complete!`,
+        description: `Text has been ${
+          isEncrypting ? "encrypted" : "decrypted"
+        } successfully.`,
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
+        description:
+          error instanceof Error ? error.message : "An error occurred",
         variant: "destructive",
       });
     }
@@ -75,7 +89,9 @@ const TextEncryptor = () => {
     navigator.clipboard.writeText(outputText);
     toast({
       title: "Copied!",
-      description: `${isEncrypting ? 'Encrypted' : 'Decrypted'} text copied to clipboard.`,
+      description: `${
+        isEncrypting ? "Encrypted" : "Decrypted"
+      } text copied to clipboard.`,
     });
   };
 
@@ -86,28 +102,37 @@ const TextEncryptor = () => {
 
   const faqs = [
     {
-      question: "What encryption methods are supported?",
-      answer: "We support Base64 encoding (not true encryption but useful for obfuscation) and Caesar cipher (a simple substitution cipher)."
+      question: "What is a text encryptor tool?",
+      answer:
+        "A text encryptor tool converts readable text into an encrypted format using methods like Base64, Caesar Cipher, or ROT13. It’s used to protect data or hide sensitive messages.",
     },
     {
-      question: "Is this suitable for sensitive data?",
-      answer: "No, these are basic encoding/cipher methods for educational purposes only. For sensitive data, use proper encryption tools."
+      question: "How do I use this free online text encryptor?",
+      answer:
+        "Paste your text into the input area, select your preferred encryption method like Base64 or Caesar Cipher, and click encrypt. The encrypted output will appear instantly.",
     },
     {
-      question: "How does the Caesar cipher work?",
-      answer: "Caesar cipher shifts each letter by a fixed number of positions in the alphabet. For example, with shift 3: A becomes D, B becomes E, etc."
+      question: "What encryption methods does this tool support?",
+      answer:
+        "This online tool supports various basic encryption schemes like Base64 encoding, Caesar Cipher, and ROT13. These are ideal for lightweight encryption or educational purposes.",
     },
     {
-      question: "What is Base64 encoding used for?",
-      answer: "Base64 is commonly used to encode binary data into ASCII text. It's often used in web development and email systems."
-    }
+      question: "Is this text encryption secure and done in-browser?",
+      answer:
+        "Yes, all text is encrypted locally in your browser. No data is transmitted or stored on servers, making it safe and privacy-friendly.",
+    },
+    {
+      question: "Who can use a text encryptor tool?",
+      answer:
+        "This tool is useful for developers, students, and privacy-conscious users looking to encode text for secure sharing or basic data protection.",
+    },
   ];
 
   return (
     <SEOWrapper
-      title="Text Encryptor Decryptor - Encode and Decode Text Online"
-      description="Free online text encryptor and decryptor. Encode and decode text using Base64 and Caesar cipher methods. Perfect for basic text obfuscation."
-      keywords="text encryptor, text decryptor, base64 encoder, caesar cipher, text encoder, decode text"
+      title="Free Online Text Encryptor - Encrypt with Base64, Caesar Cipher"
+      description="Use this free online text encryptor to convert text using Base64, Caesar Cipher. Encode and decode text using Base64 and Caesar cipher methods."
+      keywords="free online text encryptor, text encrypter, free online text encrypter, text encryptor, base64 text encryption, caesar cipher tool, encrypt text online, encode decode text, encode messages, secure text encryption"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -115,8 +140,8 @@ const TextEncryptor = () => {
             Text Encryptor / Decryptor
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Encode and decode text using various methods like Base64 and Caesar cipher. 
-            Perfect for basic text obfuscation and educational purposes.
+            Encode and decode text using various methods like Base64 and Caesar
+            cipher. Perfect for basic text obfuscation and educational purposes.
           </p>
         </div>
 
@@ -133,7 +158,7 @@ const TextEncryptor = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   className="min-h-32"
                 />
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label>Method:</Label>
@@ -147,7 +172,7 @@ const TextEncryptor = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   {method === "caesar" && (
                     <div className="space-y-2">
                       <Label>Shift Amount:</Label>
@@ -156,14 +181,21 @@ const TextEncryptor = () => {
                         min="1"
                         max="25"
                         value={caesarShift}
-                        onChange={(e) => setCaesarShift(parseInt(e.target.value) || 3)}
+                        onChange={(e) =>
+                          setCaesarShift(parseInt(e.target.value) || 3)
+                        }
                       />
                     </div>
                   )}
-                  
+
                   <div className="space-y-2">
                     <Label>Action:</Label>
-                    <Select value={isEncrypting ? "encrypt" : "decrypt"} onValueChange={(value) => setIsEncrypting(value === "encrypt")}>
+                    <Select
+                      value={isEncrypting ? "encrypt" : "decrypt"}
+                      onValueChange={(value) =>
+                        setIsEncrypting(value === "encrypt")
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -175,23 +207,31 @@ const TextEncryptor = () => {
                   </div>
                 </div>
 
-                <Button 
-                  onClick={processText} 
+                <Button
+                  onClick={processText}
                   disabled={!inputText.trim()}
                   className="w-full"
                 >
-                  {isEncrypting ? <Lock className="h-4 w-4 mr-2" /> : <Unlock className="h-4 w-4 mr-2" />}
-                  {isEncrypting ? 'Encrypt' : 'Decrypt'} Text
+                  {isEncrypting ? (
+                    <Lock className="h-4 w-4 mr-2" />
+                  ) : (
+                    <Unlock className="h-4 w-4 mr-2" />
+                  )}
+                  {isEncrypting ? "Encrypt" : "Decrypt"} Text
                 </Button>
 
                 {outputText && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-medium">
-                        {isEncrypting ? 'Encrypted' : 'Decrypted'} Text:
+                        {isEncrypting ? "Encrypted" : "Decrypted"} Text:
                       </span>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={copyToClipboard}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={copyToClipboard}
+                        >
                           <Copy className="h-4 w-4 mr-1" />
                           Copy
                         </Button>
@@ -216,7 +256,7 @@ const TextEncryptor = () => {
 
           <div className="space-y-6">
             <AdSenseBox format="rectangle" slot="tool-sidebar" />
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Methods</CardTitle>
@@ -241,6 +281,23 @@ const TextEncryptor = () => {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
+          }),
+        }}
+      />
     </SEOWrapper>
   );
 };

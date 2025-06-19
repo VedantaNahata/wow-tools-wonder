@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,23 +22,23 @@ const TextCleaner = () => {
 
   const cleanText = () => {
     let cleaned = inputText;
-    
+
     if (options.removeLineBreaks) {
       cleaned = cleaned.replace(/\n/g, " ");
     }
-    
+
     if (options.removeTabs) {
       cleaned = cleaned.replace(/\t/g, " ");
     }
-    
+
     if (options.removeExtraSpaces) {
       cleaned = cleaned.replace(/\s+/g, " ");
     }
-    
+
     if (options.trimSpaces) {
       cleaned = cleaned.trim();
     }
-    
+
     setOutputText(cleaned);
   };
 
@@ -57,33 +56,42 @@ const TextCleaner = () => {
   };
 
   const toggleOption = (option: keyof typeof options) => {
-    setOptions(prev => ({ ...prev, [option]: !prev[option] }));
+    setOptions((prev) => ({ ...prev, [option]: !prev[option] }));
   };
 
   const faqs = [
     {
-      question: "What does the text cleaner do?",
-      answer: "The text cleaner removes unwanted whitespace, line breaks, tabs, and extra spaces from your text, making it cleaner and more formatted."
+      question: "What is a text cleaner tool?",
+      answer:
+        "A text cleaner tool helps remove unwanted characters, extra spaces, line breaks, HTML tags, or formatting issues from your text. It ensures your content is clean, structured, and ready to use.",
     },
     {
-      question: "Why would I need to remove line breaks?",
-      answer: "Removing line breaks is useful when copying text from PDFs or formatted documents where unwanted line breaks break the flow of text."
+      question: "How do I clean my text using this free online tool?",
+      answer:
+        "Paste your text into the input area, select the cleaning options you want such as removing extra spaces or special characters, and click clean. The cleaned text will appear instantly.",
     },
     {
-      question: "What are extra spaces?",
-      answer: "Extra spaces are multiple consecutive spaces in text. The tool replaces them with single spaces for cleaner formatting."
+      question: "What types of formatting can this text cleaner remove?",
+      answer:
+        "This tool can remove line breaks, tabs, extra spaces, duplicate spaces, non-ASCII characters, HTML tags, and more — making your content clean and professional.",
     },
     {
-      question: "Can I choose which cleaning options to apply?",
-      answer: "Yes, you can select which cleaning operations to perform using the checkboxes. This gives you full control over the cleaning process."
-    }
+      question: "Is this text cleaner tool free and safe to use?",
+      answer:
+        "Yes, this is a 100% free online text cleaner tool. It runs entirely in your browser, and no data is stored or uploaded to any server.",
+    },
+    {
+      question: "Who should use a text cleaner tool?",
+      answer:
+        "Writers, developers, students, content creators, and anyone working with messy or copied content can use a text cleaner to streamline and format their text easily.",
+    },
   ];
 
   return (
     <SEOWrapper
-      title="Text Cleaner - Remove Line Breaks and Extra Spaces"
-      description="Free online text cleaner tool. Remove line breaks, extra spaces, tabs, and clean up messy text formatting instantly."
-      keywords="text cleaner, remove line breaks, remove extra spaces, text formatter, clean text"
+      title="Free Online Text Cleaner - Remove Unwanted Characters & Formatting"
+      description="Clean your text instantly with this free online text cleaner tool. Remove special characters, line breaks, HTML tags, extra spaces, and more for perfectly formatted content."
+      keywords="free online text cleaner, clean text tool, remove special characters, text formatting cleaner, clean up copied text, remove line breaks, text cleaner, text cleaner online, text formatting, text formatting online"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
@@ -91,7 +99,7 @@ const TextCleaner = () => {
             Text Cleaner
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Clean up messy text by removing unwanted line breaks, extra spaces, 
+            Clean up messy text by removing unwanted line breaks, extra spaces,
             tabs, and other formatting issues.
           </p>
         </div>
@@ -109,14 +117,14 @@ const TextCleaner = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   className="min-h-32"
                 />
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-3">
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="removeLineBreaks"
                         checked={options.removeLineBreaks}
-                        onCheckedChange={() => toggleOption('removeLineBreaks')}
+                        onCheckedChange={() => toggleOption("removeLineBreaks")}
                       />
                       <label htmlFor="removeLineBreaks" className="text-sm">
                         Remove line breaks
@@ -126,7 +134,9 @@ const TextCleaner = () => {
                       <Checkbox
                         id="removeExtraSpaces"
                         checked={options.removeExtraSpaces}
-                        onCheckedChange={() => toggleOption('removeExtraSpaces')}
+                        onCheckedChange={() =>
+                          toggleOption("removeExtraSpaces")
+                        }
                       />
                       <label htmlFor="removeExtraSpaces" className="text-sm">
                         Remove extra spaces
@@ -138,7 +148,7 @@ const TextCleaner = () => {
                       <Checkbox
                         id="removeTabs"
                         checked={options.removeTabs}
-                        onCheckedChange={() => toggleOption('removeTabs')}
+                        onCheckedChange={() => toggleOption("removeTabs")}
                       />
                       <label htmlFor="removeTabs" className="text-sm">
                         Remove tabs
@@ -148,7 +158,7 @@ const TextCleaner = () => {
                       <Checkbox
                         id="trimSpaces"
                         checked={options.trimSpaces}
-                        onCheckedChange={() => toggleOption('trimSpaces')}
+                        onCheckedChange={() => toggleOption("trimSpaces")}
                       />
                       <label htmlFor="trimSpaces" className="text-sm">
                         Trim leading/trailing spaces
@@ -157,8 +167,8 @@ const TextCleaner = () => {
                   </div>
                 </div>
 
-                <Button 
-                  onClick={cleanText} 
+                <Button
+                  onClick={cleanText}
                   disabled={!inputText.trim()}
                   className="w-full"
                 >
@@ -170,7 +180,11 @@ const TextCleaner = () => {
                     <div className="flex items-center justify-between">
                       <span className="font-medium">Cleaned Text:</span>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={copyToClipboard}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={copyToClipboard}
+                        >
                           <Copy className="h-4 w-4 mr-1" />
                           Copy
                         </Button>
@@ -195,7 +209,7 @@ const TextCleaner = () => {
 
           <div className="space-y-6">
             <AdSenseBox format="rectangle" slot="tool-sidebar" />
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Before & After</CardTitle>
@@ -203,15 +217,19 @@ const TextCleaner = () => {
               <CardContent>
                 <div className="space-y-4 text-sm">
                   <div>
-                    <div className="font-medium text-muted-foreground mb-1">Before:</div>
+                    <div className="font-medium text-muted-foreground mb-1">
+                      Before:
+                    </div>
                     <div className="bg-muted p-2 rounded text-xs font-mono">
-                      This    is   messy{'\n'}
-                      text    with{'\t'}tabs{'\n'}
-                      and     extra     spaces
+                      This is messy{"\n"}
+                      text with{"\t"}tabs{"\n"}
+                      and extra spaces
                     </div>
                   </div>
                   <div>
-                    <div className="font-medium text-muted-foreground mb-1">After:</div>
+                    <div className="font-medium text-muted-foreground mb-1">
+                      After:
+                    </div>
                     <div className="bg-muted p-2 rounded text-xs font-mono">
                       This is messy text with tabs and extra spaces
                     </div>
@@ -222,6 +240,23 @@ const TextCleaner = () => {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
+          }),
+        }}
+      />
     </SEOWrapper>
   );
 };
