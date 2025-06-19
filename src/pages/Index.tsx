@@ -413,13 +413,6 @@ const Index = () => {
           color: "from-blue-500 to-cyan-500"
         },
         {
-          name: "Scientific Calculator",
-          description: "A full-featured calculator with trigonometric, logarithmic, and power functions.",
-          icon: Calculator,
-          route: "/math/scientific-calculator",
-          color: "from-purple-500 to-pink-500"
-        },
-        {
           name: "Interest Calculator",
           description: "Compute simple and compound interest with given principal, rate, and time.",
           icon: BarChart3,

@@ -41,20 +41,20 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="font-medium text-foreground">Popular Tools</h4>
             <div className="space-y-2 text-sm">
-              <Link to="/text/case-converter" className="block text-muted-foreground hover:text-foreground transition-colors">
-                Case Converter
+              <Link to="/text/text-encryptor" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-foreground transition-colors">
+                Text Encryptor
               </Link>
-              <Link to="/text/word-counter" className="block text-muted-foreground hover:text-foreground transition-colors">
-                Word Counter
+              <Link to="/image/image-resizer" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-foreground transition-colors">
+                Image Resizer
               </Link>
-              <Link to="/code/json-formatter" className="block text-muted-foreground hover:text-foreground transition-colors">
-                JSON Formatter
+              <Link to="/seo/meta-tag-generator" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-foreground transition-colors">
+                Meta Tag Generator
               </Link>
-              <Link to="/color/color-picker" className="block text-muted-foreground hover:text-foreground transition-colors">
-                Color Picker
+              <Link to="/code/html-table-generator" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-foreground transition-colors">
+                HTML Table Generator
               </Link>
-              <Link to="/image/image-compressor" className="block text-muted-foreground hover:text-foreground transition-colors">
-                Image Compressor
+              <Link to="/color/gradient-generator" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-foreground transition-colors">
+                Gradient Generator
               </Link>
             </div>
           </div>
